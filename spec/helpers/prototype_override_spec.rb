@@ -7,7 +7,7 @@ end
 describe Drails::PrototypeOverride do
   describe ".override" do
     it "overrides ActionView::Helpers::PrototypeHelper.periodically_call_remote" do
-      mock(::ActionView::Helpers::PrototypeHelper).alias_method_chain(:periodically_call_remote, :dojo)
+      mock.proxy(::ActionView::Helpers::PrototypeHelper).alias_method_chain(:periodically_call_remote, :dojo)
       Drails::PrototypeOverride.override
     end
   end

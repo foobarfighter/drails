@@ -1,7 +1,7 @@
 module Drails
   module PrototypeHelper
     def periodically_call_remote_with_dojo(options = {})
-      puts "testdfasdfafsdf: #{self.class}"
+      "output string"
     end
   end
 end
