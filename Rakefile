@@ -8,6 +8,7 @@ task :default => :test
 desc 'Test the drails plugin.'
 Spec::Rake::SpecTask.new(:spec) do |t|
   t.libs << 'lib'
+  t.libs << File.dirname(__FILE__)
   t.spec_files = FileList['spec/**/*_spec.rb']
 end
 

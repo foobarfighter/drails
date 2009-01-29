@@ -24,6 +24,6 @@ describe Drails::PrototypeHelper do
       helper_output.should_not be_blank
     end
 
-    it "tests need to be spec'ed out"
+
   end
 end

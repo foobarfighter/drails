@@ -10,7 +10,21 @@
 #                                                                  #
 ####################################################################
 
-desc "blah2"
-task :blah2 do
-  
+namespace :drails do
+  namespace :build do
+    desc "Verifies that you have the required prerequisites for creating a dojo build"
+    task :require do
+
+    end
+
+    desc "Generate Build File: Drails does it's best to guess at the build profile that you might from the JS source in your application"
+    task :generate do
+
+    end
+
+    desc "Creates a Dojo Build from your dojo build file"
+    task :create do
+      
+    end
+  end
 end
