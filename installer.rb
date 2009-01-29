@@ -11,9 +11,10 @@
 ####################################################################
 
 class Drails::Installer
-  attr_reader :drails_root
+  attr_reader :rails_root, :drails_root
 
-  def initialize(drails_root)
+  def initialize(rails_root, drails_root)
+    @rails_root = rails_root
     @drails_root = drails_root
   end
 
@@ -71,8 +72,6 @@ class Drails::Installer
     Kernel.exit(1)
   end
 
-  protected
-
   def install_dojo_source
 #    cmd = Dojo::Commands::Dojofy.new
 #    Dir.chdir(RAILS_ROOT) do
@@ -95,13 +94,6 @@ class Drails::Installer
   end
 
   def require_rails
-#    unless defined?(RAILS_ROOT)
-#      begin
-#        require File.dirname(__FILE__) + '/../../testapp/config/boot'
-#      rescue LoadError => e
-#        return false
-#      end
-#    end
-#    true
+    File.directory?(@rails_root) && File.exists?(File.join(@rails_root, "config", "environment.rb"))  
   end
 end
