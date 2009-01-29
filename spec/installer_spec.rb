@@ -65,12 +65,26 @@ describe Drails::Installer do
   end
 
   describe "#die_with_message" do
-    it "warns the user with an error message" do
+    attr_reader :installer, :msg, :temp_file, :stderr_fileno
 
+    before do
+      @installer = Drails::Installer.new('.')
+      @msg = "Umm... dammit, I croaked"
+      @temp_file = Tempfile.open("drails_installer_spec")
+      @stderr_fileno = $stderr.fileno
+      $stderr.reopen(temp_file)
+      mock(Kernel).exit(1) { true }
     end
 
-    it "calls exit with an error code" do
-
+    after do
+      temp_file.close!
+      $stderr.reopen(STDIN)
     end
+
+    it "warns the user with an error message and calls exit" do
+      installer.die_with_message(msg)
+      temp_file.size.should > 0
+    end
+
   end
 end

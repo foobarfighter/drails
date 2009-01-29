@@ -67,8 +67,8 @@ class Drails::Installer
   end
 
   def die_with_message(msg)
-#    warn(msg)
-#    exit 1
+    warn(msg)
+    Kernel.exit(1)
   end
 
   protected
