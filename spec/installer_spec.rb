@@ -38,7 +38,7 @@ describe Drails::Installer do
     before do
       @installer = Drails::Installer.new(rails_root, drails_root)
     end
-    
+
     describe "when it finds dojo_pkg" do
       it "returns true" do
         mock(Kernel).require('dojo-pkg') { true }
@@ -56,8 +56,20 @@ describe Drails::Installer do
 
 
   describe "#require_prerequisites!" do
+    before do
+      @installer = Drails::Installer.new(rails_root, drails_root)
+    end
+
     describe "when it fails" do
-      it "dies with an error message notifying the user"
+      it "dies with an error message notifying the user" do
+        mock(installer).require_dojo_pkg { false }
+        mock(installer).die_with_message(Drails::Installer::REQUIRE_PREREQUISITES_ERROR)
+        installer.require_prerequisites!
+      end
+    end
+
+    describe "install is successful" do
+      it "notifies the user of success"
     end
   end
 
@@ -71,14 +83,18 @@ describe Drails::Installer do
         it "notifies the user of success"
       end
     end
+  end
 
-    describe "when Drails::Installer attempts to install the d-rails sources" do
-      describe "an error occurs" do
-        it "dies with an error message notifying the user"
-      end
-
-      describe "install is successful" do
-        it "notifies the user of success"
+  describe "#install_dojo_source" do
+    before do
+      @installer = Drails::Installer.new('somedirthatshouldntexist', 'someotherdirthatshouldntexist')
+    end
+    
+    describe "when it fails" do
+      it "should raise an error" do
+        lambda {
+          installer.install_dojo_source
+        }.should raise_error
       end
     end
   end

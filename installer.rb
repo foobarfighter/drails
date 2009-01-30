@@ -13,30 +13,30 @@
 class Drails::Installer
   attr_reader :rails_root, :drails_root
 
+  REQUIRE_PREREQUISITES_ERROR =<<MSG
+
+** Installation Error:
+**
+** d-rails requires the dojo-pkg rubygem for installation.
+** To get dojo-pkg:
+**
+**    sudo gem install dojo-pkg
+**
+** For more information on dojo-pkg, visit http://dojo-pkg.rubyforge.org
+MSG
+
   def initialize(rails_root, drails_root)
     @rails_root = rails_root
     @drails_root = drails_root
   end
 
   def require_prerequisites!
-#    if !require_dojo_pkg
-#      msg =<<MSG
-#
-#** Installation Error:
-#**
-#** d-rails requires the dojo-pkg rubygem for installation.
-#** To get dojo-pkg:
-#**
-#**    sudo gem install dojo-pkg
-#**
-#** For more information on dojo-pkg, visit http://dojo-pkg.rubyforge.org
-#**
-#MSG
-#      die_with_message(msg)
-#    end
-#    if !require_rails
-#      die_with_message(msg)
-#    end
+    if !require_dojo_pkg
+      die_with_message(REQUIRE_PREREQUISITES_ERROR)
+    end
+    if !require_rails
+      die_with_message(msg)
+    end
   end
 
   def install!
@@ -73,10 +73,10 @@ class Drails::Installer
   end
 
   def install_dojo_source
-#    cmd = Dojo::Commands::Dojofy.new
-#    Dir.chdir(RAILS_ROOT) do
-#      cmd.install
-#    end
+    cmd = Dojo::Commands::Dojofy.new
+    Dir.chdir(rails_root) do
+      cmd.install
+    end
   end
 
   def install_drails_scripts
