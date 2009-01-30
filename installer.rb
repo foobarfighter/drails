@@ -85,12 +85,12 @@ class Drails::Installer
   end
 
   def require_dojo_pkg
-#    begin
-#      require 'dojo-pkg'
-#    rescue LoadError => e
-#      return false
-#    end
-#    true
+    begin
+      Kernel.require 'dojo-pkg'
+    rescue LoadError => e
+      return false
+    end
+    true
   end
 
   def require_rails

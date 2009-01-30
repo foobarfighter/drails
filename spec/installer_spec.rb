@@ -1,7 +1,12 @@
 require File.join(File.dirname(__FILE__), "spec_helper.rb")
 
 describe Drails::Installer do
-  attr_reader :installer
+  attr_reader :installer, :rails_root, :drails_root
+
+  before do
+    @rails_root = File.join(File.dirname(__FILE__), "../../testapp")
+    @drails_root = File.join(File.dirname(__FILE__), "../../")
+  end
 
   describe "#initialize" do
     it "sets the #drails_root to the same directory that it was passed" do
@@ -10,11 +15,6 @@ describe Drails::Installer do
   end
 
   describe "#require_rails" do
-    attr_reader :rails_root, :drails_root
-    before do
-      @rails_root = File.join(File.dirname(__FILE__), "../../testapp")
-      @drails_root = File.join(File.dirname(__FILE__), "../../")
-    end
 
     describe "when it finds the rails_root" do
       it "returns true" do
@@ -35,12 +35,22 @@ describe Drails::Installer do
   end
 
   describe "#require_dojo_pkg" do
+    before do
+      @installer = Drails::Installer.new(rails_root, drails_root)
+    end
+    
     describe "when it finds dojo_pkg" do
-      it "returns true"
+      it "returns true" do
+        mock(Kernel).require('dojo-pkg') { true }
+        installer.require_dojo_pkg.should be_true
+      end
     end
 
     describe "when it can't find dojo_pkg" do
-      it "returns false"
+      it "returns false" do
+        mock(Kernel).require('dojo-pkg') { raise LoadError.new }
+        installer.require_dojo_pkg.should be_false
+      end
     end
   end
 
