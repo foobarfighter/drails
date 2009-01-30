@@ -91,11 +91,15 @@ describe Drails::Installer do
     end
     
     describe "when it fails" do
-      it "should raise an error" do
+      it "raises an error" do
         lambda {
           installer.install_dojo_source
         }.should raise_error
       end
+    end
+
+    describe "when it succeeds" do
+      it "returns"
     end
   end
 
