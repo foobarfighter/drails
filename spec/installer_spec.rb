@@ -89,13 +89,23 @@ describe Drails::Installer do
     before do
       @installer = Drails::Installer.new('somedirthatshouldntexist', 'someotherdirthatshouldntexist')
     end
-    
+
     describe "when it fails" do
       it "raises an error" do
         lambda {
           installer.install_dojo_source
         }.should raise_error
       end
+    end
+
+    describe "when it succeeds" do
+      it "returns"
+    end
+  end
+
+  describe "#install_drails_scripts" do
+    describe "when it fails" do
+      it "raises an error"
     end
 
     describe "when it succeeds" do

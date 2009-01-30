@@ -80,8 +80,8 @@ MSG
   end
 
   def install_drails_scripts
-#    cp_r File.join(DRAILS_ROOT, "javascripts", "drails"),
-#            File.join(RAILS_ROOT, "public", "javascripts", "dojo")
+    cp_r File.join(DRAILS_ROOT, "javascripts", "drails"),
+            File.join(RAILS_ROOT, "public", "javascripts", "dojo")
   end
 
   def require_dojo_pkg
