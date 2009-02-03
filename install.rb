@@ -14,7 +14,7 @@ require 'rubygems'
 require 'fileutils'
 require 'installer'
 
-installer = Drails::Installer.new
+installer = Drails::Installer.new(RAILS_ROOT, File.dirname(__FILE__))
 installer.require_prerequisites!
 installer.install!
 

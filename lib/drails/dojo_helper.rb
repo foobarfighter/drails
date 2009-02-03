@@ -10,7 +10,10 @@
 #                                                                  #
 ####################################################################
 
-require 'drails/error'
-require 'drails/dojo_helper.rb'
-require 'drails/prototype_helper'
-require 'drails/prototype_override'
+module Drails
+  module DojoHelper
+    def dojo_require(mod)
+      "dojo.require('#{mod}')"
+    end
+  end
+end

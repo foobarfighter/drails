@@ -6,9 +6,24 @@ end
 
 describe Drails::PrototypeOverride do
   describe ".override" do
+
     it "overrides ActionView::Helpers::PrototypeHelper.periodically_call_remote" do
-      mock.proxy(::ActionView::Helpers::PrototypeHelper).alias_method_chain(:periodically_call_remote, :dojo)
-      Drails::PrototypeOverride.override
+      test_alias_method_chained(::ActionView::Helpers::PrototypeHelper, :periodically_call_remote, :dojo) do
+        Drails::PrototypeOverride.override
+      end.should be_true
+
+    end
+
+    it "overrides ActionView::Helpers::PrototypeHelper.remote_function" do
+      test_alias_method_chained(::ActionView::Helpers::PrototypeHelper, :remote_function, :dojo) do
+        Drails::PrototypeOverride.override
+      end.should be_true
+    end
+
+    it "overrides ActionView::Helpers::PrototypeHelper.build_callbacks" do
+      test_alias_method_chained(::ActionView::Helpers::PrototypeHelper, :build_callbacks, :dojo) do
+        Drails::PrototypeOverride.override
+      end.should be_true
     end
   end
 end

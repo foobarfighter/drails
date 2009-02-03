@@ -10,7 +10,8 @@
 #                                                                  #
 ####################################################################
 
-require 'drails/error'
-require 'drails/dojo_helper.rb'
-require 'drails/prototype_helper'
-require 'drails/prototype_override'
+
+module Drails
+  class IncompatibilityError < Exception  
+  end
+end
