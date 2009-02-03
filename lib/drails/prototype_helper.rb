@@ -45,22 +45,17 @@ module Drails
     protected
 
     def build_callbacks_with_dojo(options)
-      prefix = "function(request){"
-      suffix = "}"
-      callbacks = {}
-      options.each do |callback, code|
-        case callback
-        when :complete
-          callbacks['handle'] = prefix + code + suffix
-        when :success
-          callbacks['load'] = prefix + code + suffix
-        when :failure
-          callbacks['error'] = prefix + code + suffix
+      options.inject({}) do |callbacks, (event, code)|
+        cb = case event
+        when :complete: 'handle'
+        when :success:  'load'
+        when :failure:  'error'
         when :loaded, :loading, :interactive, :uninitialized, 100..599
           raise Drails::IncompatibilityError, "currently the only callbacks supported are [:complete, :success, :failure]"
         end
+        callbacks[cb] = "function(request){" + code + "}"
+        callbacks
       end
-      callbacks
     end
 
   end
