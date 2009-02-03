@@ -1,3 +1,15 @@
+####################################################################
+#                                                                  #
+#      Copyright (c) 2008, Bob Remeika and others                  #
+#      All Rights Reserved.                                        #
+#                                                                  #
+#      Licensed under the MIT License.                             #
+#      For more information on d-rails licensing, see:             #
+#                                                                  #
+#          http://www.opensource.org/licenses/mit-license.php      #
+#                                                                  #
+####################################################################
+
 require File.join(File.dirname(__FILE__), "../spec_helper.rb")
 
 class TestView
