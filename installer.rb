@@ -10,7 +10,11 @@
 #                                                                  #
 ####################################################################
 
+require 'fileutils'
+
 class Drails::Installer
+  include FileUtils
+
   attr_reader :rails_root, :drails_root
 
   REQUIRE_PREREQUISITES_ERROR =<<MSG
@@ -30,6 +34,14 @@ MSG
     @drails_root = drails_root
   end
 
+  def drails_scripts_dir
+    File.join(drails_root, "javascripts", "drails")
+  end
+
+  def dojo_dest_dir
+    File.join(rails_root, "public", "javascripts", "dojo")
+  end
+
   def require_prerequisites!
     if !require_dojo_pkg
       die_with_message(REQUIRE_PREREQUISITES_ERROR)
@@ -41,29 +53,29 @@ MSG
 
   def install!
 #    begin
-#      puts "** Installing dojo source into your application..."
-#      install_dojo_source
-#    rescue e
-#      die_with_message("!! Could not install dojo sources: #{e.to_s}")
-#    end
-#
-#    begin
-#      puts "** Installing d-rails javascripts into your application..."
-#      install_drails_scripts
-#    rescue e
-#      die_with_message("!! Could not install d-rails javascripts: #{e.to_s}")
-#    end
-#
-#    puts "**"
-#    puts "** d-rails was installed d-rails successfully!"
-#    puts "** d-rails installed dojo source and d-rails scripts to:"
-#    puts "**"
-#    puts "**    " + File.join(RAILS_ROOT, "public", "javascripts", "dojo")
-#    puts "**"
-#    puts "** All other d-rails source files are located at:"
-#    puts "**"
-#    puts "**    #{@drails_root}"
-#    puts "**"
+    #      puts "** Installing dojo source into your application..."
+    #      install_dojo_source
+    #    rescue e
+    #      die_with_message("!! Could not install dojo sources: #{e.to_s}")
+    #    end
+    #
+    #    begin
+    #      puts "** Installing d-rails javascripts into your application..."
+    #      install_drails_scripts
+    #    rescue e
+    #      die_with_message("!! Could not install d-rails javascripts: #{e.to_s}")
+    #    end
+    #
+    #    puts "**"
+    #    puts "** d-rails was installed d-rails successfully!"
+    #    puts "** d-rails installed dojo source and d-rails scripts to:"
+    #    puts "**"
+    #    puts "**    " + File.join(RAILS_ROOT, "public", "javascripts", "dojo")
+    #    puts "**"
+    #    puts "** All other d-rails source files are located at:"
+    #    puts "**"
+    #    puts "**    #{@drails_root}"
+    #    puts "**"
 
   end
 
@@ -80,8 +92,7 @@ MSG
   end
 
   def install_drails_scripts
-    cp_r File.join(DRAILS_ROOT, "javascripts", "drails"),
-            File.join(RAILS_ROOT, "public", "javascripts", "dojo")
+    cp_r drails_scripts_dir, dojo_dest_dir
   end
 
   def require_dojo_pkg
@@ -94,6 +105,6 @@ MSG
   end
 
   def require_rails
-    File.directory?(@rails_root) && File.exists?(File.join(@rails_root, "config", "environment.rb"))  
+    File.directory?(@rails_root) && File.exists?(File.join(@rails_root, "config", "environment.rb"))
   end
 end

@@ -4,8 +4,8 @@ describe Drails::Installer do
   attr_reader :installer, :rails_root, :drails_root
 
   before do
-    @rails_root = File.join(File.dirname(__FILE__), "../../testapp")
-    @drails_root = File.join(File.dirname(__FILE__), "../../")
+    @rails_root = File.join(File.dirname(__FILE__), "../testapp")
+    @drails_root = File.join(File.dirname(__FILE__), "../")
   end
 
   describe "#initialize" do
@@ -86,11 +86,11 @@ describe Drails::Installer do
   end
 
   describe "#install_dojo_source" do
-    before do
-      @installer = Drails::Installer.new('somedirthatshouldntexist', 'someotherdirthatshouldntexist')
-    end
-
     describe "when it fails" do
+      before do
+        @installer = Drails::Installer.new('somedirthatshouldntexist', 'someotherdirthatshouldntexist')
+      end
+
       it "raises an error" do
         lambda {
           installer.install_dojo_source
@@ -99,17 +99,46 @@ describe Drails::Installer do
     end
 
     describe "when it succeeds" do
-      it "returns"
+      before do
+        @installer = Drails::Installer.new(rails_root, drails_root)
+        require 'dojo-pkg'
+        mock.instance_of(Dojo::Commands::Dojofy).install { true }
+      end
+
+      it "returns" do
+        installer.install_dojo_source
+      end
     end
   end
 
   describe "#install_drails_scripts" do
     describe "when it fails" do
-      it "raises an error"
+      before do
+        @installer = Drails::Installer.new('somedirthatshouldntexist', 'someotherdirthatshouldntexist')
+      end
+
+      it "raises an error" do
+        lambda {
+          installer.install_drails_scripts
+        }.should_not raise_error
+      end
     end
 
     describe "when it succeeds" do
-      it "returns"
+      attr_reader :drails_scripts_dest_dir
+      before do
+        @drails_scripts_dest_dir = File.join(installer.dojo_dest_dir, 'drails')
+        @installer = Drails::Installer.new(rails_root, drails_root)
+      end
+
+      after do
+        require 'fileutils'
+        FileUtils::rm_r drails_scripts_dest_dir
+      end
+      it "copys the drails scripts to the installer#dojo_dest_dir" do
+        installer.install_drails_scripts
+        File.directory?(File.join(installer.dojo_dest_dir, 'drails'))
+      end
     end
   end
 
