@@ -69,18 +69,29 @@ describe Drails::Installer do
     end
 
     describe "install is successful" do
-      it "notifies the user of success"
+      before do
+        mock(installer).require_dojo_pkg { true }
+      end
+
+      it "returns" do
+        installer.require_prerequisites!
+      end
     end
   end
 
   describe "#install!" do
-    describe "when Drails::Installer attempts to install dojo sources" do
-      describe "an error occurs" do
-        it "dies with an error message notifying the user"
-      end
+    before do
+      @installer = Drails::Installer.new(rails_root, drails_root)
+      mock(installer).install_drails_scripts { true }
+      mock(installer).install_dojo_source { true }
+      mock(installer).write_message("** Installing dojo source into your application...")
+      mock(installer).write_message("** Installing d-rails javascripts into your application...")
+      mock(installer).write_message(installer.install_success_msg)
+    end
 
-      describe "install is successful" do
-        it "notifies the user of success"
+    describe "install is successful" do
+      it "notifies the user of success" do
+        installer.install!
       end
     end
   end
@@ -120,21 +131,23 @@ describe Drails::Installer do
       it "raises an error" do
         lambda {
           installer.install_drails_scripts
-        }.should_not raise_error
+        }.should raise_error
       end
     end
 
     describe "when it succeeds" do
       attr_reader :drails_scripts_dest_dir
       before do
-        @drails_scripts_dest_dir = File.join(installer.dojo_dest_dir, 'drails')
         @installer = Drails::Installer.new(rails_root, drails_root)
+        Dir.mkdir(installer.dojo_dest_dir)
+        @drails_scripts_dest_dir = File.join(installer.dojo_dest_dir, 'drails')
       end
 
       after do
         require 'fileutils'
-        FileUtils::rm_r drails_scripts_dest_dir
+        FileUtils::rm_r installer.dojo_dest_dir
       end
+
       it "copys the drails scripts to the installer#dojo_dest_dir" do
         installer.install_drails_scripts
         File.directory?(File.join(installer.dojo_dest_dir, 'drails'))
@@ -143,25 +156,16 @@ describe Drails::Installer do
   end
 
   describe "#die_with_message" do
-    attr_reader :msg, :temp_file, :stderr_fileno
-
+    attr_reader :message
     before do
+      @message = "Umm... dammit I croaked"
       @installer = Drails::Installer.new('.', '.')
-      @msg = "Umm... dammit, I croaked"
-      @temp_file = Tempfile.open("drails_installer_spec")
-      @stderr_fileno = $stderr.fileno
-      $stderr.reopen(temp_file)
+      mock(installer).warn_message(message)
       mock(Kernel).exit(1) { true }
     end
 
-    after do
-      $stderr = IO.for_fd(stderr_fileno, "w")
-      temp_file.close!
-    end
-
     it "warns the user with an error message and calls exit" do
-      installer.die_with_message(msg)
-      temp_file.size.should > 0
+      installer.die_with_message(message)
     end
 
   end
