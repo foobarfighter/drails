@@ -20,7 +20,6 @@ module Drails
         alias_method_chain :remote_function, :dojo
 
         protected
-        alias_method_chain :build_callbacks, :dojo
         alias_method_chain :options_for_ajax, :dojo
       end
     end

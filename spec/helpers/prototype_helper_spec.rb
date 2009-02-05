@@ -53,55 +53,6 @@ describe Drails::PrototypeHelper do
     end
   end
 
-  describe "#build_callbacks" do
-    attr_reader :callbacks
-
-    describe "when :complete is passed as an option" do
-      before do
-        @callbacks = test_view.send(:build_callbacks, :complete => "alert('complete')")
-      end
-      it "adds a 'handle' callback with JavaScript code" do
-        callbacks['handle'].should == "function(request){alert('complete')}"
-      end
-    end
-
-    describe "when :success is passed as an option" do
-      before do
-        @callbacks = test_view.send(:build_callbacks, :success => "alert('success')")
-      end
-      it "adds a :success callback with JavaScript code" do
-        callbacks['load'].should == "function(request){alert('success')}"
-      end
-    end
-
-    describe "when :failure is passed as an option" do
-      before do
-        @callbacks = test_view.send(:build_callbacks, :failure => "alert('failure')")
-      end
-      it "adds a :failure callback with JavaScript code" do
-        callbacks['error'].should == "function(request){alert('failure')}"
-      end
-    end
-
-    describe "when an unsupported callback is passed as an option" do
-      it "raises a Drails::IncompatibilityError" do
-        lambda do
-          test_view.send(:build_callbacks, :loaded => "alert('loaded')")
-        end.should raise_error(Drails::IncompatibilityError)
-      end
-    end
-    
-    describe "when an invalid callback is passed as an option" do
-      before do
-        @callbacks = test_view.send(:build_callbacks, :something_i_made_up => "dontDoThis()")
-      end
-      it "does not return the parameter as a callback" do
-        callbacks.values.collect { |v| v.gsub(/\s+/, "") }.should_not include("function(request){dontDoThis()}")
-        [:something_i_made_up, "something_i_made_up"].each { |k| callbacks.has_key?(k).should == false  }
-      end
-    end
-  end
-
   describe "#options_for_ajax" do
     attr_reader :default_options
     before do
@@ -114,9 +65,9 @@ describe Drails::PrototypeHelper do
     describe "when supported callbacks are passed" do
       it "returns the callbacks as part of the ajax options" do
         expected_options = default_options.merge(
-          "handle" => "function(request){alert('complete')}",
-          "load" => "function(request){alert('success')}",
-          "error" => "function(request){alert('failure')}"
+          "onComplete" => "function(request){alert('complete')}",
+          "onSuccess" => "function(request){alert('success')}",
+          "onFailure" => "function(request){alert('failure')}"
           )
         params = { :success => "alert('success')", :complete => "alert('complete')", :failure => "alert('failure')" }
         actual_options = test_view.send(:options_for_ajax, params)

@@ -85,21 +85,5 @@ module Drails
       options_for_javascript(js_options)
     end
     
-    def build_callbacks_with_dojo(options)
-      options.inject({}) do |callbacks, (event, code)|
-        cb = case event
-            when :complete: 'handle'
-            when :success:  'load'
-            when :failure:  'error'
-            else
-              if ActionView::Helpers::PrototypeHelper::CALLBACKS.include?(event)
-                raise Drails::IncompatibilityError, "currently the only callbacks supported are [:complete, :success, :failure]"
-              end
-            end
-        callbacks[cb] = "function(request){" + code + "}" unless cb.nil?
-        callbacks
-      end
-    end
-
   end
 end

@@ -1,8 +1,21 @@
-Drails
-======
+d-rails
+=======
 
-Introduction goes here.
+d-rails allows you to use RJS with Dojo in your Rails application.  It completely replaces the need
+for Prototype/Scriptaculous in your application and let's you use the more powerful Dojo Toolkit as
+your Javascript library.
 
+How it works:
+=============
+d-rails tries not to touch Rails' ruby internals as much as possible by providing a client
+side library that provides the same argument interface as Prototype/Scriptaculous.  The method
+names and objects map to the Prototype/Scriptaculous methods and objects needed for emulating the
+RJS helper APIs as well as help with any argument munging that is needed due to inconsistencies
+between the Dojo and Prototype/Scriptaculous APIs.
+
+d-rails overrides Rails' ruby internals only when it needs to in order to call out to d-rails functions
+instead of Prototype/Scriptaculous.  This monkey patching is necessary only because Rails/RJS is so
+tightly coupled to the Javascript framework that is bundled with it.
 
 Example
 =======
@@ -10,4 +23,4 @@ Example
 Example goes here.
 
 
-Copyright (c) 2009 [name of plugin creator], released under the MIT license
+Copyright (c) 2009 Bob Remeika, released under the MIT license
