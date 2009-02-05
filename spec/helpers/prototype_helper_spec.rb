@@ -14,6 +14,15 @@ require File.join(File.dirname(__FILE__), "../spec_helper.rb")
 
 class TestView
   include ActionView::Helpers::PrototypeHelper
+  include ActionView::Helpers::JavaScriptHelper
+
+  def url_for(params)
+    return "http://somemockurl.com"
+  end
+
+  def protect_against_forgery?
+    false
+  end
 end
 
 describe Drails::PrototypeHelper do
@@ -78,4 +87,25 @@ describe Drails::PrototypeHelper do
       end
     end
   end
+
+  describe "#options_for_ajax" do
+    attr_reader :base_options
+    before do
+      @base_options = {
+        'asynchronous' => true,
+        'evalScripts' => true,
+        'content' => "dojo.queryToObject()"
+      }
+    end
+
+    describe "when callbacks are passed" do
+      it "returns the callbacks as part of the ajax options" do
+        expected_options = base_options.merge("load" => "function(request){alert('test')}")
+        params = { :success => "alert('test')" }
+        actual_options = test_view.send(:options_for_ajax, params)
+        dirty_json_decoder(actual_options).should include_options(expected_options)
+      end
+    end
+  end
+
 end

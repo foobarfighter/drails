@@ -56,34 +56,36 @@ module Drails
 
     protected
 
+    # TODO: Merge possible differences between old d-rails and possibly new implementation in rails (actionpack-2.2.2)
     def options_for_ajax_with_dojo(options)
-#      js_options = build_callbacks(options)
-#
-#      url_options = options[:url]
-#      url_options = url_options.merge(:escape => false) if url_options.is_a? Hash
-#      js_options['url'] = "'#{url_for(url_options)}'"
-#      js_options['sync'] = options[:type] == :synchronous
-#
-#
-#      if options[:form]
-#        js_options['form'] = 'this'
-#      elsif options[:submit]
-#        js_options['form'] = "dojo.byId('#{options[:submit]}')"
-#      elsif options[:with]
-#        xhr_content = options[:with]
-#      end
-#
-#      if protect_against_forgery? && !options[:form]
-#        xhr_content ||= "'"
-#        xhr_content << " + '&" unless xhr_content == "'"
-#        xhr_content << "#{request_forgery_protection_token}=' + encodeURIComponent('#{escape_javascript form_authenticity_token}')"
-#      end
-#
-#      js_options['content'] = "dojo.queryToObject(#{xhr_content})" if options[:form].nil?
-#
-#      options_for_javascript(js_options)
-    end
+      js_options = build_callbacks(options)
 
+      url_options = options[:url]
+      url_options = url_options.merge(:escape => false) if url_options.is_a? Hash
+      js_options['url'] = "'#{url_for(url_options)}'"
+      js_options['sync'] = options[:type] == :synchronous
+
+
+      if options[:form]
+        js_options['form'] = 'this'
+      elsif options[:submit]
+        js_options['form'] = "dojo.byId('#{options[:submit]}')"
+      elsif options[:with]
+        xhr_content = options[:with]
+      end
+
+      if protect_against_forgery? && !options[:form]
+        xhr_content ||= "'"
+        xhr_content << " + '&" unless xhr_content == "'"
+        xhr_content << "#{request_forgery_protection_token}=' + encodeURIComponent('#{escape_javascript form_authenticity_token}')"
+      end
+
+      js_options['content'] = "dojo.queryToObject(#{xhr_content})" if options[:form].nil?
+
+      options_for_javascript(js_options)
+      #js_options.empty? ? '{}' : "{#{js_options.keys.map { |k| "\"#{k}\":#{js_options[k]}" }.sort.join(', ')}}"
+    end
+    
     def build_callbacks_with_dojo(options)
       options.inject({}) do |callbacks, (event, code)|
         cb = case event
