@@ -23,6 +23,10 @@ class TestView
   def protect_against_forgery?
     false
   end
+  
+  def request_forgery_protection_token
+    "my_request_forgery_protection_token"
+  end
 end
 
 describe Drails::PrototypeHelper do
@@ -86,24 +90,74 @@ describe Drails::PrototypeHelper do
         end.should raise_error(Drails::IncompatibilityError)
       end
     end
+    
+    describe "when an invalid callback is passed as an option" do
+      before do
+        @callbacks = test_view.send(:build_callbacks, :something_i_made_up => "dontDoThis()")
+      end
+      it "does not return the parameter as a callback" do
+        callbacks.values.collect { |v| v.gsub(/\s+/, "") }.should_not include("function(request){dontDoThis()}")
+        [:something_i_made_up, "something_i_made_up"].each { |k| callbacks.has_key?(k).should == false  }
+      end
+    end
   end
 
   describe "#options_for_ajax" do
-    attr_reader :base_options
+    attr_reader :default_options
     before do
-      @base_options = {
+      @default_options = {
         'asynchronous' => true,
-        'evalScripts' => true,
-        'content' => "dojo.queryToObject()"
+        'evalScripts' => true
       }
     end
 
-    describe "when callbacks are passed" do
+    describe "when supported callbacks are passed" do
       it "returns the callbacks as part of the ajax options" do
-        expected_options = base_options.merge("load" => "function(request){alert('test')}")
-        params = { :success => "alert('test')" }
+        expected_options = default_options.merge(
+          "handle" => "function(request){alert('complete')}",
+          "load" => "function(request){alert('success')}",
+          "error" => "function(request){alert('failure')}"
+          )
+        params = { :success => "alert('success')", :complete => "alert('complete')", :failure => "alert('failure')" }
         actual_options = test_view.send(:options_for_ajax, params)
-        dirty_json_decoder(actual_options).should include_options(expected_options)
+        dirty_json_decode(actual_options).should include_options(expected_options)
+      end
+    end
+    
+    describe "when :form is passed" do
+      it "returns a dojo function for form serialization in 'parameters'" do
+        expected_options = default_options.merge(
+          "parameters" => "dojo.formToQuery(this)"
+          )
+        params = { :form => true }
+        actual_options = test_view.send(:options_for_ajax, params)
+        dirty_json_decode(actual_options).should include_options(expected_options)
+      end
+    end
+    
+    describe "when :submit is passed" do
+      it "returns a dojo function for form serialization in 'parameters'" do
+        expected_options = default_options.merge(
+          "parameters" => "dojo.formToQuery('myForm')"
+          )
+        params = { :submit => 'myForm' }
+        actual_options = test_view.send(:options_for_ajax, params)
+        dirty_json_decode(actual_options).should include_options(expected_options)
+      end
+    end
+    
+    describe "when protect_against_forgery? is true" do
+      before do
+        mock(test_view).protect_against_forgery? { true }
+        mock(test_view).form_authenticity_token { "my_token" }
+      end
+      
+      it "returns a dojo function for form serialization in 'parameters'" do
+        expected_options = default_options.merge(
+          "parameters" => "'my_request_forgery_protection_token=' + encodeURIComponent('my_token')"
+          )
+        actual_options = test_view.send(:options_for_ajax, {})
+        dirty_json_decode(actual_options).should include_options(expected_options)
       end
     end
   end

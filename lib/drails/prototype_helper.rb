@@ -60,42 +60,43 @@ module Drails
     def options_for_ajax_with_dojo(options)
       js_options = build_callbacks(options)
 
-      url_options = options[:url]
-      url_options = url_options.merge(:escape => false) if url_options.is_a? Hash
-      js_options['url'] = "'#{url_for(url_options)}'"
-      js_options['sync'] = options[:type] == :synchronous
-
+      js_options['asynchronous'] = options[:type] != :synchronous
+      js_options['method']       = method_option_to_s(options[:method]) if options[:method]
+      js_options['insertion']    = "'#{options[:position].to_s.downcase}'" if options[:position]
+      js_options['evalScripts']  = options[:script].nil? || options[:script]
 
       if options[:form]
-        js_options['form'] = 'this'
+        js_options['parameters'] = 'dojo.formToQuery(this)'
       elsif options[:submit]
-        js_options['form'] = "dojo.byId('#{options[:submit]}')"
+        js_options['parameters'] = "dojo.formToQuery('#{options[:submit]}')"
       elsif options[:with]
-        xhr_content = options[:with]
+        js_options['parameters'] = options[:with]
       end
-
+      
       if protect_against_forgery? && !options[:form]
-        xhr_content ||= "'"
-        xhr_content << " + '&" unless xhr_content == "'"
-        xhr_content << "#{request_forgery_protection_token}=' + encodeURIComponent('#{escape_javascript form_authenticity_token}')"
+        if js_options['parameters']
+          js_options['parameters'] << " + '&"
+        else
+          js_options['parameters'] = "'"
+        end
+        js_options['parameters'] << "#{request_forgery_protection_token}=' + encodeURIComponent('#{escape_javascript form_authenticity_token}')"
       end
-
-      js_options['content'] = "dojo.queryToObject(#{xhr_content})" if options[:form].nil?
-
+      
       options_for_javascript(js_options)
-      #js_options.empty? ? '{}' : "{#{js_options.keys.map { |k| "\"#{k}\":#{js_options[k]}" }.sort.join(', ')}}"
     end
     
     def build_callbacks_with_dojo(options)
       options.inject({}) do |callbacks, (event, code)|
         cb = case event
-        when :complete: 'handle'
-        when :success:  'load'
-        when :failure:   'error'
-        when :loaded, :loading, :interactive, :uninitialized, 100..599
-          raise Drails::IncompatibilityError, "currently the only callbacks supported are [:complete, :success, :failure]"
-        end
-        callbacks[cb] = "function(request){" + code + "}"
+            when :complete: 'handle'
+            when :success:  'load'
+            when :failure:  'error'
+            else
+              if ActionView::Helpers::PrototypeHelper::CALLBACKS.include?(event)
+                raise Drails::IncompatibilityError, "currently the only callbacks supported are [:complete, :success, :failure]"
+              end
+            end
+        callbacks[cb] = "function(request){" + code + "}" unless cb.nil?
         callbacks
       end
     end
