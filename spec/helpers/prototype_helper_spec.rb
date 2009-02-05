@@ -47,9 +47,17 @@ describe Drails::PrototypeHelper do
   end
 
   describe "#remote_function" do
+    attr_reader :helper_output
+    
     before do
-      @helper_output = test_view.remote_function
+      @helper_output = test_view.remote_function({})
       helper_output.should_not be_blank
+    end
+    
+    describe "when an empty object is passed" do
+      it "returns the basic drails.Request call" do
+        helper_output.should == "new drails.Request('http://somemockurl.com', {asynchronous:true, evalScripts:true})"
+      end
     end
   end
 

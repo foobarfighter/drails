@@ -20,38 +20,33 @@ module Drails
     end
 
     def remote_function_with_dojo(options)
-      #      dojo_require "drails.Element"
-      #
-      #      javascript_options = options_for_ajax(options)
-      #      method = "Get"
-      #      if options[:method]
-      #        method = options[:method].match(/[A-z]+/)[0].camelize
-      #      end
-      #      function = "dojo.xhr#{method}(#{javascript_options})"
-      #
-      #      def create_callback(id, position = nil)
-      #        func = position.nil? ? "update('#{id}', response)" : "insert('#{id}', {#{position.to_s.downcase}: response})"
-      #        "function(response){ drails.Element.#{func};}"
-      #      end
-      #
-      #      updates = options[:update]
-      #      if updates && updates.is_a?(Hash)
-      #        success_callback = create_callback(updates[:success], options[:position]) if updates[:success]
-      #        error_callback   = create_callback(updates[:failure], options[:position]) if updates[:failure]
-      #        function = "#{function}.addCallback(#{success_callback})" if updates[:success]
-      #        function = "#{function}.addErrback(#{error_callback})"    if updates[:failure]
-      #      elsif updates
-      #        both_callback = create_callback(updates, options[:position])
-      #        function = "#{function}.addBoth(#{both_callback},#{both_callback})"
-      #      end
-      #
-      #
-      #      function = "#{options[:before]}; #{function}" if options[:before]
-      #      function = "#{function}; #{options[:after]}"  if options[:after]
-      #      function = "if (#{options[:condition]}) { #{function}; }" if options[:condition]
-      #      function = "if (confirm('#{escape_javascript(options[:confirm])}')) { #{function}; }" if options[:confirm]
-      #
-      #      return function
+      javascript_options = options_for_ajax(options)
+      
+      update = ''
+      if options[:update] && options[:update].is_a?(Hash)
+        update  = []
+        update << "success:'#{options[:update][:success]}'" if options[:update][:success]
+        update << "failure:'#{options[:update][:failure]}'" if options[:update][:failure]
+        update  = '{' + update.join(',') + '}'
+      elsif options[:update]
+        update << "'#{options[:update]}'"
+      end
+      
+      function = update.empty? ?
+        "new drails.Request(" :
+        "new drails.Updater(#{update}, "
+      
+      url_options = options[:url]
+      url_options = url_options.merge(:escape => false) if url_options.is_a?(Hash)
+      function << "'#{escape_javascript(url_for(url_options))}'"
+      function << ", #{javascript_options})"
+      
+      function = "#{options[:before]}; #{function}" if options[:before]
+      function = "#{function}; #{options[:after]}"  if options[:after]
+      function = "if (#{options[:condition]}) { #{function}; }" if options[:condition]
+      function = "if (confirm('#{escape_javascript(options[:confirm])}')) { #{function}; }" if options[:confirm]
+      
+      return function
     end
 
     protected
