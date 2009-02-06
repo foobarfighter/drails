@@ -49,14 +49,47 @@ describe Drails::PrototypeHelper do
   describe "#remote_function" do
     attr_reader :helper_output
     
-    before do
-      @helper_output = test_view.remote_function({})
-      helper_output.should_not be_blank
-    end
-    
     describe "when an empty object is passed" do
+      before do
+        @helper_output = test_view.remote_function({})
+        helper_output.should_not be_blank
+      end
+      
       it "returns the basic drails.Request call" do
         helper_output.should == "new drails.Request('http://somemockurl.com', {asynchronous:true, evalScripts:true})"
+      end
+    end
+    
+    describe "when :update is passed" do
+      before do
+        @helper_output = test_view.remote_function({ :update => "some_div" })
+        helper_output.should_not be_blank
+      end
+      
+      it "returns the drails.Updater with 'some_div' as it's target" do
+        helper_output.should == "new drails.Updater('some_div', 'http://somemockurl.com', {asynchronous:true, evalScripts:true})"
+      end
+    end
+    
+    describe "when :update is passed as a hash" do
+      before do
+        @helper_output = test_view.remote_function({ :update => { :success => 'success_div', :failure => 'failure_div' } })
+        helper_output.should_not be_blank
+      end
+      
+      it "return the drails.Updater with the 'success_div' and the 'failure_div'" do
+        helper_output.should == "new drails.Updater({success:'success_div',failure:'failure_div'}, 'http://somemockurl.com', {asynchronous:true, evalScripts:true})"
+      end
+    end
+    
+    describe "when callbacks are passed" do
+      before do
+        @helper_output = test_view.remote_function( :success => "function(){alert('complete')}" )
+        helper_output.should_not be_blank
+      end
+      
+      it "return the drails.Request with the callback" do
+        helper_output.should == "new drails.Request('http://somemockurl.com', {asynchronous:true, evalScripts:true, onSuccess:function(request){function(){alert('complete')}}})"
       end
     end
   end
