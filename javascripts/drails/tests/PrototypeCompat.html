@@ -1,0 +1,54 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+		"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+
+	<title>PrototypeCompat unit test</title>
+	<style type="text/css">
+		@import "../../../dojo/resources/dojo.css";
+		@import "../css/dijitTests.css";
+	</style>
+
+	<!-- required: the default dijit theme: -->
+	<link id="themeStyles" rel="stylesheet" href="../../../dijit/themes/tundra/tundra.css">
+
+	<!-- required: dojo.js -->
+	<script type="text/javascript" src="/javascripts/dojo/dojo/dojo.js"
+		djConfig="isDebug: true, parseOnLoad: true"></script>
+
+
+	<script type="text/javascript">
+		dojo.require("doh.runner");
+        dojo.registerModulePath("drails", "/javascripts/dojo/drails");
+
+        function setUp(t){
+            
+        }
+
+        function tearDown(t){
+        }
+
+        function testThatTestsActuallyWork(t){
+            t.is(1, 1);
+        }
+
+		dojo.addOnLoad(function(){
+			doh.registerGroup("drails.tests.prototypecompat",
+                [testThatTestsActuallyWork],
+                setUp,
+                tearDown
+            );
+
+			doh.run();
+		});
+
+	</script>
+</head>
+<body class="tundra">
+
+<div id="flashCard" class="flash-card" dojoType="mombot.controls.FlashCard" frontText="Lorem" backText="Ipsum"></div>
+
+STUFF!!!!
+
+</body>
+</html>

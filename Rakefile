@@ -49,20 +49,26 @@ namespace :testjs do
     installer.install_dojo_source
     
     src_drails_js = File.join(DRAILS_PATH, 'javascripts', 'drails')
+    puts "SRC: #{src_drails_js}"
     dest_drails_js = File.join(TESTAPP_PATH, 'public', 'javascripts', 'dojo', 'drails')
+    puts "DEST: #{dest_drails_js}"
 
-    RakeDrails.safe_ln(src_drails_js, dest_drails_js)
+    RakeDrails.safe_ln("javascripts/drails", dest_drails_js)
   end
 
   desc 'Tear down the d-rails development environment.'
   task :teardown do
     delete_files = ['testapp/javascripts/public/dojo/drails'].each do |file|
-      rm file if File.exists? file
-      puts "removed #{file}"
+      if File.exists? file
+        rm file 
+        puts "removed #{file}"
+      end
     end
     rm_rf_dirs = ['testapp/public/javascripts/dojo'].each do |dir|
-      FileUtils::rm_rf dir if File.directory?(dir)
-      puts "removed #{dir}"
+      if File.directory?(dir)
+        FileUtils::rm_rf dir
+        puts "removed #{dir}"
+      end
     end
   end
 end
