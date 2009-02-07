@@ -1,6 +1,7 @@
 require 'rake'
 require 'spec/rake/spectask'
 require 'rake/rdoctask'
+require 'installer'
 
 desc 'Default: run specs.'
 task :default => :test
@@ -11,13 +12,6 @@ Spec::Rake::SpecTask.new(:spec) do |t|
   t.libs << File.dirname(__FILE__)
   t.spec_files = FileList['spec/**/*_spec.rb']
 end
-
-#Rake::TestTask.new(:test) do |t|
-#  t.libs << 'lib'
-#  t.libs << 'test'
-#  t.pattern = 'test/**/*_test.rb'
-#  t.verbose = true
-#end
 
 desc 'Generate documentation for the drails plugin.'
 Rake::RDocTask.new(:rdoc) do |rdoc|
@@ -44,26 +38,16 @@ module RakeDrails
   end
 end
 
+DRAILS_PATH = File.dirname(__FILE__)
+TESTAPP_PATH = File.join(File.dirname(__FILE__), "testapp")
 
-namespace :dev do
+namespace :testjs do
   desc 'Setup the d-rails development environment.'
   task :setup do
-    RakeDrails.safe_ln(DRAILS_PATH, 'testapp/vendor/plugins/drails')
-    RakeDrails.safe_ln(RAILS_PATH, 'testapp/vendor/rails')
-
-    # Install dojo source from dojo-pkg
-    require 'dojo-pkg'
-    puts "**  Installing dojo source into your application..."
-    begin
-      cmd = Dojo::Commands::Dojofy.new
-      Dir.chdir(TESTAPP_PATH) do
-        cmd.install
-      end
-    rescue Dojo::Errors::DojofyError => e
-      warn "**  Dojo was not reinstalled.  Most likely you already dojofied this app."
-    end
-
-    # Temporary while working with jmole to figure out why these files are here instead of in drails.common
+    installer = Drails::Installer.new(TESTAPP_PATH, DRAILS_PATH)
+    installer.require_prerequisites!
+    installer.install_dojo_source
+    
     src_drails_js = File.join(DRAILS_PATH, 'javascripts', 'drails')
     dest_drails_js = File.join(TESTAPP_PATH, 'public', 'javascripts', 'dojo', 'drails')
 
@@ -72,9 +56,13 @@ namespace :dev do
 
   desc 'Tear down the d-rails development environment.'
   task :teardown do
-    delete_files = ['testapp/javascripts/public/dojo/drails', 'testapp/vendor/plugins/drails', 'testapp/vendor/rails'].each do |file|
+    delete_files = ['testapp/javascripts/public/dojo/drails'].each do |file|
       rm file if File.exists? file
+      puts "removed #{file}"
     end
-    FileUtils::rm_rf 'testapp/public/javascripts/dojo' if File.exists? "testapp/public/javascripts/dojo"
+    rm_rf_dirs = ['testapp/public/javascripts/dojo'].each do |dir|
+      FileUtils::rm_rf dir if File.directory?(dir)
+      puts "removed #{dir}"
+    end
   end
 end
