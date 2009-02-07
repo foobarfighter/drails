@@ -22,15 +22,33 @@
 		dojo.registerModulePath("drails", "/javascripts/dojo/drails");
 		dojo.require("drails.common");
 
+		var successDiv = "success_div";
+		var failureDiv = "failure_div";
+		var updaterDiv = "updater_div";
+
+		function isEmpty(str){
+			return str != null && str.length > 0;
+		}
+		
+		function resetDivs(){
+			dojo.byId(successDiv).innerHTML = "success";
+			dojo.byId(failureDiv).innerHTML = "failure";
+			dojo.byId(updaterDiv).innerHTML = "update";
+		}
+
         function setUp(t){
-       		
+			
         }
 
         function tearDown(t){
         }
 
         function testOnSuccessCallback(t){
-            //var updater = new drails.Updater("updater_div", "/success/updater", { onSuccess: function() { alert("onSuccess!") } });
+			var callbackCalled = false;
+			var d = new doh.Deferred();
+			setTimeout(function() { d.callback(callbackCalled); }, 1000);
+			var updater = new drails.Updater(updaterDiv, "/success/updater", { onSuccess: function() { callbackCalled = true } });
+			return d;
         }
 
 		function testOnFailureCallback(t){
@@ -45,10 +63,58 @@
 			catch (e) { error = e; }
 			t.is("onUninitialized is not a supported drails operation", error);
 		}
+		
+		function testUpdaterDivChangedWhenSuccessful(t){
+			resetDivs();
+			var updaterDivHTML = dojo.byId(updaterDiv).innerHTML;
+			t.f(!isEmpty(updaterDivHTML));
+			
+			var d = new doh.Deferred();
+			setTimeout(function() { d.callback(updaterDivHTML != dojo.byId(updaterDiv).innerHTML); }, 1000);
+			var updater = new drails.Updater(updaterDiv, "/success/updater");
+			
+			return d;
+		}
+
+		function testUpdaterDivChangedWhenFailure(t){
+			resetDivs();
+			var updaterDivHTML = dojo.byId(updaterDiv).innerHTML;
+			t.f(!isEmpty(updaterDivHTML));
+			
+			var d = new doh.Deferred();
+			setTimeout(function() { d.callback(updaterDivHTML != dojo.byId(updaterDiv).innerHTML); }, 1000);
+			var updater = new drails.Updater(updaterDiv, "/failure/updater");
+			
+			return d;
+		}
+		
+		function testSuccessDivChangedWhenSuccessful(t){
+			resetDivs();
+			var successDivHTML = dojo.byId(successDiv).innerHTML;
+			t.f(!isEmpty(successDivHTML));
+			
+			var d = new doh.Deferred();
+			setTimeout(function() { d.callback(successDivHTML != dojo.byId(successDiv).innerHTML); }, 1000);
+			var updater = new drails.Updater({ success: successDiv }, "/success/updater");
+			
+			return d;
+		}
+
+		function testFailureDivChangedWhenFailure(t){
+			resetDivs();
+			var failureDivHTML = dojo.byId(failureDiv).innerHTML;
+			t.f(!isEmpty(failureDivHTML));
+			
+			var d = new doh.Deferred();
+			setTimeout(function() { d.callback(failureDivHTML != dojo.byId(failureDiv).innerHTML); }, 1000);
+			var updater = new drails.Updater({ failure: failureDiv }, "/failure/updater");
+			
+			return d;
+		}
 
 		dojo.addOnLoad(function(){
 			doh.registerGroup("drails.tests.prototypecompat",
-                [testOnSuccessCallback, testOnFailureCallback, testUnsupportedCallback],
+                [testOnSuccessCallback, testOnFailureCallback, testUnsupportedCallback, testUpdaterDivChangedWhenSuccessful, testUpdaterDivChangedWhenFailure, testSuccessDivChangedWhenSuccessful, testFailureDivChangedWhenFailure],
                 setUp,
                 tearDown
             );
@@ -59,8 +125,10 @@
 	</script>
 </head>
 <body class="tundra">
-
-<div id="updater_div">Updater div before response</div>
+	
+<div id="success_div">success</div>
+<div id="failure_div">failure</div>
+<div id="updater_div">updater</div>
 
 </body>
 </html>

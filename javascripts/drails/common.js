@@ -1,4 +1,5 @@
 dojo.provide("drails.common");
+dojo.require("dojo._base.xhr");
 
 drails._xhrMap = {
 	"before": 			null,
@@ -27,17 +28,25 @@ drails._xhrCallbackMap = {
 };
 
 dojo.declare("drails._base", null, {
-	interpolateXhr: function(xhrArgs) {
-		for (var item in xhrArgs) {
-			var cb = drails._xhrCallbackMap[item];
-			if (cb) {
-				this[item] = xhrArgs[item];
-				dojo.connect(this, cb, this, this[item]);
-			}
-			else {
-				this.unsupportedOperation(item)
+	interpolateXhr: function(url, xhrArgs) {
+		var dojoXhrArgs = { url: url };
+		for (var protoCallback in xhrArgs) {
+			var dojoCallback = drails._xhrCallbackMap[protoCallback];
+			if (dojoCallback) {		// Found callback mapping
+				// If a prototype callback handler exists on this object
+				if (this[protoCallback]) {
+				  dojo.connect(dojoXhrArgs, dojoCallback, this, protoCallback);
+				  if (xhrArgs[protoCallback]){
+					  dojo.connect(this, protoCallback, xhrArgs[protoCallback]);	// Connect the callback to the currently existing callback
+				  }
+				}	else if (xhrArgs[protoCallback]) {
+				  dojoXhrArgs[dojoCallback] = xhrArgs[protoCallback];
+				}
+			}	else {							// Did not find a callback mapping
+				this.unsupportedOperation(protoCallback);
 			}
 		}
+		return dojoXhrArgs;
 	},
 	
 	unsupportedOperation: function(callbackName){
@@ -45,32 +54,45 @@ dojo.declare("drails._base", null, {
 	}
 })
 
-dojo.declare("drails.Updater", [drails._base, dojo._base.xhr], {
+dojo.declare("drails.Updater", [drails._base], {
+  
+  _successNode: null,
+  _failureNode: null,
+  
 	constructor: function(target, url, xhrArgs) {
 		var dojoXhrArgs;
 		
-		//if (target) this.interpolateTargets(target);		
-		if (xhrArgs) dojoXhrArgs = this.interpolateXhr(xhrArgs);
-	}
+		xhrArgs = xhrArgs || {};
+		xhrArgs['onSuccess'] = xhrArgs['onSuccess'] || function() {};
+		xhrArgs['onFailure'] = xhrArgs['onFailure'] || function() {};
+		
+		if (target) this.interpolateTargets(target);		
+		if (xhrArgs) dojoXhrArgs = this.interpolateXhr(url, xhrArgs);
+		dojo.xhrGet(dojoXhrArgs);
+	},
 	
-	// interpolateTargets: function(target) {
-	// 		var successNode, failureNode;
-	// 		
-	// 		if (target instanceof String) {
-	// 			var updateNode = target;
-	// 			if (updateNode) {
-	// 				dojo.connect(this, "load", this, function(response, ioArgs) { dojo.byId(updateNode).innerHTML = response });
-	// 				dojo.connect(this, "failure", this, function(response, ioArgs) { dojo.byId(updateNode).innerHTML = response });
-	// 			}
-	// 		} else if (targets && targets instanceof Object) {
-	// 			var successNode = target["success"];
-	// 			var failureNode = target["failure"];
-	// 			if (successNode) {
-	// 				dojo.connect(this, "load", this, function(response, ioArgs) { dojo.byId(successNode).innerHTML = response });
-	// 			}
-	// 			if (failureNode) {
-	// 				dojo.connect(this, "failure", this, function(response, ioArgs) { dojo.byId(failureNode).innerHTML = response });
-	// 			}
-	// 		}
-	// 	}
+  onSuccess: function(response, ioArgs) {
+    if (this._successNode){
+      dojo.byId(this._successNode).innerHTML = response.toString();
+    }
+  },
+  
+  onFailure: function(response, ioArgs) {
+    if (this._failureNode){
+      dojo.byId(this._failureNode).innerHTML = response.toString();
+    }
+  },
+  
+  interpolateTargets: function(target){
+    if (typeof target == "string") {
+      this._successNode = this._failureNode = target;
+    } else if (typeof target == "object") {
+      this._successNode = target["success"];
+    	this._failureNode = target["failure"];
+    }
+    else {
+      throw new Error("Invalid target type");
+    }
+  }
+  
 });
