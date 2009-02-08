@@ -25,13 +25,39 @@
         dojo.require("doh.runner");
         dojo.require("drails.tests.ext");
         
-        // This adds all special spec methods to the global namespace... less typing wheeeeeeee!
-        // Otherwise you have methods like doh.spec, doh.before, doh.after, doh.it
         doh.pollute();
         
-        // doh.register under the hood.  Builds up a spec
-        spec("Some context for my test group", function() {
+        spec("drails.Request", function() {
+            it("calls the onSuccess callback", function(t){
+              var callbackCalled = false;
+              var d = new doh.Deferred();
+              setTimeout(function() { d.callback(callbackCalled); }, 1000);
+              var request = new drails.Request("/success/updater", { onSuccess: function() { callbackCalled = true } });
+              return d;
+            });
+
+            it("calls the onFailure callback", function(t){
+              var callbackCalled = false;
+              var d = new doh.Deferred();
+              setTimeout(function() { d.callback(callbackCalled); }, 1000);
+              var request = new drails.Request("/failure/updater", { onFailure: function() { callbackCalled = true } });
+              return d;
+            });
+
+            it("fails if passing an unsupported callback", function(t) {
+              var error = null;
+              try {
+                var request = new drails.Request("/success/updater", { onUninitialized: function() { alert("unsupported, this function shouldn't fire!") } });
+              }
+              catch (e) { error = e; }
+              t.is("onUninitialized is not a supported drails operation", error);
+            });
             
+            it("makes synchronous calls when asynchronous is false", function(t) {
+              var called = false
+              var request = new drails.Request("/success/updater", { asynchronous: false, onSuccess: function() { called = true } });
+              doh.is(called, true);
+            })
         });
 
         dojo.addOnLoad(function(){
