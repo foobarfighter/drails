@@ -1,0 +1,51 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+        "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+
+    <title>PrototypeCompat unit test</title>
+    <style type="text/css">
+        @import "../../../dojo/resources/dojo.css";
+        @import "../css/dijitTests.css";
+    </style>
+
+    <!-- required: the default dijit theme: -->
+    <link id="themeStyles" rel="stylesheet" href="../../../dijit/themes/tundra/tundra.css">
+
+    <!-- required: dojo.js -->
+    <script type="text/javascript" src="/javascripts/dojo/dojo/dojo.js"
+        djConfig="isDebug: true, parseOnLoad: true"></script>
+
+
+    <script type="text/javascript">
+        dojo.registerModulePath("drails", "/javascripts/dojo/drails");
+        dojo.require("drails.common");
+        dojo.require("drails.tests.helpers");
+        
+        dojo.require("doh.runner");
+        dojo.require("drails.tests.ext");
+        
+        // This adds all special spec methods to the global namespace... less typing wheeeeeeee!
+        // Otherwise you have methods like doh.spec, doh.before, doh.after, doh.it
+        doh.pollute();
+        
+        // doh.register under the hood.  Builds up a spec
+        spec("Some context for my test group", function() {
+            
+        });
+
+        dojo.addOnLoad(function(){
+            doh.spec.register();
+            doh.run();
+        });
+
+    </script>
+</head>
+<body class="tundra">
+    
+<div id="success_div">success</div>
+<div id="failure_div">failure</div>
+<div id="updater_div">updater</div>
+
+</body>
+</html>
