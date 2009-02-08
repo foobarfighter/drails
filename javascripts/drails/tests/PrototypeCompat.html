@@ -52,7 +52,11 @@
         }
 
 		function testOnFailureCallback(t){
-            //var updater = new drails.Updater("updater_div", "/failure/updater", { onFailure: function() { alert("onSuccess!") } });
+			var callbackCalled = false;
+			var d = new doh.Deferred();
+			setTimeout(function() { d.callback(callbackCalled); }, 1000);
+			var updater = new drails.Updater(updaterDiv, "/failure/updater", { onFailure: function() { callbackCalled = true } });
+			return d;
         }
 
 		function testUnsupportedCallback(t){
