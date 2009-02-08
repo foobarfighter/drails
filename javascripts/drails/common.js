@@ -54,21 +54,37 @@ dojo.declare("drails._base", null, {
 	}
 })
 
-dojo.declare("drails.Updater", [drails._base], {
+dojo.declare("drails.Request", [drails._base], {
+  _requestOnConstruction: true,
   
+  constructor: function(url, xhrArgs){
+    if (this._requestOnConstruction){
+      this.xhr(url, xhrArgs);
+    }
+  },
+  
+  xhr: function(url, xhrArgs) {
+    var dojoXhrArgs;
+    
+    if (xhrArgs) dojoXhrArgs = this.interpolateXhr(url, xhrArgs);
+		dojo.xhrGet(dojoXhrArgs);
+  }
+});
+
+
+dojo.declare("drails.Updater", [drails.Request], {
+  
+  _requestOnConstruction: false,
   _successNode: null,
   _failureNode: null,
-  
+	
 	constructor: function(target, url, xhrArgs) {
-		var dojoXhrArgs;
-		
-		xhrArgs = xhrArgs || {};
-		xhrArgs['onSuccess'] = xhrArgs['onSuccess'] || function() {};
-		xhrArgs['onFailure'] = xhrArgs['onFailure'] || function() {};
-		
-		if (target) this.interpolateTargets(target);		
-		if (xhrArgs) dojoXhrArgs = this.interpolateXhr(url, xhrArgs);
-		dojo.xhrGet(dojoXhrArgs);
+	  xhrArgs = xhrArgs || {};
+  	xhrArgs['onSuccess'] = xhrArgs['onSuccess'] || function() {};
+  	xhrArgs['onFailure'] = xhrArgs['onFailure'] || function() {};
+
+  	if (target) this.interpolateTargets(target);
+  	this.xhr(url, xhrArgs);
 	},
 	
   onSuccess: function(response, ioArgs) {
