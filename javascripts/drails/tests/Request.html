@@ -57,7 +57,14 @@
               var called = false
               var request = new drails.Request("/success/updater", { asynchronous: false, onSuccess: function() { called = true } });
               doh.is(called, true);
-            })
+            });
+            
+            it("still returns successfully if a param is mapped to 'noop' dojoXhrArg", function(t) {
+              var called = false
+              var request = new drails.Request("/success/updater", { asynchronous: false, evalScripts: true, onSuccess: function() { called = true } });
+              doh.is(request._transformedArgs["noop"] === null, true);
+              doh.is(called, true);
+            });
         });
 
         dojo.addOnLoad(function(){

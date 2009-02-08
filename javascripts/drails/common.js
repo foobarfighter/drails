@@ -12,7 +12,7 @@ drails._xhrMap = {
   "form":         null,
   "with":         null,
   "update":       null,
-  "script":       null,
+  "evalScripts":  [ "noop", function(v) { return null; } ],
   "type":         null
 };
 
@@ -21,7 +21,7 @@ drails._xhrCallbackMap = {
   "onLoading":        null,
   "onLoaded":         null,
   "onInteractive":    null,
-  "onComplete":       null,
+  "onComplete":       null,   // handle ?
   "onFailure":        "error",
   "onSuccess":        "load"
   // TODO 100..599
@@ -73,6 +73,7 @@ dojo.declare("drails._base", null, {
 
 dojo.declare("drails.Request", [drails._base], {
   _requestOnConstruction: true,
+  _transformedArgs: null,
   
   constructor: function(url, xhrArgs){
     if (this._requestOnConstruction){
@@ -85,6 +86,7 @@ dojo.declare("drails.Request", [drails._base], {
     
     if (xhrArgs) dojo.mixin(dojoXhrArgs, this.transformSettings(xhrArgs));
     if (xhrArgs) dojo.mixin(dojoXhrArgs, this.transformCallbacks(url, xhrArgs));
+    this._transformedArgs = dojoXhrArgs;
     dojo.xhrGet(dojoXhrArgs);
   }
 });
