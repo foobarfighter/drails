@@ -65,6 +65,23 @@
               doh.is(request._transformedArgs["noop"] === null, true);
               doh.is(called, true);
             });
+            
+            it("defaults to 'GET' method when no method is passed", function(t) {
+              var called = false
+              var request = new drails.Request("/success/updater", { asynchronous: false, evalScripts: true, onSuccess: function() { called = true } });
+              doh.is(request._transformedMethod, "get");
+              doh.is(called, true);
+            });
+            
+            it("posts when 'POST' passed as the method", function(t) {
+              var called = false;
+              var d = new doh.Deferred();
+              setTimeout(function() { d.callback(called); }, 1000);
+              // This route fails on an HTTP post
+              var request = new drails.Request("/success/updater", { method: "POST", evalScripts: true, onFailure: function() { called = true } });
+              doh.is(request._transformedMethod, "post");
+              return d;
+            });
         });
 
         dojo.addOnLoad(function(){

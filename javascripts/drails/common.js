@@ -6,7 +6,7 @@ drails._xhrMap = {
   "after":        null,
   "condition":    null,
   "asynchronous": [ "sync", function(v) { return !v; } ],
-  "method":       null,
+  "method":       [ "method", function(v) { return v.toLowerCase(); } ],
   "insertion":    null,
   "position":     null,
   "form":         null,
@@ -74,6 +74,7 @@ dojo.declare("drails._base", null, {
 dojo.declare("drails.Request", [drails._base], {
   _requestOnConstruction: true,
   _transformedArgs: null,
+  _transformedMethod: null,
   
   constructor: function(url, xhrArgs){
     if (this._requestOnConstruction){
@@ -86,8 +87,10 @@ dojo.declare("drails.Request", [drails._base], {
     
     if (xhrArgs) dojo.mixin(dojoXhrArgs, this.transformSettings(xhrArgs));
     if (xhrArgs) dojo.mixin(dojoXhrArgs, this.transformCallbacks(url, xhrArgs));
+    this._transformedMethod = dojoXhrArgs['method'] || 'get';
     this._transformedArgs = dojoXhrArgs;
-    dojo.xhrGet(dojoXhrArgs);
+    console.debug("-----------------------------> METHOD", this._transformedMethod);
+    dojo.xhr(this._transformedMethod, this._transformedArgs);
   }
 });
 
