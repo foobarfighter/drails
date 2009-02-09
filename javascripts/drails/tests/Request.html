@@ -82,6 +82,21 @@
               doh.is(request._transformedMethod, "post");
               return d;
             });
+            
+            it("sends parameters when parameters are passed", function(t) {
+              var success = false;
+              var d = new doh.Deferred();
+              setTimeout(function() { d.callback(success); }, 1000);
+              var request = new drails.Request("/success/updater", {
+                  method: "GET",
+                  evalScripts: true,
+                  parameters: "foo=bar",
+                  onSuccess: function(response, ioArgs) {
+                    success = (ioArgs.args.content.foo == 'bar');
+                  }
+                });
+              return d;
+            });
         });
 
         dojo.addOnLoad(function(){
@@ -92,10 +107,6 @@
     </script>
 </head>
 <body class="tundra">
-    
-<div id="success_div">success</div>
-<div id="failure_div">failure</div>
-<div id="updater_div">updater</div>
 
 </body>
 </html>

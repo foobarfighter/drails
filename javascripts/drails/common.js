@@ -8,9 +8,9 @@ drails._xhrMap = {
   "asynchronous": [ "sync", function(v) { return !v; } ],
   "method":       [ "method", function(v) { return v.toLowerCase(); } ],
   "insertion":    null,
+  "parameters":   [ "content", function(v) { return dojo.queryToObject(v); } ],
   "position":     null,
-  "form":         null,
-  "with":         null,
+//  "with":         null,
   "update":       null,
   "evalScripts":  [ "noop", function(v) { return null; } ],
   "type":         null
@@ -59,12 +59,24 @@ dojo.declare("drails._base", null, {
           dojoSetting = value[0];
           value = value[1](xhrArgs[setting]);
         }
+        else {
+          value = xhrArgs[setting];
+        }
         dojoXhrArgs[dojoSetting] = value;
         delete xhrArgs[setting];
       }
     }
     return dojoXhrArgs;
   },
+  
+  /* transformParameters function(xhrArgs) {
+    var dojoXhrArgs = {};
+    if (xhrArgs['parameters']){
+      dojoXhrArgs['content'] = 
+    }
+    
+    return dojoXhrArgs;
+  }, */
   
   unsupportedOperation: function(callbackName){
     throw(callbackName + " is not a supported drails operation");
@@ -85,11 +97,15 @@ dojo.declare("drails.Request", [drails._base], {
   xhr: function(url, xhrArgs) {
     var dojoXhrArgs = {};
     
-    if (xhrArgs) dojo.mixin(dojoXhrArgs, this.transformSettings(xhrArgs));
-    if (xhrArgs) dojo.mixin(dojoXhrArgs, this.transformCallbacks(url, xhrArgs));
+    if (xhrArgs) {
+      //dojo.mixin(dojoXhrArgs), this.transformParameters(xhrArgs);
+      dojo.mixin(dojoXhrArgs, this.transformSettings(xhrArgs));
+      dojo.mixin(dojoXhrArgs, this.transformCallbacks(url, xhrArgs));
+    }
     this._transformedMethod = dojoXhrArgs['method'] || 'get';
     this._transformedArgs = dojoXhrArgs;
     console.debug("-----------------------------> METHOD", this._transformedMethod);
+    console.debug("-----------------------------> ARGS", this._transformedArgs);
     dojo.xhr(this._transformedMethod, this._transformedArgs);
   }
 });
