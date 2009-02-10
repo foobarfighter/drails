@@ -6,11 +6,15 @@ require 'installer'
 desc 'Default: run specs.'
 task :default => :test
 
-desc 'Test the drails plugin.'
-Spec::Rake::SpecTask.new(:spec) do |t|
+desc 'Runs the d-rails ruby specs.'
+Spec::Rake::SpecTask.new(:runspec) do |t|
   t.libs << 'lib'
   t.libs << File.dirname(__FILE__)
   t.spec_files = FileList['spec/**/*_spec.rb']
+end
+
+desc 'Test the d-rails ruby specs'
+task :spec  => ['testjs:teardown', 'runspec'] do
 end
 
 desc 'Generate documentation for the drails plugin.'
@@ -49,11 +53,15 @@ namespace :testjs do
     installer.install_dojo_source
     
     src_drails_js = File.join(DRAILS_PATH, 'javascripts', 'drails')
-    puts "SRC: #{src_drails_js}"
     dest_drails_js = File.join(TESTAPP_PATH, 'public', 'javascripts', 'dojo', 'drails')
-    puts "DEST: #{dest_drails_js}"
 
     RakeDrails.safe_ln("javascripts/drails", dest_drails_js)
+  end
+  
+  desc 'Fire up a web browser and run the d-rails javascript tests'
+  task :spec => [ :teardown, :setup ] do
+    `cd testapp; script/server 2>&1 > /dev/null &`
+    `open http://localhost:3000/javascripts/dojo/drails/tests/runTests.html`
   end
 
   desc 'Tear down the d-rails development environment.'

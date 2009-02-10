@@ -92,6 +92,50 @@ describe Drails::PrototypeHelper do
         helper_output.should == "new drails.Request('http://somemockurl.com', {asynchronous:true, evalScripts:true, onSuccess:function(request){function(){alert('complete')}}})"
       end
     end
+    
+    describe "when a browser-side condition is passed" do
+      before do
+        @helper_output = test_view.remote_function( :condition => "x == y" )
+        helper_output.should_not be_blank
+      end
+      
+      it "return the drails.Request wrapped in a condition" do
+        helper_output.should == "if (x == y) { new drails.Request('http://somemockurl.com', {asynchronous:true, evalScripts:true}); }"
+      end
+    end
+    
+    describe "when :with is passed" do
+      before do
+        @helper_output = test_view.remote_function( :with => "'baz=bang'" )
+        helper_output.should_not be_blank
+      end
+      
+      it "return the drails.Request with additional parameters" do
+        helper_output.should == "new drails.Request('http://somemockurl.com', {asynchronous:true, evalScripts:true, parameters:'baz=bang'})"
+      end
+    end
+    
+    describe "when :before is passed" do
+      before do
+        @helper_output = test_view.remote_function( :before => "alert('test')" )
+        helper_output.should_not be_blank
+      end
+      
+      it "return the drails.Request with a client-side statement preceding the request" do
+        helper_output.should == "alert('test'); new drails.Request('http://somemockurl.com', {asynchronous:true, evalScripts:true})"
+      end
+    end
+    
+    describe "when :after is passed" do
+      before do
+        @helper_output = test_view.remote_function( :after => "alert('test')" )
+        helper_output.should_not be_blank
+      end
+      
+      it "return the drails.Request with a client-side statement following the request" do
+        helper_output.should == "new drails.Request('http://somemockurl.com', {asynchronous:true, evalScripts:true}); alert('test')"
+      end
+    end
   end
 
   describe "#options_for_ajax" do

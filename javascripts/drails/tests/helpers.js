@@ -1,5 +1,6 @@
 dojo.provide("drails.tests.helpers");
 
-function isEmpty(str){
+dojo.global.isEmpty = function(str){
 	return str != null && str.length > 0;
 }
+

@@ -2,18 +2,12 @@ dojo.provide("drails.common");
 dojo.require("dojo._base.xhr");
 
 drails._xhrMap = {
-  "before":       null,
-  "after":        null,
-  "condition":    null,
   "asynchronous": [ "sync", function(v) { return !v; } ],
   "method":       [ "method", function(v) { return v.toLowerCase(); } ],
   "insertion":    null,
   "parameters":   [ "content", function(v) { return dojo.queryToObject(v); } ],
   "position":     null,
-//  "with":         null,
-  "update":       null,
-  "evalScripts":  [ "noop", function(v) { return null; } ],
-  "type":         null
+  "evalScripts":  [ "noop", function(v) { return null; } ]
 };
 
 drails._xhrCallbackMap = {
