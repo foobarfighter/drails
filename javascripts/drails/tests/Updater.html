@@ -31,7 +31,25 @@
     var failureDiv = "failure_div";
     var updaterDiv = "updater_div";
     var multiNodeUpdaterDiv = "multi_node_updater_div";
-
+    
+    function compareHtml(refNode, htmlString, position) {
+      var propertyMap = {
+        "top":    "firstChild",
+        "bottom": "lastChild",
+        "before": "previousSibling",
+        "after":  "nextSibling"
+      };
+      
+      var node = dojo.byId(refNode);
+      var response = dojo.doc.createElement("span");
+      response.innerHTML = htmlString;
+      
+      var actual = dojo.doc.createElement("span");
+      actual.appendChild(dojo.clone(node[propertyMap[position]]));
+      
+      return (response.innerHTML == actual.innerHTML);
+    }
+    
     spec("drails.Updater", function() {
       var updaterDivHTML, successDivHTML, failureDivHTML, multiNodeUpdaterDivHTML;
       
@@ -89,16 +107,36 @@
       it("updates the updaterDiv when it's successful in the 'top' position", function(t) {
         var d = new doh.Deferred();
         setTimeout(function() {
-            var node = dojo.byId(multiNodeUpdaterDiv);
-            var response = dojo.doc.createElement("span");
-            response.innerHTML = content.toString();
-            
-            var actual = dojo.doc.createElement("span");
-            actual.appendChild(dojo.clone(node.firstChild));
-            
-            d.callback(response.innerHTML ==  actual.innerHTML);
+            d.callback(compareHtml(multiNodeUpdaterDiv, content.toString(), 'top'));
           }, 500);
         var updater = new drails.Updater(multiNodeUpdaterDiv, "/success/updater", { onSuccess: function(response) { content = response }, insertion: 'top' });
+        return d;
+      });
+      
+      it("updates the updaterDiv when it's successful in the 'bottom' position", function(t) {
+        var d = new doh.Deferred();
+        setTimeout(function() {
+            d.callback(compareHtml(multiNodeUpdaterDiv, content.toString(), 'bottom'));
+          }, 500);
+        var updater = new drails.Updater(multiNodeUpdaterDiv, "/success/updater", { onSuccess: function(response) { content = response }, insertion: 'bottom' });
+        return d;
+      });
+      
+      it("updates the updaterDiv when it's successful in the 'before' position", function(t) {
+        var d = new doh.Deferred();
+        setTimeout(function() {
+            d.callback(compareHtml(multiNodeUpdaterDiv, content.toString(), 'before'));
+          }, 500);
+        var updater = new drails.Updater(multiNodeUpdaterDiv, "/success/updater", { onSuccess: function(response) { content = response }, insertion: 'before' });
+        return d;
+      });
+      
+      it("updates the updaterDiv when it's successful in the 'after' position", function(t) {
+        var d = new doh.Deferred();
+        setTimeout(function() {
+            d.callback(compareHtml(multiNodeUpdaterDiv, content.toString(), 'after'));
+          }, 500);
+        var updater = new drails.Updater(multiNodeUpdaterDiv, "/success/updater", { onSuccess: function(response) { content = response }, insertion: 'after' });
         return d;
       });
       
