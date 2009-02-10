@@ -82,6 +82,16 @@ describe Drails::PrototypeHelper do
       end
     end
     
+    describe "when :position is passed" do
+      before do
+        @helper_output = test_view.remote_function( :update => "some_div", :position => :top )
+        helper_output.should_not be_blank
+      end
+      it "returns the drails.Updater with an 'insertion' option" do
+        helper_output.should == "new drails.Updater('some_div', 'http://somemockurl.com', {asynchronous:true, evalScripts:true, insertion:'top'})"
+      end
+    end
+    
     describe "when callbacks are passed" do
       before do
         @helper_output = test_view.remote_function( :success => "function(){alert('complete')}" )

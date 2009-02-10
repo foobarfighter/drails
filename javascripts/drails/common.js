@@ -1,12 +1,18 @@
 dojo.provide("drails.common");
 dojo.require("dojo._base.xhr");
 
+drails._insertionMap = {
+  "top":     "first",
+  "bottom":  "last",
+  "before":  "before",
+  "after":   "after"
+};
+
 drails._xhrMap = {
   "asynchronous": [ "sync", function(v) { return !v; } ],
   "method":       [ "method", function(v) { return v.toLowerCase(); } ],
-  "insertion":    null,
+  "insertion":    [ "place", function(v) { return drails._insertionMap[v] }],
   "parameters":   [ "content", function(v) { return dojo.queryToObject(v); } ],
-  "position":     null,
   "evalScripts":  [ "noop", function(v) { return null; } ]
 };
 
@@ -63,15 +69,6 @@ dojo.declare("drails._base", null, {
     return dojoXhrArgs;
   },
   
-  /* transformParameters function(xhrArgs) {
-    var dojoXhrArgs = {};
-    if (xhrArgs['parameters']){
-      dojoXhrArgs['content'] = 
-    }
-    
-    return dojoXhrArgs;
-  }, */
-  
   unsupportedOperation: function(callbackName){
     throw(callbackName + " is not a supported drails operation");
   }
@@ -92,14 +89,11 @@ dojo.declare("drails.Request", [drails._base], {
     var dojoXhrArgs = {};
     
     if (xhrArgs) {
-      //dojo.mixin(dojoXhrArgs), this.transformParameters(xhrArgs);
       dojo.mixin(dojoXhrArgs, this.transformSettings(xhrArgs));
       dojo.mixin(dojoXhrArgs, this.transformCallbacks(url, xhrArgs));
     }
     this._transformedMethod = dojoXhrArgs['method'] || 'get';
     this._transformedArgs = dojoXhrArgs;
-    console.debug("-----------------------------> METHOD", this._transformedMethod);
-    console.debug("-----------------------------> ARGS", this._transformedArgs);
     dojo.xhr(this._transformedMethod, this._transformedArgs);
   }
 });
@@ -122,7 +116,14 @@ dojo.declare("drails.Updater", [drails.Request], {
   
   onSuccess: function(response, ioArgs) {
     if (this._successNode){
-      dojo.byId(this._successNode).innerHTML = response.toString();
+      var node = dojo.byId(this._successNode);
+      if (ioArgs.args['place']) {
+        var nodeHTML = dojo.doc.createElement("span");
+        nodeHTML.innerHTML = response.toString();
+        dojo.place(dojo.clone(nodeHTML.firstChild), node, ioArgs.args['place']);
+      } else {
+        node.innerHTML = response.toString();
+      }
     }
   },
   
