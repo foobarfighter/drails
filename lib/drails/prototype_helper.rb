@@ -48,6 +48,15 @@ module Drails
       
       return function
     end
+    
+    def submit_to_remote_with_dojo(name, value, options = {})
+      options[:with] ||= 'dojo.formToQuery(this.form)'
+
+      html_options = options.delete(:html) || {}
+      html_options[:name] = name
+
+      button_to_remote(value, options, html_options)
+    end
 
     protected
 

@@ -18,6 +18,7 @@ module Drails
 
         alias_method_chain :periodically_call_remote, :dojo
         alias_method_chain :remote_function, :dojo
+        alias_method_chain :submit_to_remote, :dojo
 
         protected
         alias_method_chain :options_for_ajax, :dojo

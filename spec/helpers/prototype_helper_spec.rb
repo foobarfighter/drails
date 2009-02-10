@@ -15,6 +15,7 @@ require File.join(File.dirname(__FILE__), "../spec_helper.rb")
 class TestView
   include ActionView::Helpers::PrototypeHelper
   include ActionView::Helpers::JavaScriptHelper
+  include ActionView::Helpers::TagHelper
 
   def url_for(params)
     return "http://somemockurl.com"
@@ -145,6 +146,18 @@ describe Drails::PrototypeHelper do
       it "return the drails.Request with a client-side statement following the request" do
         helper_output.should == "new drails.Request('http://somemockurl.com', {asynchronous:true, evalScripts:true}); alert('test')"
       end
+    end
+  end
+  
+  describe "#submit_to_remote" do
+    attr_reader :helper_output
+    before do
+      @helper_output = test_view.submit_to_remote( 'my_name', 'my_value' )
+      helper_output.should_not be_blank
+    end
+    
+    it "returns a form submit" do
+      helper_output.should == "<input name=\"my_name\" onclick=\"new drails.Request('http://somemockurl.com', {asynchronous:true, evalScripts:true, parameters:dojo.formToQuery(this.form)});\" type=\"button\" value=\"my_value\" />"
     end
   end
 
