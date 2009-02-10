@@ -12,24 +12,6 @@
 
 require File.join(File.dirname(__FILE__), "../spec_helper.rb")
 
-class TestView
-  include ActionView::Helpers::PrototypeHelper
-  include ActionView::Helpers::JavaScriptHelper
-  include ActionView::Helpers::TagHelper
-
-  def url_for(params)
-    return "http://somemockurl.com"
-  end
-
-  def protect_against_forgery?
-    false
-  end
-  
-  def request_forgery_protection_token
-    "my_request_forgery_protection_token"
-  end
-end
-
 describe Drails::PrototypeHelper do
   attr_reader :test_view
   before do

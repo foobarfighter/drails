@@ -10,9 +10,20 @@
 #                                                                  #
 ####################################################################
 
-require 'drails/error'
-require 'drails/dojo_helper.rb'
-require 'drails/prototype_helper'
-require 'drails/prototype_override'
-require 'drails/scriptaculous_helper'
-require 'drails/scriptaculous_override'
+module Drails
+  module ScriptaculousOverride
+    
+    def ScriptaculousOverride.override
+      ::ActionView::Helpers::ScriptaculousHelper.module_eval do
+        include Drails::ScriptaculousHelper
+        
+        alias_method_chain :visual_effect, :dojo
+        alias_method_chain :sortable_element_js, :dojo
+        alias_method_chain :draggable_element_js, :dojo
+        alias_method_chain :drop_receiving_element_js, :dojo
+        
+      end
+    end
+    
+  end
+end

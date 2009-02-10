@@ -1,9 +1,7 @@
 require 'rubygems'
-require 'activesupport'
-require 'actionpack'
-require 'action_view'
 require 'drails'
 require 'installer'
+require File.join(File.dirname(__FILE__), 'test_view')
 
 
 require 'spec'

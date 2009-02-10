@@ -1,9 +1,5 @@
 require File.join(File.dirname(__FILE__), "../spec_helper.rb")
 
-class TestView
-  include ActionView::Helpers::PrototypeHelper
-end
-
 describe Drails::PrototypeOverride do
   describe ".override" do
 
@@ -11,7 +7,6 @@ describe Drails::PrototypeOverride do
       test_alias_method_chained(::ActionView::Helpers::PrototypeHelper, :periodically_call_remote, :dojo) do
         Drails::PrototypeOverride.override
       end.should be_true
-
     end
 
     it "overrides ActionView::Helpers::PrototypeHelper.remote_function" do
