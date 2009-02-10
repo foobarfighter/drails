@@ -115,22 +115,11 @@ dojo.declare("drails.Updater", [drails.Request], {
   },
   
   onSuccess: function(response, ioArgs) {
-    if (this._successNode){
-      var node = dojo.byId(this._successNode);
-      if (ioArgs.args['place']) {
-        var nodeHTML = dojo.doc.createElement("span");
-        nodeHTML.innerHTML = response.toString();
-        dojo.place(dojo.clone(nodeHTML.firstChild), node, ioArgs.args['place']);
-      } else {
-        node.innerHTML = response.toString();
-      }
-    }
+    this._placeHTML(response, ioArgs, this._successNode);
   },
   
   onFailure: function(response, ioArgs) {
-    if (this._failureNode){
-      dojo.byId(this._failureNode).innerHTML = response.toString();
-    }
+    this._placeHTML(response, ioArgs, this._failureNode);
   },
   
   interpolateTargets: function(target){
@@ -142,6 +131,19 @@ dojo.declare("drails.Updater", [drails.Request], {
     }
     else {
       throw new Error("Invalid target type");
+    }
+  },
+  
+  _placeHTML: function(response, ioArgs, target) {
+    if (target){
+      var node = dojo.byId(target);
+      if (ioArgs.args['place']) {
+        var nodeHTML = dojo.doc.createElement("span");
+        nodeHTML.innerHTML = response.toString();
+        dojo.place(dojo.clone(nodeHTML.firstChild), node, ioArgs.args['place']);
+      } else {
+        node.innerHTML = response.toString();
+      }
     }
   }
   
