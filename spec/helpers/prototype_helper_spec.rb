@@ -160,6 +160,18 @@ describe Drails::PrototypeHelper do
       helper_output.should == "<input name=\"my_name\" onclick=\"new drails.Request('http://somemockurl.com', {asynchronous:true, evalScripts:true, parameters:dojo.formToQuery(this.form)});\" type=\"button\" value=\"my_value\" />"
     end
   end
+  
+  describe "#observe_field" do
+    it "pending specs" do
+      pending
+    end
+  end
+  
+  describe "#observe_form" do
+    it "pending specs" do
+      pending
+    end
+  end
 
   describe "#options_for_ajax" do
     attr_reader :default_options
