@@ -60,9 +60,11 @@ module Drails
     
     def observe_field_with_dojo(field_id, options = {})
       if options[:frequency] && options[:frequency] > 0
-        build_observer('Form.Element.Observer', field_id, options)
+        #build_observer('Form.Element.Observer', field_id, options)
+        build_observer('drails.Observer', field_id, options)
       else
-        build_observer('Form.Element.EventObserver', field_id, options)
+        #build_observer('Form.Element.EventObserver', field_id, options)
+        build_observer('drails.EventObserver', field_id, options)
       end
     end
     

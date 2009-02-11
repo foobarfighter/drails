@@ -144,8 +144,28 @@ describe Drails::PrototypeHelper do
   end
   
   describe "#observe_field" do
-    it "pending specs" do
-      pending
+    attr_reader :helper_output
+    
+    describe "when the default parameters are passed" do
+      before do
+        @helper_output = test_view.observe_field("some_field")
+        helper_output.should_not be_blank
+      end
+      
+      it "returns a drails.EventObserver" do
+        helper_output.should == "<script type=\"text/javascript\">\n//<![CDATA[\nnew drails.EventObserver('some_field', function(element, value) {new drails.Request('http://somemockurl.com', {asynchronous:true, evalScripts:true, parameters:value})})\n//]]>\n</script>"
+      end
+    end
+    
+    describe "when frequency is passed" do
+      before do
+        @helper_output = test_view.observe_field("some_field", :frequency => 100)
+        helper_output.should_not be_blank
+      end
+      
+      it "returns a drails.Event" do
+        helper_output.should == "<script type=\"text/javascript\">\n//<![CDATA[\nnew drails.Observer('some_field', 100, function(element, value) {new drails.Request('http://somemockurl.com', {asynchronous:true, evalScripts:true, parameters:value})})\n//]]>\n</script>"
+      end
     end
   end
   
