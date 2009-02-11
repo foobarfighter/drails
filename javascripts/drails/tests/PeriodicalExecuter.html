@@ -1,0 +1,97 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+
+  <title>PrototypeCompat unit test</title>
+  <style type="text/css">
+    @import "../../../dojo/resources/dojo.css";
+    @import "../css/dijitTests.css";
+  </style>
+
+  <!-- required: the default dijit theme: -->
+  <link id="themeStyles" rel="stylesheet" href="../../../dijit/themes/tundra/tundra.css">
+
+  <!-- required: dojo.js -->
+  <script type="text/javascript" src="/javascripts/dojo/dojo/dojo.js"
+    djConfig="isDebug: true, parseOnLoad: true"></script>
+
+
+  <script type="text/javascript">
+    
+    dojo.registerModulePath("drails", "/javascripts/dojo/drails");
+    dojo.require("doh.runner");
+    dojo.require("drails.tests.ext");
+    doh.pollute();
+    
+    dojo.require("drails.common");
+    dojo.require("drails.tests.helpers");
+    
+    spec("drails.PeriodicalExecuter", function() {
+      var oldRegisterCallback, called;
+  
+      before(function(t){
+        called = false;
+        oldRegisterCallback = drails.PeriodicalExecuter.prototype.registerCallback;
+        drails.PeriodicalExecuter.prototype.registerCallback = function() {
+          called = true;
+        }
+      });
+  
+      after(function(t){
+        drails.PeriodicalExecuter.prototype.registerCallback = oldRegisterCallback;
+      });
+  
+      it("registers a callback function", function(t) {
+        new drails.PeriodicalExecuter(function() { return true; }, 1);
+        t.t(called);
+      });
+  
+    });
+
+    spec("callback execution", function(){
+      
+      //it("passes the drails.PeriodicalExecuter instance as an argument to the callback");
+    
+      //it("executes the callback in the context of the drails.PeriodicalExecuter");
+      
+      it("calls the callback in the specified interval", function(t){
+        var d = new doh.Deferred();
+        var samples = new Array();
+        var toleranceMillis = 50;
+        var tTimeMillis = 1000;
+        var intervalTimeMillis = 200;
+        var callCount = 0;
+      
+        setTimeout(function() {
+            var sum = 0;
+            dojo.forEach(samples, function(item, index, array) { sum += item });
+            var average = sum / samples.length;
+            
+            d.callback(intervalTimeMillis - toleranceMillis < average &&
+              average < intervalTimeMillis + toleranceMillis &&
+              callCount >= tTimeMillis/intervalTimeMillis - 2);
+          }, tTimeMillis);
+        
+          var tic = new Date().getTime();
+          var e = new drails.PeriodicalExecuter(function() {
+              var toc = new Date().getTime();
+              samples.push(toc - tic);
+              callCount++;
+              tic = new Date().getTime();
+            }, intervalTimeMillis/1000);
+        return d;
+      });
+    });
+    
+    dojo.addOnLoad(function(){
+      doh.spec.register();
+      doh.run();
+    });
+
+  </script>
+</head>
+<body class="tundra">
+
+</body>
+</html>

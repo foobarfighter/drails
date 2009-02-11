@@ -1,0 +1,49 @@
+Possible Contributions:
+=======================
+- dojox.math needs an average function for an array of numbers
+- dojox.math needs a sum function for an array of numbers
+- dojox.drails
+
+DOH Contributions:
+==================
+- RSpec style test declarations
+- Nested specs
+- Can't use tests like doh.is() within a deferred test
+
+DOH Bug Fixes:
+
+Setting timeout above 1000 results in weird errors:
+
+spec("it makes fucking dojo.Deferred work", function(){
+  before(function(t){
+    
+  });
+  
+  it("works", function(t){
+    //var foo = false;
+    var d = new doh.Deferred();
+    setTimeout(function() { d.callback(true); }, 2000);
+    return d;
+  });
+})
+
+Results in
+
+1 tests to run in 1 groups
+ ------------------------------------------------------------
+ GROUP "drails.tests.PeriodicalExecuter" has 1 test to run
+ 1 tests to run in 1 groups
+ ------------------------------------------------------------
+ GROUP "it makes fucking dojo.Deferred work" has 1 test to run
+ Error: test timeout in /javascripts/dojo/drails/tests/PeriodicalExecuter.html::it makes fucking dojo.Deferred work::works
+     ERROR IN:
+  (function (t) {var d = new (doh.Deferred);setTimeout(function () {d.callback(true);}, 2000);return d;})
+ FAILED test: /javascripts/dojo/drails/tests/PeriodicalExecuter.html::it makes fucking dojo.Deferred work::works 0 ms
+ PASSED test: /javascripts/dojo/drails/tests/PeriodicalExecuter.html 0 ms
+ WOOHOO!!
+ ------------------------------------------------------------
+ | TEST SUMMARY:
+ ------------------------------------------------------------
+      2 tests in 2 groups
+      1 errors
+      0 failures

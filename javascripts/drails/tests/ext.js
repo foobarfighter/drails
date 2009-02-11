@@ -11,9 +11,10 @@ dojo.declare("doh.Spec", null, {
   before: null,
   _specDesc: null,
   _specFunc: null,
-  _tests: [],
+  _tests: null,
   
   constructor: function(specDesc, specFunc) {
+    this._tests = new Array();
     this._specDesc = specDesc;
     this._specFunc = specFunc;
   },
@@ -55,18 +56,18 @@ doh.spec = function(description, func){
 }
 
 doh.it = function(description, func) {
-  var spec = doh.specArray.last();
-  spec.addTest(new doh.SpecTest(description, func));
+  var s = doh.specArray.last();
+  s.addTest(new doh.SpecTest(description, func));
 }
 
 doh.before = function(func) {
-  var spec = doh.specArray.last();
-  spec.before = func;
+  var s = doh.specArray.last();
+  s.before = func;
 }
 
 doh.after = function(func) {
-  var spec = doh.specArray.last();
-  spec.after = func;
+  var s = doh.specArray.last();
+  s.after = func;
 }
 
 doh.spec.register = function() {

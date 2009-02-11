@@ -148,3 +148,52 @@ dojo.declare("drails.Updater", [drails.Request], {
   }
   
 });
+
+
+dojo.provide("drails.PeriodicalExecuter");
+
+dojo.declare("drails.PeriodicalExecuter", null, {
+  constructor: function(callback, frequency) {
+    this.callback = callback;
+    this.frequency = frequency;
+    this.currentlyExecuting = false;
+
+    this.registerCallback();
+  },
+
+  registerCallback: function() {
+    var self = this;
+    dojo.connect(self, "onTimerEvent", function() {
+        if (!self.currentlyExecuting) {
+          try {
+            self.currentlyExecuting = true;
+            // Weird, why pass "self" as an argument if callback is called in "self"'s context?
+            // (Prototype apparently does this).  Am I missing something?
+            self.callback.apply(self, [self]);
+          } finally {
+            self.currentlyExecuting = false;
+          }
+        }
+      });
+    self.timer = setInterval(self.onTimerEvent, self.frequency * 1000);
+  },
+  
+  // Included for backward compatibility with Prototype, but you don't really need
+  // this unless you want to call execute explicitly on a drails.PeriodicalExecuter
+  // instance.
+  execute: function() {
+    this.callback(this);
+  },
+
+  stop: function() {
+    if (!this.timer) return;
+    clearInterval(this.timer);
+    this.timer = null;
+  },
+  
+  // Event hook... connect away :)
+  onTimerEvent: function() {
+  }
+});
+
+

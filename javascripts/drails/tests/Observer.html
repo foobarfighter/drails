@@ -1,0 +1,51 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+
+  <title>PrototypeCompat unit test</title>
+  <style type="text/css">
+    @import "../../../dojo/resources/dojo.css";
+    @import "../css/dijitTests.css";
+  </style>
+
+  <!-- required: the default dijit theme: -->
+  <link id="themeStyles" rel="stylesheet" href="../../../dijit/themes/tundra/tundra.css">
+
+  <!-- required: dojo.js -->
+  <script type="text/javascript" src="/javascripts/dojo/dojo/dojo.js"
+    djConfig="isDebug: true, parseOnLoad: true"></script>
+
+
+  <script type="text/javascript">
+    
+    dojo.registerModulePath("drails", "/javascripts/dojo/drails");
+    dojo.require("doh.runner");
+    dojo.require("drails.tests.ext");
+    doh.pollute();
+    
+    dojo.require("drails.common");
+    dojo.require("drails.tests.helpers");
+    
+    spec("drails.Observer", function() {
+      
+      it("when Observing a Form element", function(t){
+      });
+      
+      it("when Observing a Form periodically checks for new values", function(t) {
+        
+      });
+      
+    })
+    
+    dojo.addOnLoad(function(){
+      doh.spec.register();
+      doh.run();
+    });
+
+  </script>
+</head>
+<body class="tundra">
+
+</body>
+</html>
