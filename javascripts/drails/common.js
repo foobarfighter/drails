@@ -196,4 +196,15 @@ dojo.declare("drails.PeriodicalExecuter", null, {
   }
 });
 
+dojo.declare("drails.TimedObserver", [drails.PeriodicalExecuter], {
+  
+});
+
+dojo.declare("drails.Form.Element.Observer", [drails.TimedObserver], {
+  
+});
+
+dojo.declare("drails.Form.Observer", [drails.TimedObserver], {
+  
+});
 
