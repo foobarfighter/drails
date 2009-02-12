@@ -50,7 +50,17 @@
     });
 
     spec("callback execution", function(){
-    
+      
+      it("stops when you call stop from within the callback function", function(t){
+        var d = new doh.Deferred();
+        var success = false;
+        var e = new drails.PeriodicalExecuter(function() {
+            this.stop();
+          }, 0.05);
+        setTimeout(function() { d.callback(!e.timer); }, 100);
+        return d;
+      });
+      
       it("executes the callback in the context of the drails.PeriodicalExecuter", function(t){
         var d = new doh.Deferred();
         var success = false;
