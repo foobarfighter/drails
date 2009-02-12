@@ -50,10 +50,28 @@
     });
 
     spec("callback execution", function(){
-      
-      //it("passes the drails.PeriodicalExecuter instance as an argument to the callback");
     
-      //it("executes the callback in the context of the drails.PeriodicalExecuter");
+      it("executes the callback in the context of the drails.PeriodicalExecuter", function(t){
+        var d = new doh.Deferred();
+        var success = false;
+        setTimeout(function() { d.callback(success); }, 100);
+        var e = new drails.PeriodicalExecuter(function() {
+            success = this.stop != null;
+            this.stop();
+          }, 0.05);
+        return d;
+      });
+      
+      it("passes the drails.PeriodicalExecuter instance as an argument to the callback", function(){
+        var d = new doh.Deferred();
+        var success = false;
+        setTimeout(function() { d.callback(success); }, 100);
+        var e = new drails.PeriodicalExecuter(function(executer) {
+            success = this == executer;
+            this.stop();
+          }, 0.05);
+        return d;
+      });
       
       it("calls the callback in the specified interval", function(t){
         var d = new doh.Deferred();
