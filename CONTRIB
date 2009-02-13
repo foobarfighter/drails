@@ -1,3 +1,12 @@
+Things I don't like about the current Rails/Prototype Integration:
+==================================================================
+- Prototype does too much in it's constructors, making things very hard to test (e.g. PeriodicalExecuter start's off it's timers by newing up an instance).  Although this is concise, testing is harder.  Maybe we can find a happy medium in Rails 3.
+- There's a lot of inline JS.  Maybe we can minimize this by doing some builder-like things and include the JS at the end of the document in Rails 3?
+
+Dojo Break:
+===========
+- Implement subclass that can call a superclass constructor with different argument arity
+
 Possible Contributions:
 =======================
 - dojox.math needs an average function for an array of numbers
@@ -8,6 +17,8 @@ DOH Contributions:
 ==================
 - RSpec style test declarations
 - Nested specs
+- Pending specs
+- doh.t() and doh.f() does more than test for === true and === false... so doh.t(1) works and doh.f(null) works
 - Can't use tests like doh.is() within a deferred test
 
 DOH Bug Fixes:

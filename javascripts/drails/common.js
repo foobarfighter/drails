@@ -150,8 +150,6 @@ dojo.declare("drails.Updater", [drails.Request], {
 });
 
 
-dojo.provide("drails.PeriodicalExecuter");
-
 dojo.declare("drails.PeriodicalExecuter", null, {
   constructor: function(callback, frequency) {
     this.callback = callback;
@@ -177,8 +175,8 @@ dojo.declare("drails.PeriodicalExecuter", null, {
   },
   
   execute: function() {
-	// Weird, why pass "self" as an argument if callback is called in "self"'s context?
-	// (Prototype apparently does this).  Am I missing something?
+    // Weird, why pass "self" as an argument if callback is called in "self"'s context?
+    // (Prototype apparently does this).  Am I missing something?
     this.callback(this);
   },
 
@@ -193,8 +191,40 @@ dojo.declare("drails.PeriodicalExecuter", null, {
   }
 });
 
-dojo.declare("drails.TimedObserver", [drails.PeriodicalExecuter], {
+// Due to API inconsistency in the constructor, we can't subclass PeriodicalExecuter like Prototype does
+// TODO: Reimplement as a mixin
+dojo.declare("drails.TimedObserver", null, {
+  element: null,
+  executer: null,
+  callback: null,
+  lastValue: null,
   
+  constructor: function(element, frequency, callback) {
+    this.callback = callback;
+    this.element = element;
+    this.executer = new drails.PeriodicalExecuter(dojo.hitch(this, "execute"), frequency);
+    dojo.connect(this, "stop", this.executer, "stop");
+    dojo.connect(this.executer, "onTimerEvent", this, "onTimerEvent");
+  },
+  
+  execute: function(executer) {
+    var value = this.getValue();
+    if (dojo.isString(this.lastValue) && dojo.isString(value) ?
+        this.lastValue != value : String(this.lastValue) != String(value)) {
+      this.callback(this.element, value);
+      this.lastValue = value;
+    }
+  },
+  
+  stop: function(){
+  },
+  
+  onTimerEvent: function(){
+  },
+  
+  getValue: function() {
+    throw new Error("[" + this.declaredClass + "] getValue is an abstract method");
+  }
 });
 
 dojo.declare("drails.Form.Element.Observer", [drails.TimedObserver], {
