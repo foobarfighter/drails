@@ -167,9 +167,7 @@ dojo.declare("drails.PeriodicalExecuter", null, {
         if (!self.currentlyExecuting) {
           try {
             self.currentlyExecuting = true;
-            // Weird, why pass "self" as an argument if callback is called in "self"'s context?
-            // (Prototype apparently does this).  Am I missing something?
-            self.callback.apply(self, [self]);
+            self.execute();
           } finally {
             self.currentlyExecuting = false;
           }
@@ -178,10 +176,9 @@ dojo.declare("drails.PeriodicalExecuter", null, {
     self.timer = setInterval(self.onTimerEvent, self.frequency * 1000);
   },
   
-  // Included for backward compatibility with Prototype, but you don't really need
-  // this unless you want to call execute explicitly on a drails.PeriodicalExecuter
-  // instance.
   execute: function() {
+	// Weird, why pass "self" as an argument if callback is called in "self"'s context?
+	// (Prototype apparently does this).  Am I missing something?
     this.callback(this);
   },
 
