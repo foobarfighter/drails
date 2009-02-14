@@ -1,5 +1,5 @@
 dojo.provide("drails.common");
-dojo.require("dojo._base.xhr");
+dojo.require("drails.monkey");
 
 drails._insertionMap = {
   "top":     "first",
@@ -228,10 +228,16 @@ dojo.declare("drails.TimedObserver", null, {
 });
 
 dojo.declare("drails.Form.Element.Observer", [drails.TimedObserver], {
-  
+  getValue: function(){
+    // TODO: Does this return field=value in prototype?
+    return dojo.fieldToObject(this.element);
+  }
 });
 
 dojo.declare("drails.Form.Observer", [drails.TimedObserver], {
-  
+  getValue: function(){
+    console.debug(dojo.formToObject(this.element));
+    return dojo.formToObject(this.element);
+  }
 });
 
