@@ -241,3 +241,41 @@ dojo.declare("drails.Form.Observer", [drails.TimedObserver], {
   }
 });
 
+
+dojo.declare("drails.EventObserver", null, {
+  
+  element: null,
+  lastValue: null,
+  
+  constructor: function(element, callback){
+    this.element = dojo.byId(element);
+    this.callback = callback;
+    this.lastValue = this.getValue();
+    this.registerCallbacks(this.element);
+  },
+  
+  onElementEvent: function(){
+    var value = this.getValue();
+    if (this.lastValue != value) {
+      this.callback(this.element, value);
+      this.lastValue = value;
+    }
+  },
+  
+  registerCallbacks: function() {
+    throw new Error("[" + this.declaredClass + "] getValue is an abstract method");
+  },
+  
+  getValue: function() {
+    throw new Error("[" + this.declaredClass + "] getValue is an abstract method");
+  }
+});
+
+
+
+
+
+
+
+
+
