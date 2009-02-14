@@ -236,7 +236,7 @@ dojo.declare("drails.Form.Element.Observer", [drails.TimedObserver], {
 
 dojo.declare("drails.Form.Observer", [drails.TimedObserver], {
   getValue: function(){
-    console.debug(dojo.formToObject(this.element));
+    // TODO: does this returns a query string in prototype?    
     return dojo.formToObject(this.element);
   }
 });
@@ -271,6 +271,34 @@ dojo.declare("drails.EventObserver", null, {
   }
 });
 
+
+dojo.declare("drails.Form.Element.EventObserver", [drails.EventObserver], {
+  registerCallbacks: function(element){
+  },
+  
+  getValue: function() {
+    //return Form.Element.getValue(this.element);
+  }
+});
+
+dojo.declare("drails.Form.Element.EventObserver", [drails.EventObserver], {
+  registerCallbacks: function(element){
+  },
+  
+  getValue: function() {
+    //return Form.Element.getValue(this.element);
+  }
+});
+
+dojo.declare("drails.Form.EventObserver", [drails.EventObserver], {
+  registerCallbacks: function(element){
+    
+  },
+  
+  getValue: function() {
+    //return Form.serialize(this.element);
+  }
+});
 
 
 
