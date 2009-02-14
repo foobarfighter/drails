@@ -262,7 +262,7 @@ dojo.declare("drails.EventObserver", null, {
     }
   },
   
-  registerCallbacks: function() {
+  registerCallbacks: function(element) {
     throw new Error("[" + this.declaredClass + "] getValue is an abstract method");
   },
   
@@ -274,6 +274,19 @@ dojo.declare("drails.EventObserver", null, {
 
 dojo.declare("drails.Form.Element.EventObserver", [drails.EventObserver], {
   registerCallbacks: function(element){
+    var type = (element.type||"").toLowerCase();
+    if (type == "") throw new Error("Invalid type for element: " + element.constructor.toString() + ".  Did you forget to specify an input type in your markup?");
+   
+    var evtType;
+    switch(element.type){
+      case 'checkbox': // fall through
+      case 'radio':
+        evtType = 'click';
+        break;
+      default:
+        evtType = 'change';
+    }
+    dojo.connect(element, evtType, this, "onElementEvent");
   },
   
   getValue: function() {
@@ -281,7 +294,7 @@ dojo.declare("drails.Form.Element.EventObserver", [drails.EventObserver], {
   }
 });
 
-dojo.declare("drails.Form.Element.EventObserver", [drails.EventObserver], {
+dojo.declare("drails.Form.EventObserver", [drails.EventObserver], {
   registerCallbacks: function(element){
   },
   

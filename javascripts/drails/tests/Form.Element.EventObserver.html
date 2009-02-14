@@ -28,28 +28,50 @@
     dojo.require("drails.tests.helpers");
     
     spec("drails.Form.Element.EventObserver", function() {      
-      before(function(){
+
+      it("registers the click callbacks for radio buttons", function(t){
+        var element = 'radio_input1';
+        var success = false;
+        var h = doh.onConnect(
+          dojo.byId(element), "click",
+          drails.Form.Element.EventObserver, "onElementEvent",
+          function() { success = true; }
+        );
+        
+        var o = new drails.Form.Element.EventObserver(element, function(element, value) { });
+        dojo.disconnect(h);
+        t.t(success);
       });
       
-      it("registers the click callbacks for radio and checkbox buttons", function(t){
+      it("registers the click callbacks for checkbox buttons", function(t){
+        var element = 'checkbox_input1';
+        var success = false;
+        var h = doh.onConnect(
+          dojo.byId(element), "click",
+          drails.Form.Element.EventObserver, "onElementEvent",
+          function() { success = true; }
+        );
         
+        var o = new drails.Form.Element.EventObserver(element, function(element, value) { });
+        dojo.disconnect(h);
+        t.t(success);
       });
-      
-      it("registers the change callback for other fields", function(t){
-        
-      });
-      
-      it("calls the callback when a click event occurs on a radio or checkbox", function(t){
-        
-      });
-      
-      it("calls the callback when a change event occurs for other fields", function(t){
-        
-      });
-      
-      it("retrieves a value from the element", function(t){
-        
-      });
+      //       
+      //       it("registers the change callback for other fields", function(t){
+      //         t.f(true);
+      //       });
+      //       
+      //       it("calls the callback when a click event occurs on a radio or checkbox", function(t){
+      //         t.f(true);
+      //       });
+      //       
+      //       it("calls the callback when a change event occurs for other fields", function(t){
+      //         t.f(true);
+      //       });
+      //       
+      //       it("retrieves a value from the element", function(t){
+      //         t.f(true);
+      //       });
     });
     
     dojo.addOnLoad(function(){
@@ -62,7 +84,11 @@
 <body class="tundra">
 
 <form>
-  <input type="text" id="foo">
+  <input type="text" id="text_input" name="my_text_input" value="somevalue" />
+  <input type="radio" id="radio_input1" name="my_radio_input" value="someradiovalue1" />
+  <input type="radio" id="radio_input2" name="my_radio_input" value="someradiovalue2" />
+  <input type="checkbox" id="checkbox_input1" name="my_checkbox_input" value="somecheckboxvalue1" />
+  <input type="checkbox" id="checkbox_input2" name="my_checkbox_input" value="somecheckboxvalue2" />
 </form>
 
 </body>

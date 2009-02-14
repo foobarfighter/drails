@@ -82,3 +82,30 @@ doh.pollute = function(){
     dojo.global[func] = doh[func];
   });
 }
+
+/**********************************************************************
+ *                           doh Helpers                              *
+ **********************************************************************/
+
+doh.onConnect = function(/*Object*/ source, /*String|Function*/ sourceEvt, /*Function*/ destCtor, /*String|Function*/ destEvt, /*Function*/ cb) {
+  // summary
+  //    Can be used to test that a particular connection has been made.
+  //    Use the callback to set a success variable for an assertion in your test code.
+  
+  // TODO: Make this work with the same variable arities that dojo.connect uses
+  // TODO: Can we do better than just assert on a destination constructor
+  // TODO: Should we pass more arguments to the callback
+  // TODO: Make this better: instance.constructor == destCtor
+  var h = dojo.connect(dojo, "connect", function(element, evt, instance, handler) {
+    if (element && evt && instance && handler){
+      if (element === source &&
+        evt == sourceEvt &&
+        instance.constructor == destCtor  &&
+        handler == destEvt
+      ) {
+        cb();
+      }
+    }
+  });
+  return h; // Handle
+}

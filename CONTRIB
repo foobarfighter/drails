@@ -20,6 +20,7 @@ DOH Contributions:
 - Pending specs
 - doh.t() and doh.f() does more than test for === true and === false... so doh.t(1) works and doh.f(null) works
 - Can't use tests like doh.is() within a deferred test
+- When a test fails, it's hard to distinguish between a syntax error and a legit test failure
 
 DOH Bug Fixes:
 
