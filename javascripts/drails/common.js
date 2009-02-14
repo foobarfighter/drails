@@ -201,7 +201,7 @@ dojo.declare("drails.TimedObserver", null, {
   
   constructor: function(element, frequency, callback) {
     this.callback = callback;
-    this.element = element;
+    this.element = dojo.byId(element);
     this.executer = new drails.PeriodicalExecuter(dojo.hitch(this, "execute"), frequency);
     dojo.connect(this, "stop", this.executer, "stop");
     dojo.connect(this.executer, "onTimerEvent", this, "onTimerEvent");

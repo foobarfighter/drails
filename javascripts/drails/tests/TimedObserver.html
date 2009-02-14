@@ -69,7 +69,7 @@
       
       it("calls the callback", function(t) {
         var o = new drails.TimeValueImplementer('my_div', .1, function(element, value) {
-          success = (this == o && element == 'my_div' && value.indexOf("value") >= 0);
+          success = (this == o && element == dojo.byId('my_div') && value.indexOf("value") >= 0);
           this.stop();
         });
         return d;
