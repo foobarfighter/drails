@@ -79,7 +79,7 @@
         t.t(success);
       });
       
-      it("calls the callback when a click event occurs when the element is a text input", function(t){
+      it("calls the callback when a change event occurs when the element is a text input", function(t){
         var element = 'text_input';
         var success = false;
         var o = new drails.Form.Element.EventObserver(element, function(element, value) { success = true; });
