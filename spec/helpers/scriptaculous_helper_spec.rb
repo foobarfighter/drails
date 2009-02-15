@@ -139,11 +139,48 @@ describe Drails::ScriptaculousHelper do
 
     before do
       @helper_output = test_view.drop_receiving_element_js('my_id')
-      helper_output.should_not be_blank
     end
     
-    it "pending specs" do
-      pending
+    describe "when an element is passed" do
+      it "returns a drails.Droppable.add call with the default drails.Request for the onDrop handler" do
+        helper_output.should == "drails.Droppables.add(\"my_id\", {onDrop:function(element){new drails.Request('http://somemockurl.com', {asynchronous:true, evalScripts:true, parameters:'id=' + encodeURIComponent(element.id)})}});"
+      end
     end
+    
+    
+    describe "when :with is passed" do
+      before do
+        @helper_output = test_view.drop_receiving_element_js('my_id', :with => "function(){}")
+      end
+      
+      it "returns extra parameters" do
+        helper_output.should == "drails.Droppables.add(\"my_id\", {onDrop:function(element){new drails.Request('http://somemockurl.com', {asynchronous:true, evalScripts:true, parameters:function(){}})}});"
+      end
+    end
+    
+    describe "when :onDrop is passed" do
+      before do
+        @helper_output = test_view.drop_receiving_element_js('my_id', :onDrop => "function(){}")
+      end
+      
+      it "returns a custom callback instead of a drails.Request" do
+        helper_output.should == "drails.Droppables.add(\"my_id\", {onDrop:function(){}});"
+      end
+    end
+    
+    describe "when sortable specific params are passed" do
+      before do
+        options = {
+          :accept => ['DraggableType1', 'DraggableType2'],
+          :hoverclass => 'hoverClass',
+          :confirm => 'foo == "bar"'
+        }
+        @helper_output = test_view.drop_receiving_element_js('my_id', options)
+      end
+      it "returns a drails.Sortable with all of the options" do
+        helper_output.should == "drails.Droppables.add(\"my_id\", {accept:['DraggableType1','DraggableType2'], hoverclass:'hoverClass', onDrop:function(element){if (confirm('foo == \\\"bar\\\"')) { new drails.Request('http://somemockurl.com', {asynchronous:true, evalScripts:true, parameters:'id=' + encodeURIComponent(element.id)}); }}});"
+      end
+    end
+    
   end
 end

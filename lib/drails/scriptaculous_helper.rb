@@ -58,7 +58,7 @@ module Drails
         # Confirmation happens during the onDrop callback, so it can be removed from the options
         options.delete(:confirm) if options[:confirm]
 
-        %(Droppables.add(#{element_id.to_json}, #{options_for_javascript(options)});)
+        %(drails.Droppables.add(#{element_id.to_json}, #{options_for_javascript(options)});)
       end
   end
 end
