@@ -36,6 +36,7 @@
         var generator = dojo.byId("generator");
         generatorHTML = generatorHTML || generator.innerHTML;
         generator.innerHTML = "";
+        if (dojo.byId("foo")) throw new Error("Generator found an ID that should not have been found");
         container.innerHTML = generatorHTML;
         dojo.query("form", container)[0].id = formId;
       });

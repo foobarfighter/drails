@@ -318,7 +318,6 @@ dojo.declare("drails.Form.EventObserver", [drails.EventObserver], {
   
   getValue: function() {
     return dojo.formToObject(this.element);
-    //return Form.serialize(this.element);
   }
 });
 
