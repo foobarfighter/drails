@@ -18,9 +18,10 @@ DOH Contributions:
 - RSpec style test declarations
 - Nested specs
 - Pending specs
-- doh.t() and doh.f() does more than test for === true and === false... so doh.t(1) works and doh.f(null) works
+- doh.t() and doh.f() does more than test for === true and === false... so doh.t(1) works and doh.f(null) works.  Might have to create new "matchers"
 - Can't use tests like doh.is() within a deferred test
 - When a test fails, it's hard to distinguish between a syntax error and a legit test failure
+- Baked in support for regenerating a view state: see Form.EventObserver.html
 
 DOH Bug Fixes:
 

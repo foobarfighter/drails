@@ -272,18 +272,7 @@ dojo.declare("drails.EventObserver", null, {
     }
   },
   
-  registerCallbacks: function(element) {
-    throw new Error("[" + this.declaredClass + "] getValue is an abstract method");
-  },
-  
-  getValue: function() {
-    throw new Error("[" + this.declaredClass + "] getValue is an abstract method");
-  }
-});
-
-
-dojo.declare("drails.Form.Element.EventObserver", [drails.EventObserver], {
-  registerCallbacks: function(element){
+  registerListenerForField: function(element){
     var type = (element.type||"").toLowerCase();
     if (type == "") throw new Error("Invalid type for element: " + element.constructor.toString() + ".  Did you forget to specify an input type in your markup?");
    
@@ -299,26 +288,36 @@ dojo.declare("drails.Form.Element.EventObserver", [drails.EventObserver], {
     dojo.connect(element, evtType, this, "onElementEvent");
   },
   
+  registerCallbacks: function(element) {
+    throw new Error("[" + this.declaredClass + "] getValue is an abstract method");
+  },
+  
+  getValue: function() {
+    throw new Error("[" + this.declaredClass + "] getValue is an abstract method");
+  }
+});
+
+
+dojo.declare("drails.Form.Element.EventObserver", [drails.EventObserver], {
+  registerCallbacks: function(element){
+    this.registerListenerForField(element);
+  },
+  
   getValue: function() {
     return dojo.fieldToObject(this.element);
   }
 });
 
-dojo.declare("drails.Form.EventObserver", [drails.EventObserver], {
-  registerCallbacks: function(element){
-  },
-  
-  getValue: function() {
-    //return Form.Element.getValue(this.element);
-  }
-});
 
 dojo.declare("drails.Form.EventObserver", [drails.EventObserver], {
   registerCallbacks: function(element){
-    
+    dojo.forEach(element.elements, function(node){
+      this.registerListenerForField(node);
+    }, this);
   },
   
   getValue: function() {
+    return dojo.formToObject(this.element);
     //return Form.serialize(this.element);
   }
 });
