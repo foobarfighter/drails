@@ -38,7 +38,7 @@ module Drails
         options[:containment] = array_or_string_for_javascript(options[:containment]) if options[:containment]
         options[:only] = array_or_string_for_javascript(options[:only]) if options[:only]
   
-        %(Sortable.create(#{element_id.to_json}, #{options_for_javascript(options)});)
+        %(drails.Sortable.create(#{element_id.to_json}, #{options_for_javascript(options)});)
       end
       
       def draggable_element_js_with_dojo(element_id, options = {}) #:nodoc:

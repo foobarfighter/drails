@@ -64,7 +64,7 @@ describe Drails::ScriptaculousHelper do
         end
         
         it "passes the hash as the effect options" do
-          helper_output.should == "new drails.Effect.Foo(\"my_id\",{direction:'up', endcolor:'#0000ff', queue:{bar:'baz',limit:100}, restorecolor:'true', scaleMode:'scale', startcolor:'#ff0000'});"
+          helper_output.should == "new drails.Effect.Foo(\"my_id\",{direction:'up', endcolor:'#0000ff', queue:{limit:100,bar:'baz'}, restorecolor:'true', scaleMode:'scale', startcolor:'#ff0000'});"
         end
       end
       
@@ -79,7 +79,7 @@ describe Drails::ScriptaculousHelper do
     end
     
     it "pending specs" do
-      pending
+      helper_output.should == 'drails.Sortable.create("my_id", {onUpdate:function(){new drails.Request(\'http://somemockurl.com\', {asynchronous:true, evalScripts:true, parameters:Sortable.serialize("my_id")})}});'
     end
   end
   
