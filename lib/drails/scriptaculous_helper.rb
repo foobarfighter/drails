@@ -41,10 +41,12 @@ module Drails
         %(drails.Sortable.create(#{element_id.to_json}, #{options_for_javascript(options)});)
       end
       
+      #TODO: Should we worry about this undocumented function?  Postpone for 1.1?
       def draggable_element_js_with_dojo(element_id, options = {}) #:nodoc:
-        %(new Draggable(#{element_id.to_json}, #{options_for_javascript(options)});)
+        %(new drails.Draggable(#{element_id.to_json}, #{options_for_javascript(options)});)
       end
       
+      #TODO: Should we worry about this undocumented function?  Postpone for 1.1?
       def drop_receiving_element_js_with_dojo(element_id, options = {}) #:nodoc:
         options[:with]     ||= "'id=' + encodeURIComponent(element.id)"
         options[:onDrop]   ||= "function(element){" + remote_function(options) + "}"

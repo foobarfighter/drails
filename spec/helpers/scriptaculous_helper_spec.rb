@@ -127,11 +127,10 @@ describe Drails::ScriptaculousHelper do
 
     before do
       @helper_output = test_view.draggable_element_js('my_id')
-      helper_output.should_not be_blank
     end
     
-    it "pending specs" do
-      pending
+    it "returns a new drails.Draggable" do
+      helper_output.should == 'new drails.Draggable("my_id", {});'
     end
   end
   
