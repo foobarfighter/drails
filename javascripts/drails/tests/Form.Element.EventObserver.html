@@ -27,51 +27,67 @@
     dojo.require("drails.common");
     dojo.require("drails.tests.helpers");
     
+    function assertElementEventConnection(t, element, evt){
+      var success = false;
+      var h = doh.onConnect(
+        dojo.byId(element), evt,
+        drails.Form.Element.EventObserver, "onElementEvent",
+        function() { success = true; }
+      );
+      
+      var o = new drails.Form.Element.EventObserver(element, function(element, value) { });
+      dojo.disconnect(h);
+      t.t(success);
+    }
+    
     spec("drails.Form.Element.EventObserver", function() {      
 
-      it("registers the click callbacks for radio buttons", function(t){
+      it("registers the click callbacks when the element is a radio button", function(t){
+        assertElementEventConnection(t, 'radio_input1', 'onclick');
+      });
+      
+      it("registers the click callbacks when the element is a checkbox", function(t){
+        assertElementEventConnection(t, 'checkbox_input1', 'onclick');
+      });
+      
+      
+      it("registers the change callback for other fields", function(t){
+        assertElementEventConnection(t, 'text_input', 'onchange');
+      });
+      
+      it("retrieves a value from the element", function(t){
+        var element = 'text_input';
+        var o = new drails.Form.Element.EventObserver(element, function(element, value) { success = true; });
+        doh.is('somevalue', o.getValue());
+      });
+      
+      it("calls the callback when a click event occurs when the element is a radio", function(t){
         var element = 'radio_input1';
         var success = false;
-        var h = doh.onConnect(
-          dojo.byId(element), "click",
-          drails.Form.Element.EventObserver, "onElementEvent",
-          function() { success = true; }
-        );
-        
-        var o = new drails.Form.Element.EventObserver(element, function(element, value) { });
-        dojo.disconnect(h);
+        var o = new drails.Form.Element.EventObserver(element, function(element, value) { success = true; });
+        var node = dojo.byId(element);
+        node.click();
         t.t(success);
       });
       
-      it("registers the click callbacks for checkbox buttons", function(t){
+      it("calls the callback when a click event occurs when the element is a checkbox", function(t){
         var element = 'checkbox_input1';
         var success = false;
-        var h = doh.onConnect(
-          dojo.byId(element), "click",
-          drails.Form.Element.EventObserver, "onElementEvent",
-          function() { success = true; }
-        );
-        
-        var o = new drails.Form.Element.EventObserver(element, function(element, value) { });
-        dojo.disconnect(h);
+        var o = new drails.Form.Element.EventObserver(element, function(element, value) { success = true; });
+        var node = dojo.byId(element);
+        node.click();
         t.t(success);
       });
-      //       
-      //       it("registers the change callback for other fields", function(t){
-      //         t.f(true);
-      //       });
-      //       
-      //       it("calls the callback when a click event occurs on a radio or checkbox", function(t){
-      //         t.f(true);
-      //       });
-      //       
-      //       it("calls the callback when a change event occurs for other fields", function(t){
-      //         t.f(true);
-      //       });
-      //       
-      //       it("retrieves a value from the element", function(t){
-      //         t.f(true);
-      //       });
+      
+      it("calls the callback when a click event occurs when the element is a text input", function(t){
+        var element = 'text_input';
+        var success = false;
+        var o = new drails.Form.Element.EventObserver(element, function(element, value) { success = true; });
+        var node = dojo.byId(element);
+        node.value = "different value";
+        o.onElementEvent();
+        t.t(success);
+      });
     });
     
     dojo.addOnLoad(function(){

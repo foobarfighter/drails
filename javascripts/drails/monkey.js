@@ -23,7 +23,6 @@ dojo.provide("drails.monkey");
       var _in = item.value;
       if (_in && type && !item.disabled){
         if(type == "radio" || type == "checkbox"){
-          console.debug(item);
           if(item.checked){ ret = item.value }
         }else if(item.multiple){
           ret = [];

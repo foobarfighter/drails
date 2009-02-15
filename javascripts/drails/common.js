@@ -256,6 +256,16 @@ dojo.declare("drails.EventObserver", null, {
   
   onElementEvent: function(){
     var value = this.getValue();
+    // FIXME: In the prototype impl, this does not appear to work for radio and checkboxes since
+    // their values rarely change.  We should consider checking on the element type and firing
+    // the event even if the lastValue hasn't changed for the radio button or checkbox.
+    // TODO: Verify that declaring an EventObserver on a radio button does not work.  Also,
+    // we should check to see if Rails does some munging to when rendering radio button so that
+    // the EventObserver is checking the value based on a radio button name vs. and ID.  If this
+    // munging does occur, then this functionality appears to work as advertised.
+    
+    // Until we have done out TODO task, we will keep this check in to stay consistent with
+    // the client-side APIs.
     if (this.lastValue != value) {
       this.callback(this.element, value);
       this.lastValue = value;
@@ -281,16 +291,16 @@ dojo.declare("drails.Form.Element.EventObserver", [drails.EventObserver], {
     switch(element.type){
       case 'checkbox': // fall through
       case 'radio':
-        evtType = 'click';
+        evtType = 'onclick';
         break;
       default:
-        evtType = 'change';
+        evtType = 'onchange';
     }
     dojo.connect(element, evtType, this, "onElementEvent");
   },
   
   getValue: function() {
-    //return Form.Element.getValue(this.element);
+    return dojo.fieldToObject(this.element);
   }
 });
 
