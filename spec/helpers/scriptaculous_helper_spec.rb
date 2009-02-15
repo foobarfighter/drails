@@ -31,6 +31,15 @@ describe Drails::ScriptaculousHelper do
         helper_output.should == 'new drails.Effect.Foo(element,{});'
       end
       
+      describe "when name is a TOGGLE_EFFECT" do
+        before do
+          @helper_output = test_view.visual_effect(:toggle_appear, "my_id")
+        end
+        it "calles .toggle on drails.Effect with ID as the first param, the effect as the second param, and options as the third param" do
+          helper_output.should == "drails.Effect.toggle(\"my_id\",'appear',{});"
+        end
+      end
+      
       describe "when element is passed" do
         before do
           @helper_output = test_view.visual_effect("foo", "my_id")
@@ -41,11 +50,24 @@ describe Drails::ScriptaculousHelper do
         end
       end
       
-      describe "when options are passed" do
-        it "does something" do
-          pending
+      describe "when js_options are passed" do
+        before do
+          options = {
+            :endcolor => "#0000ff",
+            :direction => "up",
+            :startcolor => "#ff0000",
+            :scaleMode => "scale",
+            :restorecolor => true,
+            :queue => { :limit => 100, :bar => "baz" }
+          }
+          @helper_output = test_view.visual_effect("foo", "my_id", options)
+        end
+        
+        it "passes the hash as the effect options" do
+          helper_output.should == "new drails.Effect.Foo(\"my_id\",{direction:'up', endcolor:'#0000ff', queue:{bar:'baz',limit:100}, restorecolor:'true', scaleMode:'scale', startcolor:'#ff0000'});"
         end
       end
+      
     end
   end
   

@@ -8,6 +8,7 @@ module Drails
       def visual_effect_with_dojo(name, element_id = false, js_options = {})
         element = element_id ? element_id.to_json : "element"
         
+        # spaghetti
         js_options[:queue] = if js_options[:queue].is_a?(Hash)
           '{' + js_options[:queue].map {|k, v| k == :limit ? "#{k}:#{v}" : "#{k}:'#{v}'" }.join(',') + '}'
         elsif js_options[:queue]
