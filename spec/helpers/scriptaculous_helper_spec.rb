@@ -76,7 +76,6 @@ describe Drails::ScriptaculousHelper do
 
     before do
       @helper_output = test_view.sortable_element_js('my_id')
-      helper_output.should_not be_blank
     end
     
     it "pending specs" do

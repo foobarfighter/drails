@@ -24,7 +24,10 @@ describe Drails::PrototypeHelper do
 
     before do
       @helper_output = test_view.periodically_call_remote
-      helper_output.should_not be_blank
+    end
+    
+    it "does something" do
+      pending
     end
 
   end
@@ -35,7 +38,6 @@ describe Drails::PrototypeHelper do
     describe "when an empty object is passed" do
       before do
         @helper_output = test_view.remote_function({})
-        helper_output.should_not be_blank
       end
       
       it "returns the basic drails.Request call" do
@@ -46,7 +48,6 @@ describe Drails::PrototypeHelper do
     describe "when :update is passed" do
       before do
         @helper_output = test_view.remote_function({ :update => "some_div" })
-        helper_output.should_not be_blank
       end
       
       it "returns the drails.Updater with 'some_div' as it's target" do
@@ -57,7 +58,6 @@ describe Drails::PrototypeHelper do
     describe "when :update is passed as a hash" do
       before do
         @helper_output = test_view.remote_function({ :update => { :success => 'success_div', :failure => 'failure_div' } })
-        helper_output.should_not be_blank
       end
       
       it "return the drails.Updater with the 'success_div' and the 'failure_div'" do
@@ -68,7 +68,6 @@ describe Drails::PrototypeHelper do
     describe "when :position is passed" do
       before do
         @helper_output = test_view.remote_function( :update => "some_div", :position => :top )
-        helper_output.should_not be_blank
       end
       it "returns the drails.Updater with an 'insertion' option" do
         helper_output.should == "new drails.Updater('some_div', 'http://somemockurl.com', {asynchronous:true, evalScripts:true, insertion:'top'})"
@@ -78,7 +77,6 @@ describe Drails::PrototypeHelper do
     describe "when callbacks are passed" do
       before do
         @helper_output = test_view.remote_function( :success => "function(){alert('complete')}" )
-        helper_output.should_not be_blank
       end
       
       it "return the drails.Request with the callback" do
@@ -89,7 +87,6 @@ describe Drails::PrototypeHelper do
     describe "when a browser-side condition is passed" do
       before do
         @helper_output = test_view.remote_function( :condition => "x == y" )
-        helper_output.should_not be_blank
       end
       
       it "return the drails.Request wrapped in a condition" do
@@ -100,7 +97,6 @@ describe Drails::PrototypeHelper do
     describe "when :with is passed" do
       before do
         @helper_output = test_view.remote_function( :with => "'baz=bang'" )
-        helper_output.should_not be_blank
       end
       
       it "return the drails.Request with additional parameters" do
@@ -111,7 +107,6 @@ describe Drails::PrototypeHelper do
     describe "when :before is passed" do
       before do
         @helper_output = test_view.remote_function( :before => "alert('test')" )
-        helper_output.should_not be_blank
       end
       
       it "return the drails.Request with a client-side statement preceding the request" do
@@ -122,7 +117,6 @@ describe Drails::PrototypeHelper do
     describe "when :after is passed" do
       before do
         @helper_output = test_view.remote_function( :after => "alert('test')" )
-        helper_output.should_not be_blank
       end
       
       it "return the drails.Request with a client-side statement following the request" do
@@ -135,7 +129,6 @@ describe Drails::PrototypeHelper do
     attr_reader :helper_output
     before do
       @helper_output = test_view.submit_to_remote( 'my_name', 'my_value' )
-      helper_output.should_not be_blank
     end
     
     it "returns a form submit" do
@@ -149,7 +142,6 @@ describe Drails::PrototypeHelper do
     describe "when the default parameters are passed" do
       before do
         @helper_output = test_view.observe_field("some_field")
-        helper_output.should_not be_blank
       end
       
       it "returns a drails.EventObserver" do
@@ -160,7 +152,6 @@ describe Drails::PrototypeHelper do
     describe "when frequency is passed" do
       before do
         @helper_output = test_view.observe_field("some_field", :frequency => 100)
-        helper_output.should_not be_blank
       end
       
       it "returns a drails.Event" do
@@ -175,7 +166,6 @@ describe Drails::PrototypeHelper do
     describe "when the default parameters are passed" do
       before do
         @helper_output = test_view.observe_form("some_form")
-        helper_output.should_not be_blank
       end
       
       it "returns a drails.EventObserver" do
@@ -186,7 +176,6 @@ describe Drails::PrototypeHelper do
     describe "when frequency is passed" do
       before do
         @helper_output = test_view.observe_form("some_form", :frequency => 100)
-        helper_output.should_not be_blank
       end
       
       it "returns a drails.Event" do
