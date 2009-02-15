@@ -16,19 +16,36 @@ describe Drails::ScriptaculousHelper do
   attr_reader :test_view
   before do
     @test_view = TestView.new
-    Drails::PrototypeOverride.override
+    Drails::ScriptaculousOverride.override
   end
 
   describe "#visual_effect" do
     attr_reader :helper_output
-
-    before do
-      @helper_output = test_view.periodically_call_remote
-      helper_output.should_not be_blank
-    end
     
-    it "pending specs" do
-      pending
+    describe "when name is passed" do
+      before do
+        @helper_output = test_view.visual_effect("foo")
+      end
+      
+      it "generates a JS effect constructor for the name" do
+        helper_output.should == 'new drails.Effect.Foo(element,{});'
+      end
+      
+      describe "when element is passed" do
+        before do
+          @helper_output = test_view.visual_effect("foo", "my_id")
+        end
+
+        it "generates a JS effect constructor for the element" do
+          helper_output.should == 'new drails.Effect.Foo("my_id",{});'
+        end
+      end
+      
+      describe "when options are passed" do
+        it "does something" do
+          pending
+        end
+      end
     end
   end
   
@@ -36,7 +53,7 @@ describe Drails::ScriptaculousHelper do
     attr_reader :helper_output
 
     before do
-      @helper_output = test_view.periodically_call_remote
+      @helper_output = test_view.sortable_element_js('my_id')
       helper_output.should_not be_blank
     end
     
@@ -49,7 +66,7 @@ describe Drails::ScriptaculousHelper do
     attr_reader :helper_output
 
     before do
-      @helper_output = test_view.periodically_call_remote
+      @helper_output = test_view.draggable_element_js('my_id')
       helper_output.should_not be_blank
     end
     
@@ -62,7 +79,7 @@ describe Drails::ScriptaculousHelper do
     attr_reader :helper_output
 
     before do
-      @helper_output = test_view.periodically_call_remote
+      @helper_output = test_view.drop_receiving_element_js('my_id')
       helper_output.should_not be_blank
     end
     

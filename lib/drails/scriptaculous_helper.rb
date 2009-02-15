@@ -1,6 +1,10 @@
 module Drails
     module ScriptaculousHelper
-
+      # TODO: Figure out a way to not include this constant
+      unless const_defined? :TOGGLE_EFFECTS
+        TOGGLE_EFFECTS = [:toggle_appear, :toggle_slide, :toggle_blind]
+      end
+      
       def visual_effect_with_dojo(name, element_id = false, js_options = {})
         element = element_id ? element_id.to_json : "element"
         
@@ -15,9 +19,9 @@ module Drails
         end
 
         if TOGGLE_EFFECTS.include? name.to_sym
-          "Effect.toggle(#{element},'#{name.to_s.gsub(/^toggle_/,'')}',#{options_for_javascript(js_options)});"
+          "drails.Effect.toggle(#{element},'#{name.to_s.gsub(/^toggle_/,'')}',#{options_for_javascript(js_options)});"
         else
-          "new Effect.#{name.to_s.camelize}(#{element},#{options_for_javascript(js_options)});"
+          "new drails.Effect.#{name.to_s.camelize}(#{element},#{options_for_javascript(js_options)});"
         end
       end
       

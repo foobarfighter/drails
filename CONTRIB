@@ -22,6 +22,9 @@ DOH Contributions:
 - Can't use tests like doh.is() within a deferred test
 - When a test fails, it's hard to distinguish between a syntax error and a legit test failure
 - Baked in support for regenerating a view state: see Form.EventObserver.html
+- Make single test running possible from within doh
+- Allow doh to run only the previously failed tests
+- Pause/Resume and/or Cancel suite run
 
 DOH Bug Fixes:
 

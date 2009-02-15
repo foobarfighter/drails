@@ -9,9 +9,21 @@
 #          http://www.opensource.org/licenses/mit-license.php      #
 #                                                                  #
 ####################################################################
+require 'set'
 
 module Drails
   module PrototypeHelper
+    
+    #TODO: Figure out a way to not include this constant
+    unless const_defined? :CALLBACKS
+      CALLBACKS    = Set.new([ :uninitialized, :loading, :loaded,
+                       :interactive, :complete, :failure, :success ] +
+                       (100..599).to_a)
+      AJAX_OPTIONS = Set.new([ :before, :after, :condition, :url,
+                       :asynchronous, :method, :insertion, :position,
+                       :form, :with, :update, :script, :type ]).merge(CALLBACKS)
+    end
+    
     def periodically_call_remote_with_dojo(options = {})
       dojo_require("drails.PeriodicalExecuter")
       frequency = options[:frequency] || 10
