@@ -78,8 +78,47 @@ describe Drails::ScriptaculousHelper do
       @helper_output = test_view.sortable_element_js('my_id')
     end
     
-    it "pending specs" do
-      helper_output.should == 'drails.Sortable.create("my_id", {onUpdate:function(){new drails.Request(\'http://somemockurl.com\', {asynchronous:true, evalScripts:true, parameters:Sortable.serialize("my_id")})}});'
+    describe "when the element is passed" do
+      it "returns the drails.Sortable.create method with the default onUpdate  callback" do
+        helper_output.should == 'drails.Sortable.create("my_id", {onUpdate:function(){new drails.Request(\'http://somemockurl.com\', {asynchronous:true, evalScripts:true, parameters:Sortable.serialize("my_id")})}});'
+      end
+    end
+    
+    describe "when :with is passed" do
+      before do
+        @helper_output = test_view.sortable_element_js('my_id', :with => "function(){}")
+      end
+      
+      it "returns extra parameters" do
+        helper_output.should == "drails.Sortable.create(\"my_id\", {onUpdate:function(){new drails.Request('http://somemockurl.com', {asynchronous:true, evalScripts:true, parameters:function(){}})}});"
+      end
+    end
+    
+    describe "when :onUpdate is passed" do
+      before do
+        @helper_output = test_view.sortable_element_js('my_id', :onUpdate => "function(){}")
+      end
+      
+      it "returns a custom callback instead of a drails.Request" do
+        helper_output.should == "drails.Sortable.create(\"my_id\", {onUpdate:function(){}});"
+      end
+    end
+    
+    describe "when sortable specific params are passed" do
+      before do
+        options = {
+          :tag => "tag",
+          :overlap => true,
+          :constraint => "if (true)",
+          :handle => "handleIt()",
+          :containment => [ 'blah', 'blah2' ],
+          :only => ['boo', 'boo2']
+        }
+        @helper_output = test_view.sortable_element_js('my_id', options)
+      end
+      it "returns a drails.Sortable with all of the options" do
+        helper_output.should == "drails.Sortable.create(\"my_id\", {constraint:'if (true)', containment:['blah','blah2'], handle:'handleIt()', onUpdate:function(){new drails.Request('http://somemockurl.com', {asynchronous:true, evalScripts:true, parameters:Sortable.serialize(\"my_id\")})}, only:['boo','boo2'], overlap:'true', tag:'tag'});"
+      end
     end
   end
   
