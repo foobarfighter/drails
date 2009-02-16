@@ -322,6 +322,59 @@ dojo.declare("drails.Form.EventObserver", [drails.EventObserver], {
 });
 
 
+dojo.declare("drails.Sortable", null, {
+  options: null,
+  source: null,
+  sourceNode: null,
+  connects: null,
+  
+  constructor: function(element, options){
+    this.connects = [];
+    this.options = options || {};
+    this.sourceNode = dojo.byId(element);
+    this._applyAttributes();
+    this._initDnd();
+  },
+  
+  destroy: function(){
+    if (this.source){
+      this.source.destroy();
+      this.source = null;
+    }
+    if (this.connects){
+      dojo.forEach(this.connects, function(connection){
+        dojo.disconnect(connection);
+      });
+      this.connects = null;
+    }
+    this.options = null;
+    this.sourceNode = null;
+  },
+  
+  onUpdate: function(source, nodes, copy, target){
+  },
+  
+  _applyAttributes: function(){
+    dojo.attr(this.sourceNode, "dojoType", "dojo.dnd.Source");
+    dojo.query("> *", this.sourceNode).forEach(function(node){
+      dojo.addClass(node, "dojoDndItem");
+    });
+  },
+  
+  _initDnd: function(){
+    this.source = new dojo.dnd.Source(this.sourceNode);
+    this.connects.push(dojo.connect(this.source, "onDndDrop", this, "onUpdate"));
+    if (dojo.isFunction(this.options.onUpdate)){
+      this.connects.push(dojo.connect(this, "onUpdate", this.options.onUpdate));
+    }
+  }
+});
+
+drails.Sortable.create = function(element, options){
+  dojo.require("dojo.dnd.Source");
+  return new drails.Sortable(element, options);
+}
+
 
 
 

@@ -21,7 +21,7 @@ DOH Contributions:
 - doh.t() and doh.f() does more than test for === true and === false... so doh.t(1) works and doh.f(null) works.  Might have to create new "matchers"
 - Can't use tests like doh.is() within a deferred test
 - When a test fails, it's hard to distinguish between a syntax error and a legit test failure
-- Baked in support for regenerating a view state: see Form.EventObserver.html
+- Baked in support for regenerating a view state: see Form.EventObserver.html... pauseOnDestroy flag for debugging for an individual test?
 - Make single test running possible from within doh
 - Allow doh to run only the previously failed tests
 - Pause/Resume and/or Cancel suite run
