@@ -26,8 +26,8 @@ describe Drails::PrototypeHelper do
       @helper_output = test_view.periodically_call_remote
     end
     
-    it "does something" do
-      pending
+    it "generates a drails.PeriodicalExecuter" do
+      helper_output.should == "<script type=\"text/javascript\">\n//<![CDATA[\nnew drails.PeriodicalExecuter(function() {new drails.Request('http://somemockurl.com', {asynchronous:true, evalScripts:true})}, 10)\n//]]>\n</script>"
     end
 
   end

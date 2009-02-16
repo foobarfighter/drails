@@ -25,10 +25,9 @@ module Drails
     end
     
     def periodically_call_remote_with_dojo(options = {})
-      dojo_require("drails.PeriodicalExecuter")
-      frequency = options[:frequency] || 10
-      code = "new drails.PeriodicalExecuter(function(){ #{remote_function(options)}; }, #{frequency})"
-      javascript_tag(code)
+     frequency = options[:frequency] || 10 # every ten seconds by default
+     code = "new drails.PeriodicalExecuter(function() {#{remote_function(options)}}, #{frequency})"
+     javascript_tag(code)
     end
 
     def remote_function_with_dojo(options)
