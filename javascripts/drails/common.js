@@ -375,6 +375,15 @@ drails.Sortable.create = function(element, options){
   return new drails.Sortable(element, options);
 }
 
+drails.Sortable.serialize = function(element){
+  var ret = [];
+  var node = dojo.byId(element);
+  dojo.query("> *", node).forEach(function(child){
+    ret.push(node.id + "[]=" + child.id.split("_")[1]);
+  });
+  return ret.join("&");
+};
+
 
 
 

@@ -12,6 +12,8 @@
   <!-- required: dojo.js -->
   <script type="text/javascript" src="/javascripts/dojo/dojo/dojo.js"
     djConfig="isDebug: true"></script>
+  <script type="text/javascript" src="/javascripts/prototype.js"></script>
+  <script type="text/javascript" src="/javascripts/scriptaculous.js"></script>
 
 
   <script type="text/javascript">
@@ -97,6 +99,15 @@
         var sortable = drails.Sortable.create(elementId);
         t.t(sortable.source != null);
         skipDestroy = true;
+      });
+      
+      it(".serialize serializes the Sortable nodes", function(t){
+        //console.debug(Sortable);
+        var expected = "list_to_sort[]=1&list_to_sort[]=2&list_to_sort[]=3&list_to_sort[]=4&list_to_sort[]=5&list_to_sort[]=6&list_to_sort[]=7";
+        var actual = drails.Sortable.serialize(elementId);
+        t.is(expected, actual);
+        // Sortable.create(elementId);
+        // console.debug(Sortable.serialize(elementId));
       });
     });
     
