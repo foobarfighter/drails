@@ -449,11 +449,10 @@ dojo.declare("drails.Draggable", [drails.dnd.Source], {
 });
 
 
-dojo.declare("drails.Droppable", null, {
-	container: null,
-	
+dojo.declare("drails.Droppable", [drails.dnd.Source], {
 	constructor: function(element, options){
-		this.container = new dojo.dnd.Source(element);
+		this.initSource(dojo.byId(element));
+		this.applyOptions(options);
 	}
 });
 
