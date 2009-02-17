@@ -1,5 +1,6 @@
 dojo.provide("drails.common");
 dojo.require("drails.monkey");
+dojo.require("dojo.dnd.move");
 
 drails._insertionMap = {
   "top":     "first",
@@ -375,6 +376,7 @@ drails.Sortable.create = function(element, options){
   return new drails.Sortable(element, options);
 }
 
+//TODO: Test with date fields
 drails.Sortable.serialize = function(element){
   var ret = [];
   var node = dojo.byId(element);
@@ -382,9 +384,78 @@ drails.Sortable.serialize = function(element){
     ret.push(node.id + "[]=" + child.id.split("_")[1]);
   });
   return ret.join("&");
-};
+}
+
+dojo.declare("drails.dnd.Source", null, {
+  supportedCallbacks: ['onDndSourceOver', 'onDndStart', 'onDndDrop', 'onDndCancel'],
+  
+  connects: null,
+  source: null,
+  options: null,
+  
+  initSource: function(node){
+    dojo.require("dojo.dnd.Source");
+    this.source = new dojo.dnd.Source(node);
+  },
+  
+  destroy: function(){
+    dojo.forEach(this.connects, function(c){
+      dojo.disconnect(c);
+    });
+    this.connects = null;
+    this.source.destroy();
+    this.source = null;
+    this.options = null;
+  },
+  
+  applyOptions: function(options){
+    this.options = options || {};
+    this.applyCallbacks();
+  },
+  
+  applyCallbacks: function(){
+    this.connects = [];
+    dojo.forEach(this.supportedCallbacks, function(cb){
+      this.connects.push(dojo.connect(this.source, cb, this, cb));
+      if (dojo.isFunction(this.options[cb])) {
+        this.connects.push(dojo.connect(this, cb, this.options[cb]));
+      }
+    }, this);
+  },
+  
+  // Callback hooks
+  onDndSourceOver: function(){},
+  onDndStart: function(){},
+  onDndDrop: function(){},
+  onDndCancel: function(){}
+});
+
+dojo.declare("drails.Draggable", [drails.dnd.Source], {  
+  element: null,
+  sourceNode: null,
+  
+  constructor: function(element, options){
+    this.element = dojo.byId(element);
+    this.connects = [];
+    
+    this.sourceNode = dojo.doc.createElement("div");
+    dojo.place(this.sourceNode, this.element, "before");
+    this.sourceNode.appendChild(this.element);
+    dojo.addClass(this.element, "dojoDndItem");
+    
+    this.initSource(this.sourceNode);
+    this.applyOptions(options);
+  }
+});
 
 
+dojo.declare("drails.Droppable", null, {
+  container: null,
+  
+  constructor: function(element, options){
+    this.container = new dojo.dnd.Source(element);
+  }
+});
 
 
 

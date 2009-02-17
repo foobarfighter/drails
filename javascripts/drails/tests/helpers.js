@@ -21,3 +21,30 @@ dojo.global.assertElementEventConnection = function(t, element, evt){
   dojo.disconnect(h);
   t.t(success);
 }
+
+dojo.declare("drails.test.Generator", null, {
+  containerNode: null,
+  generatorNode: null,
+  generatorHTML: null,
+  skip: false,
+  
+  constructor: function(containerNode, generatorNode){    
+    this.containerNode = dojo.byId(containerNode);
+    this.generatorNode = dojo.byId(generatorNode);
+    this.generatorHTML = this.generatorNode.innerHTML;
+    this.generatorNode.innerHTML = "";
+  },
+  
+  generate: function(skip, callback){
+    if (skip) return;
+    this.containerNode.innerHTML = this.generatorHTML;
+    if (callback) callback();
+  },
+  
+  reset: function(skip, callback){
+    if (skip) return;
+    this.containerNode.innerHTML = "";
+    if (callback) callback();
+  }
+  
+});
