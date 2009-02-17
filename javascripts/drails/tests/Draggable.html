@@ -26,6 +26,9 @@
     dojo.require("drails.common");
     dojo.require("drails.tests.helpers");
     
+    // Init in the addOnLoad below
+    var generator = null;
+    
     var elementId = 'foo';
     var skipDestroy = false;
     var draggable = null;
@@ -34,24 +37,13 @@
       var generatorHTML;
       
       before(function(){
-        var container = dojo.byId("test_container");
-        var generator = dojo.byId("generator");
-        generatorHTML = generatorHTML || generator.innerHTML;
-        generator.innerHTML = "";
-        container.innerHTML = generatorHTML;
+        generator.generate(skipDestroy);
       });
       
       after(function(){
-        if (!skipDestroy){
-          dojo.byId('test_container').innerHTML = "";
+        generator.generate(skipDestroy, function(){
           if (draggable && draggable.destroy) draggable.destroy();
-        }
-      });
-      
-      it("creates a draggable dojo.dnd.Source", function(t){
-        var node = dojo.byId(elementId);
-        draggable = new drails.Draggable(node);
-        t.t(draggable.source.constructor == dojo.dnd.Source);
+        });
       });
       
       it("creates a container node on a draggable", function(t){
@@ -66,32 +58,10 @@
         t.t(dojo.hasClass(node, "dojoDndItem"));
       });
       
-      it("connects all internal callbacks correctly", function(t) {
-        var node = dojo.byId(elementId);
-        draggable = new drails.Draggable(node);
-        //FIXME: use drails.Draggable.prototype.supportedCallbacks and then retest
-        //TODO: usage should be drails.Draggable.supportedCallbacks I think
-        dojo.forEach(drails.Draggable.supportedCallbacks, function(cb){
-          var success = false;
-          var handle = dojo.connect(draggable, cb, function(){
-            success = true;
-          });
-          draggable.source[cb]();
-          t.t(success);
-          dojo.disconnect(handle);
-        });
-      });
-        
-      // it("does something", function(t){
-      //         dojo.query(".droppable").forEach(function(node){
-      //           new drails.Droppable(node);
-      //         });
-      //         skipDestroy = true;
-      //       });
-      
     });
     
     dojo.addOnLoad(function(){
+      generator = new drails.test.Generator("test_container", "generator");
       doh.spec.register();
       doh.run();
     });

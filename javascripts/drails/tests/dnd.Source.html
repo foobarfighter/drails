@@ -50,6 +50,11 @@
         generator.reset(skip);
       });
       
+      it("creates a dojo.dnd.Source", function(t){
+        var impl = new test.dnd.SourceImpl(element);
+        t.t(impl.source.constructor == dojo.dnd.Source);
+      });
+      
       it("destroys properly", function(t){
         var impl = new test.dnd.SourceImpl(element, { onDndDrop: function() {} });
         impl.destroy();

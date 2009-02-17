@@ -437,12 +437,12 @@ dojo.declare("drails.Draggable", [drails.dnd.Source], {
 	constructor: function(element, options){
 		this.element = dojo.byId(element);
 		this.connects = [];
-		
+
 		this.sourceNode = dojo.doc.createElement("div");
 		dojo.place(this.sourceNode, this.element, "before");
 		this.sourceNode.appendChild(this.element);
 		dojo.addClass(this.element, "dojoDndItem");
-		
+
 		this.initSource(this.sourceNode);
 		this.applyOptions(options);
 	}
