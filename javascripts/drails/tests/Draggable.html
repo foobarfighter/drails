@@ -58,6 +58,16 @@
         t.t(dojo.hasClass(node, "dojoDndItem"));
       });
       
+      it("lets you drag and drop (consider robot testing)", function(t){
+        dojo.query(".droppable").forEach(function(node){
+          var node = new drails.Droppable(node);
+        });
+        dojo.query(".draggable").forEach(function(node){
+          var node = new drails.Draggable(node);
+        });
+        skipDestroy = true;
+      });
+      
     });
     
     dojo.addOnLoad(function(){
