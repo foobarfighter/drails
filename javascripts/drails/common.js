@@ -543,12 +543,13 @@ dojo.declare("drails.Toggler", [dojo.fx.Toggler], {
 			if (!id){
 				id = _f.getUniqueTogglerId();
 				dojo.attr(node, "drailsTogglerId", id);
-				t = new drails.Toggler({ node: element, showFunc: ctor });
+				var o = { node: element, showFunc: ctor };
+				t = new drails.Toggler(dojo.mixin(o, options));
 				_f.togglers[id] = t;
 			}else{
 				t = _f.togglers[id];
 			}
-			t.toggle();
+			t.toggle(options ? options.delay : null);
 			
 			return t;
 		},
