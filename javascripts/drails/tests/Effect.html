@@ -68,6 +68,22 @@
         t.t(t2.constructor == drails.Toggler);
       });
       
+      it("passes the correct toggle delay to the Toggler", function(t){
+        var h, toggler, togglerDelay;
+        h = dojo.connect(drails.Toggler.prototype, "toggle", function(delay){
+          togglerDelay = delay;
+        });
+        
+        toggler = drails.Effect.toggle('test_dummy1', 'appear', { delay: 30 });
+        t.is(30, togglerDelay);
+        
+        
+        toggler = drails.Effect.toggle('test_dummy1', 'appear', { delay: 40 });
+        t.is(40, togglerDelay);
+        
+        dojo.disconnect(h);
+      });
+      
       it("if the toggle is new, it adds the toggler to the togglers map and calls toggle on the Toggler", function(t){
         t.t(drails.Effect.togglers[1] == null);
         
