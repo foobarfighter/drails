@@ -386,9 +386,7 @@ drails.Sortable.serialize = function(element){
 	return ret.join("&");
 }
 
-dojo.declare("drails.dnd.Source", null, {
-	supportedCallbacks: ['onDndSourceOver', 'onDndStart', 'onDndDrop', 'onDndCancel'],
-	
+dojo.declare("drails.dnd.Source", null, {	
 	connects: null,
 	source: null,
 	options: null,
@@ -415,8 +413,8 @@ dojo.declare("drails.dnd.Source", null, {
 	
 	applyCallbacks: function(){
 		this.connects = [];
-		dojo.forEach(this.supportedCallbacks, function(cb){
-			this.connects.push(dojo.connect(this.source, cb, this, cb));
+		dojo.forEach(drails.dnd.Source._supportedCallbacks, function(cb){
+			this.connects.push(dojo.connect(this.source, drails.dnd.Source._supportedCallbackMap[cb], this, cb));
 			if (dojo.isFunction(this.options[cb])) {
 				this.connects.push(dojo.connect(this, cb, this.options[cb]));
 			}
@@ -424,11 +422,27 @@ dojo.declare("drails.dnd.Source", null, {
 	},
 	
 	// Callback hooks
-	onDndSourceOver: function(){},
-	onDndStart: function(){},
-	onDndDrop: function(){},
-	onDndCancel: function(){}
+	onSourceOver: function(){},
+	onStart: function(){},
+	onDrop: function(){},
+	onCancel: function(){}
 });
+
+(function(){
+	var m = {
+		'onSourceOver': 'onDndSourceOver',
+		'onStart': 'onDndStart',
+		'onDrop': 'onDndDrop',
+		'onCancel': 'onDndCancel'
+	};
+	var a = [];
+	for (var p in m){
+		a.push(p);
+	}
+	drails.dnd.Source._supportedCallbackMap = m;
+	drails.dnd.Source._supportedCallbacks = a;
+})();
+
 
 dojo.declare("drails.Draggable", [drails.dnd.Source], {	 
 	element: null,

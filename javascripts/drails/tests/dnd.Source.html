@@ -63,7 +63,11 @@
         t.t(impl.options == null);
       });
       
-      dojo.forEach(test.dnd.SourceImpl.prototype.supportedCallbacks, function(cb){
+      it("it has supported callbacks", function(t){
+        t.t(drails.dnd.Source._supportedCallbacks.length > 0);
+      });
+      
+      dojo.forEach(drails.dnd.Source._supportedCallbacks, function(cb){
         it("connects the supported '" + cb + "' callback if it is passed in the options", function(t){
           var options = {};
           var success = false;
