@@ -28,7 +28,7 @@ describe Drails::ScriptaculousHelper do
       end
       
       it "generates a JS effect constructor for the name" do
-        helper_output.should == 'new drails.Effect.Foo(element,{});'
+        helper_output.should == 'new drails.Effect(element,"foo",{});'
       end
       
       describe "when name is a TOGGLE_EFFECT" do
@@ -36,7 +36,7 @@ describe Drails::ScriptaculousHelper do
           @helper_output = test_view.visual_effect(:toggle_appear, "my_id")
         end
         it "calles .toggle on drails.Effect with ID as the first param, the effect as the second param, and options as the third param" do
-          helper_output.should == "drails.Effect.toggle(\"my_id\",'appear',{});"
+          helper_output.should == "drails.Effect.toggle(\"my_id\",\"appear\",{});"
         end
       end
       
@@ -46,7 +46,7 @@ describe Drails::ScriptaculousHelper do
         end
 
         it "generates a JS effect constructor for the element" do
-          helper_output.should == 'new drails.Effect.Foo("my_id",{});'
+          helper_output.should == 'new drails.Effect("my_id","foo",{});'
         end
       end
       
@@ -64,7 +64,7 @@ describe Drails::ScriptaculousHelper do
         end
         
         it "passes the hash as the effect options" do
-          helper_output.should == "new drails.Effect.Foo(\"my_id\",{direction:'up', endcolor:'#0000ff', queue:{limit:100,bar:'baz'}, restorecolor:'true', scaleMode:'scale', startcolor:'#ff0000'});"
+          helper_output.should == "new drails.Effect(\"my_id\",\"foo\",{direction:'up', endcolor:'#0000ff', queue:{limit:100,bar:'baz'}, restorecolor:'true', scaleMode:'scale', startcolor:'#ff0000'});"
         end
       end
       

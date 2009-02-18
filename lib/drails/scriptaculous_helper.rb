@@ -20,9 +20,9 @@ module Drails
         end
 
         if TOGGLE_EFFECTS.include? name.to_sym
-          "drails.Effect.toggle(#{element},'#{name.to_s.gsub(/^toggle_/,'')}',#{options_for_javascript(js_options)});"
+          "drails.Effect.toggle(#{element},\"#{name.to_s.gsub(/^toggle_/,'')}\",#{options_for_javascript(js_options)});"
         else
-          "new drails.Effect.#{name.to_s.camelize}(#{element},#{options_for_javascript(js_options)});"
+          "new drails.Effect(#{element},\"#{name.to_s}\",#{options_for_javascript(js_options)});"
         end
       end
       

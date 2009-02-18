@@ -470,3 +470,19 @@ dojo.declare("drails.Droppable", [drails.dnd.Source], {
 	}
 });
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
