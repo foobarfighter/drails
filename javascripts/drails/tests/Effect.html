@@ -120,17 +120,18 @@
         var ctor = drails.Effect._fxCtorMap[effect];
         var success = false;
         try {
-          var e = new drails.Effect('test_dummy1', effect, {});
+          var e = new drails.Effect('test_dummy1', effect);
         }catch(e){
           success = true;
         }
         t.t(success);
       });
-    });
-    
-    spec("drails.Toggler", function(){
-      it("a new instance", function(t){
-        
+      
+      it("extends the default options with user defined options", function(t){
+        var d = new doh.Deferred();
+        var effect = 'fade_out';
+        var e = new drails.Effect('test_dummy1', effect, { duration: 3000 });
+        t.is(3000, e.fxOptions.duration)
       });
     });
     

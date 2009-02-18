@@ -496,11 +496,16 @@ dojo.declare("drails.Toggler", [dojo.fx.Toggler], {
 	var _f;
 	
 	dojo.declare("drails.Effect", null, {
+		fx: null,
+		fxOptions: null,
+		
 		constructor: function(element, effect, options){
 			var ctor = _f._fxCtorMap[effect];
 			if (!ctor) throw new Error("'" + effect + "' is not a valid d-rails effect");
 			var o = { node: element, duration: 200 };
-			ctor(o).play();
+			this.fxOptions = dojo.mixin(o, options || {});
+			this.fx = ctor(this.fxOptions)
+			this.fx.play();
 		}
 	});
 	_f = drails.Effect;
