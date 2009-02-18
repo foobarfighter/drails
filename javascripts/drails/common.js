@@ -1,6 +1,6 @@
 dojo.provide("drails.common");
 dojo.require("drails.monkey");
-dojo.require("dojo.dnd.move");
+dojo.require("dojo.fx");
 
 drails._insertionMap = {
 	"top":		 "first",
@@ -470,8 +470,89 @@ dojo.declare("drails.Droppable", [drails.dnd.Source], {
 	}
 });
 
+dojo.declare("drails.Toggler", [dojo.fx.Toggler], {
+	_lastState: null,
+	
+	getNextState: function(){
+		return (!this._lastState || this._lastState == "hide") ? "show" : "hide";
+	},
+	
+	show: function(delay){
+		this._lastState = "show";
+		this.inherited(arguments);
+	},
+	
+	hide: function(delay){
+		this._lastState = "hide";
+		this.inherited(arguments);
+	},
+	
+	toggle: function(delay){
+		this[this.getNextState()](delay);
+	}
+});
 
-
+(function(){
+	var _f;
+	
+	dojo.declare("drails.Effect", null, {
+		constructor: function(element, effect, options){
+			var ctor = _f._fxCtorMap[effect];
+			if (!ctor) throw new Error("'" + effect + "' is not a valid d-rails effect");
+			var o = { node: element, duration: 200 };
+			ctor(o).play();
+		}
+	});
+	_f = drails.Effect;
+	
+	dojo.mixin(_f, {
+		togglers: {},
+		_lastTogglerId: 1,
+		
+		_fxCtorMap: {
+			'fade_in':  dojo.fadeIn,
+			'fade_out': dojo.fadeOut,
+			'wipe_in':  dojo.fx.wipeIn,
+			'wipe_out': dojo.fx.wipeOut,
+			'slide_to': dojo.fx.slideTo
+		},
+	
+		_toggleFxOptionMap: {
+			'appear': 'fade_in',
+			'slide':  'slide_to',
+			'blind':  'wipe_in'
+		},
+		
+		findToggleFxCtor: function(effect){
+			var ctor = _f._fxCtorMap[_f._toggleFxOptionMap[effect]];
+			if (!ctor) throw new Error("'" + effect + "' is not a valid d-rails toggle effect");
+			return ctor;
+		},
+		
+		toggle: function(element, effect, options){
+			var ctor = _f.findToggleFxCtor(effect);
+			var node = dojo.byId(element);
+			var id = dojo.attr(node, "drailsTogglerId");
+			var t = null;
+			
+			if (!id){
+				id = _f.getUniqueTogglerId();
+				dojo.attr(node, "drailsTogglerId", id);
+				t = new drails.Toggler({ node: element, showFunc: ctor });
+				_f.togglers[id] = t;
+			}else{
+				t = _f.togglers[id];
+			}
+			t.toggle();
+			
+			return t;
+		},
+		
+		getUniqueTogglerId: function(){
+			return _f._lastTogglerId++;
+		}
+	});
+})();
 
 
 

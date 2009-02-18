@@ -12,6 +12,7 @@ Possible Contributions:
 - dojox.math needs an average function for an array of numbers
 - dojox.math needs a sum function for an array of numbers
 - dojox.drails
+- toggle function for dojo.fx.Toggler
 
 DOH Contributions:
 ==================
