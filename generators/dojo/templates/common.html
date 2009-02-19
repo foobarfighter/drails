@@ -1,0 +1,31 @@
+<%
+  module_prefix = name.split(".").first
+%>
+<html>
+  <head>
+    <title><%= name %> tests</title>
+    <script type="text/javascript" src="/javascripts/dojo/dojo/dojo.js"></script>
+    <script type="text/javascript">
+      dojo.registerModulePath("<%= module_prefix %>", "/javascripts/<%= module_prefix %>");
+      dojo.require("<%= name %>.common");
+      dojo.require("doh.runner");
+      
+      doh.register("<%= name %>",
+        [
+          // This will fail because myClass.someMethod() returns false.
+          // Congratulations! You have a failing test... now go make something work :)
+          function testMyClassSomeMethodIsTrue(t){
+            var myClass = new <%= name %>.MyClass();
+            t.t(myClass.someMethod());
+          }
+        ]
+      );
+      
+      dojo.addOnLoad(function(){
+        doh.run();
+      });
+    </script>
+  </head>
+  <body>
+  </body>
+</html>
