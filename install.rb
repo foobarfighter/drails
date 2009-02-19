@@ -1,3 +1,5 @@
+#!/usr/bin/ruby
+
 ####################################################################
 #                                                                  #
 #      Copyright (c) 2008, Bob Remeika and others                  #
@@ -16,7 +18,9 @@ require 'rubygems'
 require 'fileutils'
 require 'installer'
 
-installer = Drails::Installer.new(RAILS_ROOT, File.dirname(__FILE__))
+rails_root = ENV['RAILS_ROOT'] ? ENV['RAILS_ROOT'] : RAILS_ROOT
+
+installer = Drails::Installer.new(rails_root, File.dirname(__FILE__))
 installer.require_prerequisites!
 installer.install!
 
