@@ -10,9 +10,11 @@
 #                                                                  #
 ####################################################################
 
-require 'installer'
+$LOAD_PATH << File.dirname(__FILE__)
+
 require 'rubygems'
 require 'fileutils'
+require 'installer'
 
 installer = Drails::Installer.new(RAILS_ROOT, File.dirname(__FILE__))
 installer.require_prerequisites!
