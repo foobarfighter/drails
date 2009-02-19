@@ -31,19 +31,28 @@ module RakeDrails
 
   # FIXME: This is only safe on UNIX, and this method pretty much sucks.
   # FIXME: Could not get ln_s to work properly
-  def RakeDrails.safe_ln(old, new)
+  def RakeDrails.safe_ln(old, new, fake = false)
     split_dir = new.split('/')
     dest = split_dir.pop();
     current_dir = pwd
     cmd = "cd #{File.join(split_dir)}; if [ ! -L #{dest} ]; then ln -s  #{File.join(current_dir, old)} #{dest}; fi; cd #{current_dir};"
+    
     puts 'Executing: ' + cmd
-    `#{cmd}`
+    `#{cmd}` unless fake
     puts 'Done'
   end
 end
 
 DRAILS_PATH = File.dirname(__FILE__)
 TESTAPP_PATH = File.join(File.dirname(__FILE__), "testapp")
+
+desc "Do a full local to the d-rails testapp"
+task :local_full_install do
+  vendor_dir = File.join(TESTAPP_PATH, "vendor")
+  drails_dest_dir = File.join(vendor_dir, "drails")
+  mkdir vendor_dir unless File.directory?(vendor_dir)
+  RakeDrails.safe_ln("../d-rails", drails_dest_dir)
+end
 
 namespace :testjs do
   desc 'Setup the d-rails development environment.'

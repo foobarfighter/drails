@@ -26,6 +26,7 @@ DOH Contributions:
 - Make single test running possible from within doh
 - Allow doh to run only the previously failed tests
 - Pause/Resume and/or Cancel suite run
+- doh.mock
 
 DOH Bug Fixes:
 
