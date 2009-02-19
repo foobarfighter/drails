@@ -1,5 +1,6 @@
 class DojoGenerator < Rails::Generator::Base
-  JS_PATH=ActionView::Helpers::AssetTagHelper::JAVASCRIPTS_DIR
+  
+  JS_PATH = "public/javascripts"
   
   attr_accessor :type, :name
   
@@ -47,6 +48,7 @@ class DojoGenerator < Rails::Generator::Base
   def build_manifest
     record do |m|
       m.template "profile.js", build_js_path(name)
+      m.template "BUILD_README", dijit_dir + "/BUILD_README"
     end
   end
   
@@ -61,6 +63,7 @@ class DojoGenerator < Rails::Generator::Base
       m.template "Dijit.html", test_html_path
       m.template "module.js", dijit_dir + "/tests/module.js"
       m.template "runTests.html", dijit_dir + "/tests/runTests.html"
+      m.template "DIJIT_README", dijit_dir + "/README"
     end
   end
   
@@ -71,7 +74,9 @@ class DojoGenerator < Rails::Generator::Base
       m.template "common.js", dir + "/common.js"
       m.directory dir + "/tests"
       m.template "module.js", dir + "/tests/module.js"
+      m.template "common.html", dir + "/tests/common.html"
       m.template "runTests.html", dir + "/tests/runTests.html"
+      m.template "MODULE_README", dir + "/README"
     end
   end
   

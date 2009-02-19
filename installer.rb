@@ -21,14 +21,14 @@ module Drails
 
     REQUIRE_PREREQUISITES_ERROR =<<MSG
 
-  ** Installation Error:
-  **
-  ** d-rails requires the dojo-pkg rubygem for installation.
-  ** To get dojo-pkg:
-  **
-  **    sudo gem install dojo-pkg
-  **
-  ** For more information on dojo-pkg, visit http://dojo-pkg.rubyforge.org
+** Installation Error:
+**
+** d-rails requires the dojo-pkg rubygem for installation.
+** To get dojo-pkg:
+**
+**    sudo gem install dojo-pkg
+**
+** For more information on dojo-pkg, visit http://dojo-pkg.rubyforge.org
 MSG
 
     def initialize(rails_root, drails_root)
@@ -46,16 +46,16 @@ MSG
 
     def install_success_msg
       msg =<<MSG
-  **
-  ** d-rails was installed d-rails successfully!"
-  ** d-rails installed dojo source and d-rails scripts to:"
-  **"
-  **    #{dojo_dest_dir}
-  **"
-  ** All other d-rails source files are located at:"
-  **"
-  **    #{drails_root}
-  **
+
+** d-rails was installed successfully!
+** d-rails installed dojo source and d-rails scripts to:
+**
+**    #{dojo_dest_dir}
+**
+** All other d-rails source files are located at:
+**
+**    #{drails_root}
+**
 MSG
     end
 

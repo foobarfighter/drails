@@ -16,6 +16,7 @@ NAME is dependent on the TYPE
       public/javascripts/xcompany/util/common.js
       public/javascripts/xcompany/util/tests/module.js
       public/javascripts/xcompany/util/tests/runTests.html
+      public/javascripts/xcompany/util/README
   
   * If TYPE is 'build', then NAME is optional and it will be the name of the dojo
     build profile that you want to create.
@@ -24,11 +25,13 @@ NAME is dependent on the TYPE
     The generator will create the following:
     
       public/javascripts/xcompany_profile.js
+      public/javascripts/BUILD_README
     
     If you omit NAME: ./script/generate dojo build
     The generator will create the following:
       
       public/javascripts/build_profile.js
+      public/javascripts/BUILD_README
   
   * If TYPE is 'dijit', then NAME is the name of the dojo widget that you want
     to create.
@@ -39,5 +42,6 @@ NAME is dependent on the TYPE
       public/javascripts/xcompany/widgets/tests/module.js
       public/javascripts/xcompany/widgets/tests/runTests.html
       public/javascripts/xcompany/widgets/tests/Widget.html
+      public/javascripts/xcompany/widgets/README
 
 Happy dojaxing :)
