@@ -1,1 +1,32 @@
-dijit README
+You have just created a new dijit module called: <%= name %>
+
+To use your new <%= name %> dijit in your application, just edit your layout or view
+so that it includes the following code:
+
+<script type="text/javascript" src="/javascripts/dojo/dojo/dojo.js" djConfig="parseOnLoad: true"></script>
+<script type="text/javascript">
+  dojo.registerModulePath("<%= module_prefix %>", "/javascripts/<%= module_prefix %>");
+  dojo.require("<%= name %>");
+</script>
+
+Once you have added the proper script tags, you can create your dijit in a couple of different
+ways.
+
+Instantiating your dijit via markup:
+
+<div dojoType="<%= name %>">
+  ... put stuff that you want included in the container node here
+</div>
+
+Instantiating your dijit via script:
+
+<script type="text/html">
+  dojo.addOnLoad(function(){
+    var params = { title: "foo" };
+    var widget = new <%= name %>(params, dojo.byId("my_widget"));
+  });
+</script>
+
+<div id="my_widget">
+  ... put stuff that you want included in the container node here
+</div>

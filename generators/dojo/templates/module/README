@@ -1,4 +1,4 @@
-You have just created a new dojo module called: <%= name %>.common
+You have just created a new dojo module called: <%= name %>
 
 To use your new <%= name %>.common module in your application, just edit your layout or view
 so that it includes the following code:
@@ -6,5 +6,5 @@ so that it includes the following code:
 <script type="text/javascript" src="/javascripts/dojo/dojo/dojo.js"></script>
 <script type="text/javascript">
   dojo.registerModulePath("<%= module_prefix %>", "/javascripts/<%= module_prefix %>");
-  dojo.require("<%= name %>.common");
+  dojo.require("<%= name %>");
 </script>

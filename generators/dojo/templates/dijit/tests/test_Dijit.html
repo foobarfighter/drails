@@ -12,9 +12,16 @@
       
       doh.register("<%= name %>",
         [
+          // This test should pass
+          function testWidgetFromScriptWorks_ShouldPass(t){
+            var params = { title: "foo" };
+            var widget = new <%= name %>(params, dojo.byId("widget_from_script"));
+            t.is("foo", widget.title);
+            t.t(widget.domNode.innerHTML.indexOf("... stuff that is going to be in the widget") > -1);
+          },
           // This will fail because myClass.someMethod() returns false.
           // Congratulations! You have a failing test... now go make something work :)
-          function testMyClassSomeMethodIsTrue(t){
+          function testMyClassSomeMethodIsTrue_ShouldFail(t){
             alert("You are using a generated test so the test should fail, but the test runner is working correctly.");
             var myClass = new <%= name %>();
             t.t(myClass.someMethod());
@@ -44,5 +51,9 @@
         </tbody>
       </table>
     </div>
+    
+    <div id="widget_from_script">
+      ... stuff that is going to be in the widget
+    <div>
   </body>
 </html>
