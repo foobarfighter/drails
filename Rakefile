@@ -48,10 +48,22 @@ TESTAPP_PATH = File.join(File.dirname(__FILE__), "testapp")
 
 desc "Do a full local to the d-rails testapp"
 task :local_full_install do
-  vendor_dir = File.join(TESTAPP_PATH, "vendor")
-  drails_dest_dir = File.join(vendor_dir, "drails")
-  mkdir vendor_dir unless File.directory?(vendor_dir)
-  RakeDrails.safe_ln("../d-rails", drails_dest_dir)
+  drails_root = File.expand_path(".")
+  rails_root = File.expand_path("testapp")
+  
+  rm_rf "/tmp/d-rails"
+  cp_r ".", "/tmp/d-rails"
+  rm_rf "testapp/vendor"
+  rm_rf "testapp/public/javascripts/dojo"
+  mkdir_p "testapp/vendor/plugins"
+  cp_r "/tmp/d-rails", "testapp/vendor/plugins"
+  
+  chdir "testapp/vendor/plugins/d-rails" do
+    chmod 755, "install.rb"
+    `RAILS_ROOT=#{rails_root} ./install.rb`
+    rm_rf  "generators"
+    RakeDrails.safe_ln(drails_root + "/generators", "generators")
+  end
 end
 
 namespace :testjs do
