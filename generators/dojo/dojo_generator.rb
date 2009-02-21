@@ -2,7 +2,7 @@ class DojoGenerator < Rails::Generator::Base
   
   JS_PATH = "public/javascripts"
   
-  attr_accessor :type, :name, :split_name
+  attr_accessor :type, :name, :split_name, :module_name, :module_namespace, :module_prefix, :module_public_dir, :module_rails_dir, :module_js_rails_path
   
   def initialize(runtime_args, runtime_options = {})
     super
@@ -17,11 +17,11 @@ class DojoGenerator < Rails::Generator::Base
     # "railsy" way to do this.
     begin
       raise "TYPE and NAME must be passed as arguments" unless type && name
-      @split_name = name.split(".")
-    
+      setup_instance_vars
+      
       m = case type
       when "build": build_manifest
-      when "dijit": dijit_manifest
+      when "dijit": module_manifest
       when "module": module_manifest
       end
     rescue Exception => e
@@ -34,33 +34,19 @@ class DojoGenerator < Rails::Generator::Base
   
   private
   
+  def setup_instance_vars
+    tmp_module_array = name.split(".")
+    @split_name = Array.new(tmp_module_array)
+  	@module_name = tmp_module_array.pop
+  	@module_namespace = tmp_module_array.first
+  	@module_prefix = tmp_module_array.join(".")
+  	@module_public_dir = tmp_module_array.split('.').join('/')
+  	@module_rails_dir = "#{JS_PATH}/#{module_public_dir}"
+  	@module_js_rails_path = "#{module_rails_dir}/#{module_name}.js"
+  end
+  
   def build_js_path(name)
     name ? "#{JS_PATH}/#{name}_profile.js" : "#{JS_PATH}/build_profile.js"
-  end
-  
-  def dijit_path(name)
-    dir_names = name.split(".")
-    dir_names.pop
-    
-    "#{JS_PATH}/" + dir_names.join("/")
-  end
-  
-  def dijit_js_path(name)
-    dijit_path(name) + "/" + name.split(".").pop + ".js"
-  end
-  
-  def dijit_test_html_path(name)
-    dijit_path(name) + "/tests/" + name.split(".").pop + ".html"
-  end
-  
-  def module_name(name)
-    name.split(".").last
-  end
-  
-  def module_path(name)
-    p = name.split(".")
-    p.pop
-    "#{JS_PATH}/" + p.join("/")
   end
   
   def build_manifest
@@ -70,33 +56,26 @@ class DojoGenerator < Rails::Generator::Base
     end
   end
   
-  def dijit_manifest
-    dijit_dir = dijit_path(name)
-    js_path = dijit_js_path(name)
-    test_html_path = dijit_test_html_path(name)
-    record do |m|
-      m.directory dijit_dir
-      m.template "Dijit.js", js_path
-      m.directory dijit_dir + "/tests"
-      m.template "Dijit.html", test_html_path
-      m.template "module.js", dijit_dir + "/tests/module.js"
-      m.template "runTests.html", dijit_dir + "/tests/runTests.html"
-      m.template "DIJIT_README", dijit_dir + "/README"
-    end
-  end
-  
   def module_manifest
-    raise "Module TYPE must be in the format namespace.moduleName" unless split_name.length > 1
-    dir = module_path(name)
-    m_name = module_name(name)
+    raise "Module TYPE must be in the format namespace.module" unless split_name.length > 1
+    case type
+    when "module":
+      source_js = "module/module.js"
+      source_test_html = "module/tests/test_module.html"
+      source_readme = "module/README"
+    when "dijit":
+      source_js = "dijit/Dijit.js"
+      source_test_html = "dijit/tests/test_Dijit.html"
+      source_readme = "dijit/README"
+    end
     record do |m|
-      m.directory dir
-      m.template "module/module.js", dir + "/#{m_name}.js"
-      m.directory dir + "/tests"
-      m.template "module/all.js", dir + "/tests/all.js"
-      m.template "module/module.html", dir + "/tests/#{m_name}.html"
-      m.template "module/runTests.html", dir + "/tests/runTests.html"
-      m.template "module/README", dir + "/README"
+      m.directory module_rails_dir
+      m.template source_js, module_js_rails_path
+      m.directory module_rails_dir + "/tests"
+      m.template "shared/tests/all.js", module_rails_dir + "/tests/all.js"
+      m.template source_test_html, module_rails_dir + "/tests/test_#{module_name}.html"
+      m.template "shared/tests/runTests.html", module_rails_dir + "/tests/runTests.html"
+      m.template source_readme, module_rails_dir + "/README"
     end
   end
   

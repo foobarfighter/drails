@@ -1,4 +1,3 @@
-<% module_prefix = name.split('.').first %>
 You have just created a new dojo module called: <%= name %>.common
 
 To use your new <%= name %>.common module in your application, just edit your layout or view
