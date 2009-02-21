@@ -2,7 +2,14 @@ class DojoGenerator < Rails::Generator::Base
   
   JS_PATH = "public/javascripts"
   
-  attr_accessor :type, :name, :split_name, :module_name, :module_namespace, :module_prefix, :module_public_dir, :module_rails_dir, :module_js_rails_path
+  # Shared instance vars
+  attr_accessor :type, :name
+  
+  # Build instance vars
+  attr_accessor :generated_prefixes, :build_file
+  
+  # Module instance vars
+  attr_accessor :split_name, :module_name, :module_namespace, :module_prefix, :module_public_dir, :module_rails_dir, :module_js_rails_path
   
   def initialize(runtime_args, runtime_options = {})
     super
@@ -17,7 +24,6 @@ class DojoGenerator < Rails::Generator::Base
     # "railsy" way to do this.
     begin
       raise "TYPE and NAME must be passed as arguments" unless type && name
-      setup_instance_vars
       
       m = case type
       when "build": build_manifest
@@ -45,18 +51,34 @@ class DojoGenerator < Rails::Generator::Base
   	@module_js_rails_path = "#{module_rails_dir}/#{module_name}.js"
   end
   
-  def build_js_path(name)
-    name ? "#{JS_PATH}/#{name}_profile.js" : "#{JS_PATH}/build_profile.js"
+  def setup_build_instance_vars
+    @build_file = "#{name}.profile.js"
+    setup_generated_prefixes
+  end
+  
+  def setup_generated_prefixes
+    js_dirs = Dir["#{RAILS_ROOT}/public/javascripts/*"].select { |f| File.directory?(f) }
+    modules = js_dirs.select { |d| dirname = d.split("/").pop; dirname != "dojo" && dirname != "." && dirname != ".." }
+    if modules
+      @generated_prefixes = modules.collect { |dir|
+        dirname = dir.split("/").pop
+        "[ '#{dirname}', '../../#{dirname}' ]"
+      }
+    end
   end
   
   def build_manifest
+    setup_build_instance_vars
+    
     record do |m|
-      m.template "profile.js", build_js_path(name)
-      m.template "BUILD_README", dijit_dir + "/BUILD_README"
+      m.template "build/profile.js", "#{JS_PATH}/#{build_file}"
+      m.template "build/README", "#{JS_PATH}/README"
     end
   end
   
   def module_manifest
+    setup_instance_vars
+    
     raise "Module TYPE must be in the format namespace.module" unless split_name.length > 1
     case type
     when "module":

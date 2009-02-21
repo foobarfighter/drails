@@ -10,7 +10,7 @@ NAME is dependent on the TYPE
 
   * If TYPE is 'module', then NAME can be the module name that you want to create.
 
-    For example, if your command is: ./script/generate dojo module xcompany.util
+    For example, if your command is: script/generate dojo module xcompany.util
     The generator will create the following:
 
       create  public/javascripts/xcompany
@@ -29,7 +29,7 @@ NAME is dependent on the TYPE
   * If TYPE is 'build', then NAME is optional and it will be the name of the dojo
     build profile that you want to create.
 
-    For example, if your command is: ./script/generate dojo build xcompany
+    For example, if your command is: script/generate dojo build xcompany
     The generator will create the following:
 
       public/javascripts/xcompany_profile.js
@@ -43,7 +43,7 @@ NAME is dependent on the TYPE
 
   * If TYPE is 'dijit', then NAME is the name of the dojo widget that you want
     to create.
-    For example, if your command is: ./script/generate dojo dijit xcompany.widgets.Widget
+    For example, if your command is: script/generate dojo dijit xcompany.widgets.Widget
     Then the generator will create the following:
 
       create  public/javascripts/xcompany/widgets

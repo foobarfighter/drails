@@ -1,0 +1,39 @@
+You have just created a new build profile named <%= name %>.
+
+The next step is to edit this file so that it loads all of the dependencies that your
+application requires.  For more information on how to set this up, then review the
+information at:
+
+  http://dojotoolkit.org/book/dojo-book-0-9/part-4-meta-dojo/package-system-and-custom-builds
+
+After you have edited the build profile, you can generate a build.  To create a dojo build
+that includes your custom profile, then run this rake task from the root directory of your
+rails app:
+
+rake drails:build:do
+
+Running this command will create the release directory (it contains a lot of files):
+
+public/javascripts/dojo/release
+
+The release directory contains the pre-built files that you create by running the rake task:
+
+public/javascripts/dojo/release/dojo/dojo.js
+public/javascripts/dojo/release/dojo/dojo.uncompressed.js
+public/javascripts/dojo/release/dojo/<%= name %>.js
+public/javascripts/dojo/release/dojo/<%= name %>.uncompressed.js
+
+The uncompressed files are great for debugging in development, but it's best to include
+only the compressed files for your production application.  If your application does
+not require any other dependencies at runtime, then these are the only files that you need
+for your application and all other files can be safely deleted from the release directory.
+Ideally, your production build includes all dependencies and does not require any other
+dependencies included at runtime.
+
+To use the pre-built files in your application, just edit your layout or view
+so that it includes the following code:
+
+<script type="text/javascript" src="/javascripts/dojo/release/dojo/dojo/dojo.js"></script>
+<script type="text/javascript" src="/javascripts/dojo/release/dojo/dojo/<%= name %>.js"></script>
+
+That should be all you need to start using your custom build!
