@@ -13,7 +13,7 @@ dependencies ={
 		}
 	],
 	prefixes: [
-<%= generated_prefixes && generated_prefixes.length ? generated_prefixes.collect { |pair| "\t\t" + pair }.join(",\n") : "" %>
+<%= generated_prefixes && generated_prefixes.length ? generated_prefixes.collect { |pair| "\t\t" + pair }.join(",\n") : "" %>,
 		//[ "dijit", "../dijit" ],		// Uncomment if you are using diji
 		//[ "dojox", "../dojox" ],		// Uncomment if you are using dojox modules
 		[ "drails", "../drails" ]
