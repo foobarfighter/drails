@@ -1,3 +1,15 @@
-<div>
-  <a href="#" dojoAttachEvent="onclick: onClickHandler">template is here</a>
+<div><!-- This can be accessed via this.domNode in <%= module_name %>.js %> -->
+  
+  <div>${title}</div>
+  
+  <!-- containerNode is a special node that will insert the markup from within your HTML parsed dijit declaration -->
+  <div dojoAttachPoint="containerNode">
+    <!--
+      Stuff will be inserted here via Dojo magic. For more info on how this works, check the following URL:
+          
+          http://dojocampus.org/content/2008/04/20/what-is-a-_widget/
+    -->
+  </div>
+  
+  <a href="#" dojoAttachEvent="onclick: onClickHandler">Click me!</a>
 </div>

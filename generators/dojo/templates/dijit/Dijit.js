@@ -19,6 +19,10 @@ dojo.declare("<%= name %>",
 			dojo.stopEvent(evt);
 		},
 		
+		postCreate: function(){
+			dojo.query("span", this.domNode).addContent("<div>Example of coercing values in postCreate</div>");
+		},
+		
 		someMethod: function(){
 			return false;
 		}
