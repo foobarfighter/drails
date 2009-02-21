@@ -2,9 +2,13 @@ require 'rake'
 require 'spec/rake/spectask'
 require 'rake/rdoctask'
 require 'installer'
+require 'fileutils'
+
+DRAILS_PATH = File.dirname(__FILE__)
+TESTAPP_PATH = File.join(File.dirname(__FILE__), "testapp")
 
 desc 'Default: run specs.'
-task :default => :test
+task :default => :spec
 
 desc 'Runs the d-rails ruby specs.'
 Spec::Rake::SpecTask.new(:runspec) do |t|
@@ -26,48 +30,35 @@ Rake::RDocTask.new(:rdoc) do |rdoc|
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
 
-# Contains some utils used in this rakefile
-module RakeDrails
-
-  # FIXME: This is only safe on UNIX, and this method pretty much sucks.
-  # FIXME: Could not get ln_s to work properly
-  def RakeDrails.safe_ln(old, new, fake = false)
-    split_dir = new.split('/')
-    dest = split_dir.pop();
-    current_dir = pwd
-    cmd = "cd #{File.join(split_dir)}; if [ ! -L #{dest} ]; then ln -s  #{File.join(current_dir, old)} #{dest}; fi; cd #{current_dir};"
-    
-    puts 'Executing: ' + cmd
-    `#{cmd}` unless fake
-    puts 'Done'
+namespace :cli do
+  desc 'Setup the d-rails CLI development environment.'
+  task :setup => :teardown do
+    cp_r ".", "/tmp/d-rails"
+    rm_rf "testapp/public/javascripts/dojo"
+    mkdir_p "testapp/vendor/plugins"
+    cp_r "/tmp/d-rails", "testapp/vendor/plugins"
+    chdir "testapp/vendor/plugins/d-rails" do
+      rm_rf  "generators"
+      ln_s(DRAILS_PATH + "/generators", "generators", :verbose => true)
+      rm_rf  "tasks"
+      ln_s(DRAILS_PATH + "/tasks", "tasks", :verbose => true)
+    end
+    puts "Executing d-rails install..."
+    cmd = "cd #{TESTAPP_PATH}/vendor/plugins/d-rails; chmod 755 install.rb; RAILS_ROOT=#{TESTAPP_PATH} ./install.rb"
+    puts cmd
+    `#{cmd}`
+    puts "done"
   end
-end
-
-DRAILS_PATH = File.dirname(__FILE__)
-TESTAPP_PATH = File.join(File.dirname(__FILE__), "testapp")
-
-desc "Do a full local to the d-rails testapp"
-task :local_full_install do
-  drails_root = File.expand_path(".")
-  rails_root = File.expand_path("testapp")
   
-  rm_rf "/tmp/d-rails"
-  cp_r ".", "/tmp/d-rails"
-  rm_rf "testapp/vendor"
-  rm_rf "testapp/public/javascripts/dojo"
-  mkdir_p "testapp/vendor/plugins"
-  cp_r "/tmp/d-rails", "testapp/vendor/plugins"
-  
-  chdir "testapp/vendor/plugins/d-rails" do
-    chmod 755, "install.rb"
-    `RAILS_ROOT=#{rails_root} ./install.rb`
-    rm_rf  "generators"
-    RakeDrails.safe_ln(drails_root + "/generators", "generators")
+  desc 'Tear down the d-rails CLI development environment'
+  task :teardown do
+    rm_rf "testapp/vendor"
+    rm_rf "/tmp/d-rails"
   end
 end
 
 namespace :testjs do
-  desc 'Setup the d-rails development environment.'
+  desc 'Setup the d-rails javascript development environment.'
   task :setup do
     installer = Drails::Installer.new(TESTAPP_PATH, DRAILS_PATH)
     installer.require_prerequisites!
@@ -76,7 +67,7 @@ namespace :testjs do
     src_drails_js = File.join(DRAILS_PATH, 'javascripts', 'drails')
     dest_drails_js = File.join(TESTAPP_PATH, 'public', 'javascripts', 'dojo', 'drails')
 
-    RakeDrails.safe_ln("javascripts/drails", dest_drails_js)
+    ln_s(src_drails_js, dest_drails_js)
   end
   
   desc 'Fire up a web browser and run the d-rails javascript tests'
