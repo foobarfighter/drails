@@ -71,11 +71,15 @@ class DojoGenerator < Rails::Generator::Base
     record do |m|
       m.directory module_rails_dir
       m.template source_js, module_js_rails_path
-      m.directory module_rails_dir + "/tests"
-      m.template "shared/tests/all.js", module_rails_dir + "/tests/all.js"
-      m.template source_test_html, module_rails_dir + "/tests/test_#{module_name}.html"
-      m.template "shared/tests/runTests.html", module_rails_dir + "/tests/runTests.html"
-      m.template source_readme, module_rails_dir + "/README"
+      if type == "dijit"
+        m.directory "#{module_rails_dir}/templates"
+        m.template "dijit/templates/Dijit.html", "#{module_rails_dir}/templates/#{module_name}.html"
+      end
+      m.directory "#{module_rails_dir}/tests"
+      m.template "shared/tests/all.js", "#{module_rails_dir}/tests/all.js"
+      m.template source_test_html, "#{module_rails_dir}/tests/test_#{module_name}.html"
+      m.template "shared/tests/runTests.html", "#{module_rails_dir}/tests/runTests.html"
+      m.template source_readme, "#{module_rails_dir}/README"
     end
   end
   

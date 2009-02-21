@@ -1,11 +1,20 @@
 dojo.provide("<%= name %>");
 dojo.require("dijit.dijit");
 
-dojo.declare("<%= name %>", null, {
-	constructor: function(){
+dojo.require("dijit._Widget");
+dojo.require("dijit._Templated");
+
+dojo.declare("<%= name %>",
+	[dijit._Widget, dijit._Templated],
+	{
+		templatePath: dojo.moduleUrl("<%= module_prefix %>", "templates/<%= module_name %>.html"),
 		
-	},
-	someMethod: function(){
-		return false;
+		constructor: function(){
+		
+		},
+		
+		someMethod: function(){
+			return false;
+		}
 	}
-});
+);

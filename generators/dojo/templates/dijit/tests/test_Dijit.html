@@ -1,9 +1,12 @@
 <html>
   <head>
     <title><%= name %> tests</title>
-    <script type="text/javascript" src="/javascripts/dojo/dojo/dojo.js"></script>
+    <script type="text/javascript" src="/javascripts/dojo/dojo/dojo.js" djConfig="isDebug: true, parseOnLoad: true"></script>
     <script type="text/javascript">
       dojo.registerModulePath("<%= module_namespace %>", "/javascripts/<%= module_namespace %>");
+      dojo.require("dijit.dijit");
+      dojo.require("dojo.parser");
+      
       dojo.require("<%= name %>");
       dojo.require("doh.runner");
       
@@ -25,5 +28,6 @@
     </script>
   </head>
   <body>
+    <div dojoType="<%= name %>"></div>
   </body>
 </html>
