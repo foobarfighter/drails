@@ -1,13 +1,16 @@
 <%
-  module_prefix = name.split(".").first
+	m_array = name.split(".")
+	module_name = m_array.pop
+	module_namespace = m_array.first
+	module_prefix = m_array.join(".")
 %>
 <html>
   <head>
     <title><%= name %> tests</title>
     <script type="text/javascript" src="/javascripts/dojo/dojo/dojo.js"></script>
     <script type="text/javascript">
-      dojo.registerModulePath("<%= module_prefix %>", "/javascripts/<%= module_prefix %>");
-      dojo.require("<%= name %>.common");
+      dojo.registerModulePath("<%= module_namespace %>", "/javascripts/<%= module_namespace %>");
+      dojo.require("<%= name %>");
       dojo.require("doh.runner");
       
       doh.register("<%= name %>",
@@ -15,6 +18,7 @@
           // This will fail because myClass.someMethod() returns false.
           // Congratulations! You have a failing test... now go make something work :)
           function testMyClassSomeMethodIsTrue(t){
+            alert("You are using a generated test so the test should fail, but the test runner is working correctly.");
             var myClass = new <%= name %>.MyClass();
             t.t(myClass.someMethod());
           }

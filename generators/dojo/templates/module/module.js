@@ -1,4 +1,4 @@
-dojo.provide("<%= name %>.common");
+dojo.provide("<%= name %>");
 
 dojo.declare("<%= name %>.MyClass", null, {
 	constructor: function(){

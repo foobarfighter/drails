@@ -1,0 +1,16 @@
+<%
+	m_array = name.split(".")
+	module_name = m_array.pop
+	module_namespace = m_array.first
+	module_prefix = m_array.join(".")
+	url_module_prefix = module_prefix.split(".").join("/")
+%>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+	<head>
+	<title>Dijit Unit Test Runner</title>
+	<meta http-equiv="REFRESH" content="0;url=/javascripts/dojo/util/doh/runner.html?registerModulePath=<%= module_namespace %>,/javascripts/<%= module_namespace %>&testModule=<%= module_prefix %>.tests.all"></HEAD>
+	<BODY>
+		Redirecting to D.O.H runner.
+	</BODY>
+</HTML>

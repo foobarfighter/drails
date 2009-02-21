@@ -2,21 +2,33 @@ class DojoGenerator < Rails::Generator::Base
   
   JS_PATH = "public/javascripts"
   
-  attr_accessor :type, :name
+  attr_accessor :type, :name, :split_name
   
   def initialize(runtime_args, runtime_options = {})
     super
-    puts 
     @type = args.shift
     @name = args.shift
   end
   
   def manifest
-    case type
-    when "build": build_manifest
-    when "dijit": dijit_manifest
-    when "module": module_manifest
+    m = nil
+    
+    # TODO: Figure out the right way to throw errors.  There's probably a more
+    # "railsy" way to do this.
+    begin
+      raise "TYPE and NAME must be passed as arguments" unless type && name
+      @split_name = name.split(".")
+    
+      m = case type
+      when "build": build_manifest
+      when "dijit": dijit_manifest
+      when "module": module_manifest
+      end
+    rescue Exception => e
+      puts "USAGE ERROR: " + e.to_s + "\n\n"
+      puts usage()
     end
+    m
   end
   
   
@@ -41,8 +53,14 @@ class DojoGenerator < Rails::Generator::Base
     dijit_path(name) + "/tests/" + name.split(".").pop + ".html"
   end
   
+  def module_name(name)
+    name.split(".").last
+  end
+  
   def module_path(name)
-    "#{JS_PATH}/" + name.split(".").join("/")
+    p = name.split(".")
+    p.pop
+    "#{JS_PATH}/" + p.join("/")
   end
   
   def build_manifest
@@ -68,15 +86,17 @@ class DojoGenerator < Rails::Generator::Base
   end
   
   def module_manifest
+    raise "Module TYPE must be in the format namespace.moduleName" unless split_name.length > 1
     dir = module_path(name)
+    m_name = module_name(name)
     record do |m|
       m.directory dir
-      m.template "common.js", dir + "/common.js"
+      m.template "module/module.js", dir + "/#{m_name}.js"
       m.directory dir + "/tests"
-      m.template "module.js", dir + "/tests/module.js"
-      m.template "common.html", dir + "/tests/common.html"
-      m.template "runTests.html", dir + "/tests/runTests.html"
-      m.template "MODULE_README", dir + "/README"
+      m.template "module/all.js", dir + "/tests/all.js"
+      m.template "module/module.html", dir + "/tests/#{m_name}.html"
+      m.template "module/runTests.html", dir + "/tests/runTests.html"
+      m.template "module/README", dir + "/README"
     end
   end
   
