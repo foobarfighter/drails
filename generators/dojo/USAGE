@@ -9,39 +9,56 @@ TYPE can be one of three different options:
 NAME is dependent on the TYPE
 
   * If TYPE is 'module', then NAME can be the module name that you want to create.
-  
+
     For example, if your command is: ./script/generate dojo module xcompany.util
     The generator will create the following:
-      
-      public/javascripts/xcompany/util/common.js
-      public/javascripts/xcompany/util/tests/module.js
-      public/javascripts/xcompany/util/tests/runTests.html
-      public/javascripts/xcompany/util/README
-  
+
+      create  public/javascripts/xcompany
+      create  public/javascripts/xcompany/util.js
+      create  public/javascripts/xcompany/tests
+      create  public/javascripts/xcompany/tests/all.js
+      create  public/javascripts/xcompany/tests/test_util.html
+      create  public/javascripts/xcompany/tests/runTests.html
+      create  public/javascripts/xcompany/README
+
+    You can then access your doh unit tests by heading to:
+
+      http://localhost:3000/javascripts/xcompany/tests/runTests.html
+      (adjust host and port settings according to your configs)
+
   * If TYPE is 'build', then NAME is optional and it will be the name of the dojo
     build profile that you want to create.
-  
+
     For example, if your command is: ./script/generate dojo build xcompany
     The generator will create the following:
-    
+
       public/javascripts/xcompany_profile.js
       public/javascripts/BUILD_README
-    
+
     If you omit NAME: ./script/generate dojo build
     The generator will create the following:
-      
+
       public/javascripts/build_profile.js
       public/javascripts/BUILD_README
-  
+
   * If TYPE is 'dijit', then NAME is the name of the dojo widget that you want
     to create.
     For example, if your command is: ./script/generate dojo dijit xcompany.widgets.Widget
     Then the generator will create the following:
-    
-      public/javascripts/xcompany/widgets/Widget.js
-      public/javascripts/xcompany/widgets/tests/module.js
-      public/javascripts/xcompany/widgets/tests/runTests.html
-      public/javascripts/xcompany/widgets/tests/Widget.html
-      public/javascripts/xcompany/widgets/README
+
+      create  public/javascripts/xcompany/widgets
+      create  public/javascripts/xcompany/widgets/Widget.js
+      create  public/javascripts/xcompany/widgets/templates
+      create  public/javascripts/xcompany/widgets/templates/Widget.html
+      create  public/javascripts/xcompany/widgets/tests
+      create  public/javascripts/xcompany/widgets/tests/all.js
+      create  public/javascripts/xcompany/widgets/tests/test_Widget.html
+      create  public/javascripts/xcompany/widgets/tests/runTests.html
+      create  public/javascripts/xcompany/widgets/README
+
+      You can then access your doh unit tests by heading to:
+
+        http://localhost:3000/javascripts/xcompany/widgets/tests/runTests.html
+        (adjust host and port settings according to your configs)
 
 Happy dojaxing :)

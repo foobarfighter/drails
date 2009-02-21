@@ -10,7 +10,13 @@ dojo.declare("<%= name %>",
 		templatePath: dojo.moduleUrl("<%= module_prefix %>", "templates/<%= module_name %>.html"),
 		
 		constructor: function(){
+			
+		},
 		
+		// This handler is declared in the widget
+		onClickHandler: function(evt){
+			alert("clicked");
+			dojo.stopEvent(evt);
 		},
 		
 		someMethod: function(){
