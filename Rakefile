@@ -32,6 +32,7 @@ end
 
 namespace :dev do
   namespace :setup do
+    desc "Sets up the toolkit that will be used by the installed d-rails version.  Pass TOOLKIT=prototype on the command line to setup d-rails with the prototype tookkit."
     task :toolkit do
       toolkit = ENV["TOOLKIT"] == "prototype" ? "prototype" : "dojo"
       puts "Setting up application using the #{toolkit} toolkit"
@@ -40,6 +41,7 @@ namespace :dev do
       end
     end
     
+    desc "Sets up d-rails within testapp"
     task :full => ["dev:teardown:all"] do |t|
       cp_r ".", "/tmp/d-rails"
       rm_rf "testapp/public/javascripts/dojo"
@@ -54,6 +56,7 @@ namespace :dev do
       Rake::Task["dev:setup:toolkit"].invoke
     end
     
+    desc "Sets up d-rails within testapp with symlinks to important source files so that development can be done while testapp is running"
     task :linked => :full  do
       chdir "testapp/vendor/plugins/d-rails" do
         rm_rf  "generators"
@@ -67,11 +70,13 @@ namespace :dev do
   end
   
   namespace :teardown do
+    desc "Tears down the entire development environment"
     task :all => [ :dojo ] do
       rm_rf "testapp/vendor"
       rm_rf "/tmp/d-rails"
     end
     
+    desc "Removes dojo from the development environment"
     task :dojo do
       rm_rf "testapp/public/javascripts/dojo"
     end
