@@ -30,30 +30,60 @@ Rake::RDocTask.new(:rdoc) do |rdoc|
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
 
+namespace :dev do
+  namespace :setup do
+    task :full => "dev:teardown:all" do
+      cp_r ".", "/tmp/d-rails"
+      rm_rf "testapp/public/javascripts/dojo"
+      mkdir_p "testapp/vendor/plugins"
+      cp_r "/tmp/d-rails", "testapp/vendor/plugins"
+    end
+    
+    task :linked => :full  do
+      chdir "testapp/vendor/plugins/d-rails" do
+        rm_rf  "generators"
+        ln_s(DRAILS_PATH + "/generators", "generators", :verbose => true)
+        rm_rf  "tasks"
+        ln_s(DRAILS_PATH + "/tasks", "tasks", :verbose => true)
+      end
+      puts "Executing d-rails install..."
+      cmd = "cd #{TESTAPP_PATH}/vendor/plugins/d-rails; chmod 755 install.rb; RAILS_ROOT=#{TESTAPP_PATH} ./install.rb"
+      puts cmd
+      `#{cmd}`
+      puts "done"
+    end
+  end
+  
+  namespace :teardown do
+    task :all do
+      rm_rf "testapp/vendor"
+      rm_rf "/tmp/d-rails"
+    end
+  end
+end
+
+namespace :server do
+  desc "Starts the server"
+  task :start => :stop do
+    puts "starting server"
+    `cd testapp; script/server -d > /dev/null`
+  end
+  
+  desc "Stops the server"
+  task :stop do
+    puts "stopping server"
+    `ps aux | grep "p 3000" | grep -v grep | awk '{ print $2 }' | xargs kill`
+  end
+end
+
+
 namespace :cli do
   desc 'Setup the d-rails CLI development environment.'
-  task :setup => :teardown do
-    cp_r ".", "/tmp/d-rails"
-    rm_rf "testapp/public/javascripts/dojo"
-    mkdir_p "testapp/vendor/plugins"
-    cp_r "/tmp/d-rails", "testapp/vendor/plugins"
-    chdir "testapp/vendor/plugins/d-rails" do
-      rm_rf  "generators"
-      ln_s(DRAILS_PATH + "/generators", "generators", :verbose => true)
-      rm_rf  "tasks"
-      ln_s(DRAILS_PATH + "/tasks", "tasks", :verbose => true)
-    end
-    puts "Executing d-rails install..."
-    cmd = "cd #{TESTAPP_PATH}/vendor/plugins/d-rails; chmod 755 install.rb; RAILS_ROOT=#{TESTAPP_PATH} ./install.rb"
-    puts cmd
-    `#{cmd}`
-    puts "done"
+  task :setup => [ "dev:setup:linked" ] do
   end
   
   desc 'Tear down the d-rails CLI development environment'
-  task :teardown do
-    rm_rf "testapp/vendor"
-    rm_rf "/tmp/d-rails"
+  task :teardown => ["dev:teardown:all"] do
   end
 end
 
@@ -90,5 +120,12 @@ namespace :testjs do
         puts "removed #{dir}"
       end
     end
+  end
+end
+
+namespace :selenium do
+  desc "Runs Selenium tests"
+  task :spec => ["dev:setup:full", "server:start"] do
+    system("ruby -Ilib -e 'require \"spec/selenium/selenium_suite\"'")
   end
 end
