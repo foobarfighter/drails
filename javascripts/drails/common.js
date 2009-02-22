@@ -95,9 +95,11 @@ dojo.declare("drails.Request", [drails._base], {
 			dojo.mixin(dojoXhrArgs, this.transformCallbacks(url, xhrArgs));
 		}
 		this._transformedMethod = dojoXhrArgs['method'] || 'post';
+		// TODO: Add specs and cleanup
 		this._handleAs = "javascript";
 		dojoXhrArgs['handleAs'] = this._handleAs;
 		dojoXhrArgs['headers'] = { "Accept": "text/javascript, text/html, application/xml, text/xml, */*" };
+		// END TODO: Add specs and cleanup
 		this._transformedArgs = dojoXhrArgs;
 		dojo.xhr(this._transformedMethod, this._transformedArgs);
 	}
