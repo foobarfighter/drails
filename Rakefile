@@ -67,9 +67,13 @@ namespace :dev do
   end
   
   namespace :teardown do
-    task :all do
+    task :all => [ :dojo ] do
       rm_rf "testapp/vendor"
       rm_rf "/tmp/d-rails"
+    end
+    
+    task :dojo do
+      rm_rf "testapp/public/javascripts/dojo"
     end
   end
 end
