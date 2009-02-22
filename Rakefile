@@ -37,6 +37,12 @@ namespace :dev do
       rm_rf "testapp/public/javascripts/dojo"
       mkdir_p "testapp/vendor/plugins"
       cp_r "/tmp/d-rails", "testapp/vendor/plugins"
+      
+      puts "Executing d-rails install..."
+      cmd = "cd #{TESTAPP_PATH}/vendor/plugins/d-rails; chmod 755 install.rb; RAILS_ROOT=#{TESTAPP_PATH} ./install.rb"
+      puts cmd
+      `#{cmd}`
+      puts "done"
     end
     
     task :linked => :full  do
@@ -46,11 +52,6 @@ namespace :dev do
         rm_rf  "tasks"
         ln_s(DRAILS_PATH + "/tasks", "tasks", :verbose => true)
       end
-      puts "Executing d-rails install..."
-      cmd = "cd #{TESTAPP_PATH}/vendor/plugins/d-rails; chmod 755 install.rb; RAILS_ROOT=#{TESTAPP_PATH} ./install.rb"
-      puts cmd
-      `#{cmd}`
-      puts "done"
     end
   end
   
@@ -128,8 +129,17 @@ namespace :testjs do
 end
 
 namespace :selenium do
+  desc "Sets up the selenium test environment"
+  task :setup => "dev:setup:full" do
+    toolkit = ENV["TOOLKIT"] == "prototype" ? "prototype" : "dojo"
+    puts "Setting up selenium test using the #{toolkit} toolkit"
+    File.open("testapp/vendor/plugins/d-rails/config/drails.yml", "w") do |f|
+      f << "drails:\n  toolkit: #{toolkit}\n"
+    end
+  end
+  
   desc "Runs Selenium tests"
-  task :spec => ["dev:setup:full", "server:start"] do
+  task :spec => [:setup, "server:start"] do
     system("ruby -Ilib -e 'require \"spec/selenium/selenium_suite\"'")
   end
 end

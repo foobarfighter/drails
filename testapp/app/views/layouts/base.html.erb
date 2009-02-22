@@ -1,6 +1,15 @@
 <html>
   <title><%= controller.controller_name %> <%= controller.action_name %></title>
-  <%= javascript_include_tag :defaults %>
+  <% puts "USING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! " + (DRAILS_CONFIG["drails"]["toolkit"] == "prototype").to_s; if DRAILS_CONFIG["drails"]["toolkit"] == "prototype" %>
+    <%= javascript_include_tag :defaults %>
+  <% else %>
+    <%= javascript_include_tag "dojo/dojo/dojo" %>
+    <% javascript_tag do %>
+      dojo.registerModulePath("/javascript/dojo/drails", "drails");
+      dojo.require("drails.common");
+      dojo.require("drails.monkey");
+    <% end %>
+  <% end %>
   <body>
     <%= yield %>
   </body>
