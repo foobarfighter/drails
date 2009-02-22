@@ -1,0 +1,13 @@
+<%=
+  link_to_remote "success",
+    :update => [ :success => "_response" ], :url => { :action => "success" },
+    :html => { :id => 'test_success' }
+%>
+<div id="success_response">default</div>
+
+<%=
+  link_to_remote "failure",
+    :update => [ :failure => "_response" ], :url => { :action => "failure" },
+    :html => { :id => 'test_failure' }
+%>
+<div id="failure_response">default</div>

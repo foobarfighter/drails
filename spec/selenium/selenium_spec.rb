@@ -24,32 +24,23 @@ class DrailsDriver
 end
 
 
-describe "Something" do
+describe "drails.Updater" do
   
   attr_reader :driver
   
   before do
-    @driver = DrailsDriver.new("http://localhost:3000/spec/update")
+    @driver = DrailsDriver.new("http://localhost:3000/updater/show")
   end
   
-  it "should do something" do
-    driver.text_present("Google blah")
+  it "clicking on the test_success link should return success_js" do
+    driver.click("test_success")
+    driver.assert_element_present("success_js")
+    driver.get_inner_html("success_js").should == "success_js"
+  end
+  
+  it "clicking on the test_failure link should return failure_js" do
+    driver.click("test_failure")
+    driver.assert_element_present("failure_js")
+    driver.get_inner_html("failure_js").should == "failure_js"
   end
 end
-
-# class SeleniumTestCase < Test::Unit::TestCase
-#     include Polonium::SeleniumDsl
-#     
-#     delegate :select, :to => :selenium_driver
-# 
-#     def setup
-#        super
-#        @selenium_driver = configuration.driver
-#     end
-# 
-#     def teardown
-#      selenium_driver.stop if stop_driver?
-#      super
-#    end
-# 
-# end

@@ -69,6 +69,10 @@ namespace :server do
     `cd testapp; script/server -d > /dev/null`
   end
   
+  desc "Restarts the server"
+  task :restart => [ :stop, :start ] do
+  end
+  
   desc "Stops the server"
   task :stop do
     puts "stopping server"
