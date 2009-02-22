@@ -32,7 +32,15 @@ end
 
 namespace :dev do
   namespace :setup do
-    task :full => "dev:teardown:all" do
+    task :toolkit do
+      toolkit = ENV["TOOLKIT"] == "prototype" ? "prototype" : "dojo"
+      puts "Setting up application using the #{toolkit} toolkit"
+      File.open("testapp/vendor/plugins/d-rails/config/drails.yml", "w") do |f|
+        f << "drails:\n  toolkit: #{toolkit}\n"
+      end
+    end
+    
+    task :full => ["dev:teardown:all"] do |t|
       cp_r ".", "/tmp/d-rails"
       rm_rf "testapp/public/javascripts/dojo"
       mkdir_p "testapp/vendor/plugins"
@@ -43,6 +51,7 @@ namespace :dev do
       puts cmd
       `#{cmd}`
       puts "done"
+      Rake::Task["dev:setup:toolkit"].invoke
     end
     
     task :linked => :full  do
@@ -52,6 +61,8 @@ namespace :dev do
         rm_rf  "tasks"
         ln_s(DRAILS_PATH + "/tasks", "tasks", :verbose => true)
       end
+      rm_rf "testapp/public/javascripts/dojo/drails"
+      ln_s(DRAILS_PATH + "/javascripts/drails", "testapp/public/javascripts/dojo/drails")
     end
   end
   
@@ -94,20 +105,11 @@ end
 
 namespace :testjs do
   desc 'Setup the d-rails javascript development environment.'
-  task :setup do
-    installer = Drails::Installer.new(TESTAPP_PATH, DRAILS_PATH)
-    installer.require_prerequisites!
-    installer.install_dojo_source
-    
-    src_drails_js = File.join(DRAILS_PATH, 'javascripts', 'drails')
-    dest_drails_js = File.join(TESTAPP_PATH, 'public', 'javascripts', 'dojo', 'drails')
-
-    ln_s(src_drails_js, dest_drails_js)
+  task :setup => ["dev:setup:linked"] do
   end
   
   desc 'Fire up a web browser and run the d-rails javascript tests'
-  task :spec => [ :teardown, :setup ] do
-    `cd testapp; script/server 2>&1 > /dev/null &`
+  task :spec => [ :teardown, :setup, "server:restart" ] do
     `open http://localhost:3000/javascripts/dojo/drails/tests/runTests.html`
   end
 
@@ -130,12 +132,7 @@ end
 
 namespace :selenium do
   desc "Sets up the selenium test environment"
-  task :setup => "dev:setup:full" do
-    toolkit = ENV["TOOLKIT"] == "prototype" ? "prototype" : "dojo"
-    puts "Setting up selenium test using the #{toolkit} toolkit"
-    File.open("testapp/vendor/plugins/d-rails/config/drails.yml", "w") do |f|
-      f << "drails:\n  toolkit: #{toolkit}\n"
-    end
+  task :setup => "dev:setup:linked" do
   end
   
   desc "Runs Selenium tests"

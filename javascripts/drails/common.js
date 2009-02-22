@@ -79,6 +79,7 @@ dojo.declare("drails.Request", [drails._base], {
 	_requestOnConstruction: true,
 	_transformedArgs: null,
 	_transformedMethod: null,
+	_handleAs: null,
 	
 	constructor: function(url, xhrArgs){
 		if (this._requestOnConstruction){
@@ -93,7 +94,10 @@ dojo.declare("drails.Request", [drails._base], {
 			dojo.mixin(dojoXhrArgs, this.transformSettings(xhrArgs));
 			dojo.mixin(dojoXhrArgs, this.transformCallbacks(url, xhrArgs));
 		}
-		this._transformedMethod = dojoXhrArgs['method'] || 'get';
+		this._transformedMethod = dojoXhrArgs['method'] || 'post';
+		this._handleAs = "javascript";
+		dojoXhrArgs['handleAs'] = this._handleAs;
+		dojoXhrArgs['headers'] = { "Accept": "text/javascript, text/html, application/xml, text/xml, */*" };
 		this._transformedArgs = dojoXhrArgs;
 		dojo.xhr(this._transformedMethod, this._transformedArgs);
 	}
