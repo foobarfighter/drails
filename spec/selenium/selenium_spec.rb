@@ -4,30 +4,9 @@ require 'rubygems'
 require 'polonium'
 require dir + '/selenium_helper'
 
-class DrailsDriver
-  include Polonium::SeleniumDsl
-  delegate :select, :to => :selenium_driver
-  
-  def initialize(url)
-    @selenium_driver = configuration.driver
-    @selenium_driver.open url
-  end
-  
-  # def method_missing(sym, args)
-  #     puts "sym: #{sym.to_s}"
-  #     #self.send(sym, args)
-  #   end
-  
-  def text_present(text, options = {})
-    self.assert_text_present(text, options)
-  end
-end
-
-
 describe "drails.Updater" do
   
   attr_reader :driver
-  
   before do
     @driver = DrailsDriver.new("http://localhost:3000/updater/show")
   end
