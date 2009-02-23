@@ -97,7 +97,18 @@ dojo.declare("drails.Request", [drails._base], {
 		dojo.mixin(dojoXhrArgs, this._initHandlerAndHeaders());
 		this._transformedMethod = dojoXhrArgs['method'] || 'post';
 		this._transformedArgs = dojoXhrArgs;
-		dojo.xhr(this._transformedMethod, this._transformedArgs);
+		console.debug(this._transformedMethod)
+		console.debug(this._transformedArgs)
+		switch(this._transformedMethod){
+			case 'post':
+				dojo.xhrPost(this._transformedArgs);
+				break;
+			case 'get':
+				dojo.xhrGet(this._transformedArgs);
+				break;
+			default:
+				dojo.xhr(this._transformedMethod, this._transformedArgs);
+		}
 	},
 	
 	_initHandlerAndHeaders: function(){
@@ -274,8 +285,7 @@ dojo.declare("drails.TimedObserver", null, {
 
 dojo.declare("drails.Form.Element.Observer", [drails.TimedObserver], {
 	getValue: function(){
-		// TODO: Does this return field=value in prototype?
-		return dojo.fieldToObject(this.element);
+		return this.element.name + "=" + (dojo.fieldToObject(this.element) || "");
 	}
 });
 
@@ -349,7 +359,7 @@ dojo.declare("drails.Form.Element.EventObserver", [drails.EventObserver], {
 	},
 	
 	getValue: function() {
-		return dojo.fieldToObject(this.element);
+		return this.element.name + "=" + (dojo.fieldToObject(this.element) || "");
 	}
 });
 

@@ -73,7 +73,7 @@ module Drails
       if options[:frequency] && options[:frequency] > 0
         build_observer('drails.Form.Element.Observer', field_id, options)
       else
-        build_observer('drails.EventObserver', field_id, options)
+        build_observer('drails.Form.Element.EventObserver', field_id, options)
       end
     end
     
@@ -81,7 +81,7 @@ module Drails
       if options[:frequency]
         build_observer('drails.Form.Observer', form_id, options)
       else
-        build_observer('drails.EventObserver', form_id, options)
+        build_observer('drails.Form.EventObserver', form_id, options)
       end
     end
     

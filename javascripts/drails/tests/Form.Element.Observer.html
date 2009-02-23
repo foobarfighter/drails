@@ -28,15 +28,19 @@
     dojo.require("drails.tests.helpers");
     
     spec("drails.Form.Element.Observer", function() {
-      var o;
-      before(function() {
-        o = new drails.Form.Element.Observer('foo', .1, function(element, value){
+      it("gets the value from the form element", function(t) {
+        var o = new drails.Form.Element.Observer('foo', .1, function(element, value){
           this.stop();
         });
+        t.is('foo_name=somevalue', o.getValue());
       });
       
-      it("gets the value from the form element", function(t) {
-        t.is('somevalue', o.getValue());
+      it("when the value is empty is does not use 'null' as the field value", function(t){
+          var element = 'empty_text_input';
+          var o = new drails.Form.Element.Observer(element, .1, function(element, value){
+            this.stop();
+          });
+          doh.is('my_empty_text_input=', o.getValue());
       });
     })
     
@@ -50,7 +54,7 @@
 <body class="tundra">
 
 <input type="text" id="foo" name="foo_name" value="somevalue" />
-
+<input type="text" id="empty_text_input" name="my_empty_text_input" value="" />
 
 </body>
 </html>

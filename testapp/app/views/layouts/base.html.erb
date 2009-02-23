@@ -9,6 +9,13 @@
       dojo.require("drails.common");
       dojo.require("drails.monkey");
     <% end %>
+    
+    <script type="text/javascript">
+      function jsFunc(){
+      }
+      
+      dojo.xhr('post', { content: { foo: 'bar' }, url: 'http://localhost:3000/form_observers/show' });
+    </script>
   <% end %>
   <body>
     <%= yield %>

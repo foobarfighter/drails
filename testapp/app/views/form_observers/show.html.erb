@@ -1,0 +1,10 @@
+
+<!-- Event based field observers -->
+<form id="foo_form" action="/form_observers/success" onsubmit="return false;">
+  type something here: <input id="foo_field" type="text" name="foo" value="" />
+  <button id="tab_to">tab to me</button>
+</form>
+
+<%= observe_field("foo_field", :url => "/form_observers/success", :success => "document.getElementById('success_response').innerHTML = request;") %>
+
+<div id="success_response">default</div>

@@ -31,6 +31,7 @@ DOH Contributions:
 Dojo Bug Fixes:
 ===============
 - dojo build does not appear to work properly when dojo is build from an external profileFile
+- does dojo XHR really put params in the URL if you are doing an HTTP Post? (adding only to content)
 
 DOH Bug Fixes:
 ==============

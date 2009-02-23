@@ -57,8 +57,14 @@
       
       it("retrieves a value from the element", function(t){
         var element = 'text_input';
-        var o = new drails.Form.Element.EventObserver(element, function(element, value) { success = true; });
-        doh.is('somevalue', o.getValue());
+        var o = new drails.Form.Element.EventObserver(element, function(element, value) { });
+        doh.is('my_text_input=somevalue', o.getValue());
+      });
+      
+      it("when the value is empty is does not use 'null' as the field value", function(t){
+          var element = 'empty_text_input';
+          var o = new drails.Form.Element.EventObserver(element, function(element, value) { });
+          doh.is('my_empty_text_input=', o.getValue());
       });
       
       it("calls the callback when a click event occurs when the element is a radio", function(t){
@@ -101,6 +107,7 @@
 
 <form>
   <input type="text" id="text_input" name="my_text_input" value="somevalue" />
+  <input type="text" id="empty_text_input" name="my_empty_text_input" value="" />
   <input type="radio" id="radio_input1" name="my_radio_input" value="someradiovalue1" />
   <input type="radio" id="radio_input2" name="my_radio_input" value="someradiovalue2" />
   <input type="checkbox" id="checkbox_input1" name="my_checkbox_input" value="somecheckboxvalue1" />

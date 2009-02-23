@@ -144,8 +144,8 @@ describe Drails::PrototypeHelper do
         @helper_output = test_view.observe_field("some_field")
       end
       
-      it "returns a drails.EventObserver" do
-        helper_output.should == "<script type=\"text/javascript\">\n//<![CDATA[\nnew drails.EventObserver('some_field', function(element, value) {new drails.Request('http://somemockurl.com', {asynchronous:true, evalScripts:true, parameters:value})})\n//]]>\n</script>"
+      it "returns a drails.Form.Element.EventObserver" do
+        helper_output.should == "<script type=\"text/javascript\">\n//<![CDATA[\nnew drails.Form.Element.EventObserver('some_field', function(element, value) {new drails.Request('http://somemockurl.com', {asynchronous:true, evalScripts:true, parameters:value})})\n//]]>\n</script>"
       end
     end
     
@@ -168,8 +168,8 @@ describe Drails::PrototypeHelper do
         @helper_output = test_view.observe_form("some_form")
       end
       
-      it "returns a drails.EventObserver" do
-        helper_output.should == "<script type=\"text/javascript\">\n//<![CDATA[\nnew drails.EventObserver('some_form', function(element, value) {new drails.Request('http://somemockurl.com', {asynchronous:true, evalScripts:true, parameters:value})})\n//]]>\n</script>"
+      it "returns a drails.Form.EventObserver" do
+        helper_output.should == "<script type=\"text/javascript\">\n//<![CDATA[\nnew drails.Form.EventObserver('some_form', function(element, value) {new drails.Request('http://somemockurl.com', {asynchronous:true, evalScripts:true, parameters:value})})\n//]]>\n</script>"
       end
     end
     
