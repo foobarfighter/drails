@@ -31,23 +31,23 @@
             it("calls the onSuccess callback", function(t){
               var callbackCalled = false;
               var d = new doh.Deferred();
-              setTimeout(function() { d.callback(callbackCalled); }, 1000);
-              var request = new drails.Request("/success/updater", { onSuccess: function() { callbackCalled = true } });
+              setTimeout(function() { d.callback(callbackCalled); }, 200);
+              var request = new drails.Request("/updater/success", { onSuccess: function() { callbackCalled = true } });
               return d;
             });
 
             it("calls the onFailure callback", function(t){
               var callbackCalled = false;
               var d = new doh.Deferred();
-              setTimeout(function() { d.callback(callbackCalled); }, 1000);
-              var request = new drails.Request("/failure/updater", { onFailure: function() { callbackCalled = true } });
+              setTimeout(function() { d.callback(callbackCalled); }, 200);
+              var request = new drails.Request("/updater/failure", { onFailure: function() { callbackCalled = true } });
               return d;
             });
 
             it("fails if passing an unsupported callback", function(t) {
               var error = null;
               try {
-                var request = new drails.Request("/success/updater", { onUninitialized: function() { alert("unsupported, this function shouldn't fire!") } });
+                var request = new drails.Request("/updater/success", { onUninitialized: function() { alert("unsupported, this function shouldn't fire!") } });
               }
               catch (e) { error = e; }
               t.is("onUninitialized is not a supported drails operation", error);
@@ -55,30 +55,22 @@
             
             it("makes synchronous calls when asynchronous is false", function(t) {
               var called = false
-              var request = new drails.Request("/success/updater", { asynchronous: false, onSuccess: function() { called = true } });
+              var request = new drails.Request("/updater/success", { asynchronous: false, onSuccess: function() { called = true } });
               doh.is(called, true);
             });
             
-            it("still returns successfully if a param is mapped to 'noop' dojoXhrArg", function(t) {
+            it("defaults to 'POST' method when no method is passed", function(t) {
               var called = false
-              var request = new drails.Request("/success/updater", { asynchronous: false, evalScripts: true, onSuccess: function() { called = true } });
-              doh.is(request._transformedArgs["noop"] === null, true);
-              doh.is(called, true);
-            });
-            
-            it("defaults to 'GET' method when no method is passed", function(t) {
-              var called = false
-              var request = new drails.Request("/success/updater", { asynchronous: false, evalScripts: true, onSuccess: function() { called = true } });
-              doh.is(request._transformedMethod, "get");
+              var request = new drails.Request("/updater/success", { asynchronous: false, evalScripts: true, onSuccess: function() { called = true } });
+              doh.is(request._transformedMethod, "post");
               doh.is(called, true);
             });
             
             it("posts when 'POST' passed as the method", function(t) {
               var called = false;
               var d = new doh.Deferred();
-              setTimeout(function() { d.callback(called); }, 1000);
-              // This route fails on an HTTP post
-              var request = new drails.Request("/success/updater", { method: "POST", evalScripts: true, onFailure: function() { called = true } });
+              setTimeout(function() { d.callback(called); }, 200);
+              var request = new drails.Request("/updater/success", { method: "POST", evalScripts: true, onSuccess: function() { called = true } });
               doh.is(request._transformedMethod, "post");
               return d;
             });
@@ -86,8 +78,8 @@
             it("sends parameters when parameters are passed", function(t) {
               var success = false;
               var d = new doh.Deferred();
-              setTimeout(function() { d.callback(success); }, 1000);
-              var request = new drails.Request("/success/updater", {
+              setTimeout(function() { d.callback(success); }, 200);
+              var request = new drails.Request("/updater/success", {
                   method: "GET",
                   evalScripts: true,
                   parameters: "foo=bar",

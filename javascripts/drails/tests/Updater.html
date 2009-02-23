@@ -32,6 +32,11 @@
     var updaterDiv = "updater_div";
     var multiNodeUpdaterDiv = "multi_node_updater_div";
     
+    var jsFuncCalled = false;
+    function jsFunc(){
+      jsFuncCalled = true;
+    }
+    
     function compareHtml(refNode, htmlString, position) {
       var propertyMap = {
         "top":    "firstChild",
@@ -53,7 +58,9 @@
     spec("drails.Updater", function() {
       var updaterDivHTML, successDivHTML, failureDivHTML, multiNodeUpdaterDivHTML;
       
-      before(function(t) {        
+      before(function(t) {     
+        jsFuncCalled = false;
+           
         updaterDivHTML = dojo.byId(updaterDiv).innerHTML;
         successDivHTML = dojo.byId(successDiv).innerHTML;
         failureDivHTML = dojo.byId(failureDiv).innerHTML;
@@ -75,50 +82,64 @@
       it("calls the onSuccess callback", function(t){
         var callbackCalled = false;
         var d = new doh.Deferred();
-        setTimeout(function() { d.callback(callbackCalled); }, 500);
-        var updater = new drails.Updater(updaterDiv, "/success/updater", { onSuccess: function() { callbackCalled = true } });
+        setTimeout(function() { d.callback(callbackCalled); }, 200);
+        var updater = new drails.Updater(updaterDiv, "/updater/success", { onSuccess: function() { callbackCalled = true } });
         return d;
       });
       
       it("calls the onFailure callback", function(t){
         var callbackCalled = false;
         var d = new doh.Deferred();
-        setTimeout(function() { d.callback(callbackCalled); }, 500);
-        var updater = new drails.Updater(updaterDiv, "/failure/updater", { onFailure: function() { callbackCalled = true } });
+        setTimeout(function() { d.callback(callbackCalled); }, 200);
+        var updater = new drails.Updater(updaterDiv, "/updater/failure", { onFailure: function() { callbackCalled = true } });
         return d;
       });
       
-      it("fails if passing an unsupported callback", function(t) {
-        var error = null;
-        try {
-          var updater = new drails.Updater(updaterDiv, "/success/updater", { onUninitialized: function() { alert("unsupported, this function shouldn't fire!") } });
-        }
-        catch (e) { error = e; }
-        t.is("onUninitialized is not a supported drails operation", error);
-      });
-      
-      it("updates the updaterDiv when it's successful", function(t) {
+      it("if evalScripts is true, then it calls the jsFunc", function(t){
         var d = new doh.Deferred();
-        setTimeout(function() { d.callback(updaterDivHTML != dojo.byId(updaterDiv).innerHTML); }, 500);
-        var updater = new drails.Updater(updaterDiv, "/success/updater");
+        setTimeout(function() { d.callback(jsFuncCalled) }, 200);
+        var request = new drails.Updater(updaterDiv, "/updater/success", { evalScripts: true });
         return d;
       });
-      
-      it("updates the updaterDiv when it's successful in the 'top' position", function(t) {
-        var d = new doh.Deferred();
-        setTimeout(function() {
-            d.callback(compareHtml(multiNodeUpdaterDiv, content.toString(), 'top'));
-          }, 500);
-        var updater = new drails.Updater(multiNodeUpdaterDiv, "/success/updater", { onSuccess: function(response) { content = response }, insertion: 'top' });
-        return d;
-      });
+     
+     it("if evalScripts is false, then it does not call jsFunc", function(t){
+       var d = new doh.Deferred();
+       setTimeout(function() { d.callback(!jsFuncCalled) }, 200);
+       var request = new drails.Updater(updaterDiv, "/updater/success", { evalScripts: false });
+       return d;
+     });
+     
+     it("fails if passing an unsupported callback", function(t) {
+       var error = null;
+       try {
+         var updater = new drails.Updater(updaterDiv, "/updater/success", { onUninitialized: function() { alert("unsupported, this function shouldn't fire!") } });
+       }
+       catch (e) { error = e; }
+       t.is("onUninitialized is not a supported drails operation", error);
+     });
+     
+     it("updates the updaterDiv when it's successful", function(t) {
+       var d = new doh.Deferred();
+       setTimeout(function() { d.callback(updaterDivHTML != dojo.byId(updaterDiv).innerHTML); }, 200);
+       var updater = new drails.Updater(updaterDiv, "/updater/success");
+       return d;
+     });
+
+     it("updates the updaterDiv when it's successful in the 'top' position", function(t) {
+       var d = new doh.Deferred();
+       setTimeout(function() {
+           d.callback(compareHtml(multiNodeUpdaterDiv, content.toString(), 'top'));
+         }, 200);
+       var updater = new drails.Updater(multiNodeUpdaterDiv, "/updater/success", { onSuccess: function(response) { content = this.strippedContent(response) }, insertion: 'top' });
+       return d;
+     });
       
       it("updates the updaterDiv when it's successful in the 'bottom' position", function(t) {
         var d = new doh.Deferred();
         setTimeout(function() {
             d.callback(compareHtml(multiNodeUpdaterDiv, content.toString(), 'bottom'));
-          }, 500);
-        var updater = new drails.Updater(multiNodeUpdaterDiv, "/success/updater", { onSuccess: function(response) { content = response }, insertion: 'bottom' });
+          }, 200);
+        var updater = new drails.Updater(multiNodeUpdaterDiv, "/updater/success", { onSuccess: function(response) { content = this.strippedContent(response.toString()) }, insertion: 'bottom' });
         return d;
       });
       
@@ -126,8 +147,8 @@
         var d = new doh.Deferred();
         setTimeout(function() {
             d.callback(compareHtml(multiNodeUpdaterDiv, content.toString(), 'before'));
-          }, 500);
-        var updater = new drails.Updater(multiNodeUpdaterDiv, "/success/updater", { onSuccess: function(response) { content = response }, insertion: 'before' });
+          }, 200);
+        var updater = new drails.Updater(multiNodeUpdaterDiv, "/updater/success", { onSuccess: function(response) { content = this.strippedContent(response.toString()) }, insertion: 'before' });
         return d;
       });
       
@@ -135,29 +156,29 @@
         var d = new doh.Deferred();
         setTimeout(function() {
             d.callback(compareHtml(multiNodeUpdaterDiv, content.toString(), 'after'));
-          }, 500);
-        var updater = new drails.Updater(multiNodeUpdaterDiv, "/success/updater", { onSuccess: function(response) { content = response }, insertion: 'after' });
+          }, 200);
+        var updater = new drails.Updater(multiNodeUpdaterDiv, "/updater/success", { onSuccess: function(response) { content = this.strippedContent(response.toString()) }, insertion: 'after' });
         return d;
       });
       
       it("updates the updaterDiv when there is a failure", function(t){
         var d = new doh.Deferred();
-        setTimeout(function() { d.callback(updaterDivHTML != dojo.byId(updaterDiv).innerHTML); }, 500);
-        var updater = new drails.Updater(updaterDiv, "/failure/updater");
+        setTimeout(function() { d.callback(updaterDivHTML != dojo.byId(updaterDiv).innerHTML); }, 200);
+        var updater = new drails.Updater(updaterDiv, "/updater/failure");
         return d;
       });
       
       it("updates the successDiv when successful", function (t){
         var d = new doh.Deferred();
-        setTimeout(function() { d.callback(successDivHTML != dojo.byId(successDiv).innerHTML); }, 500);
-        var updater = new drails.Updater({ success: successDiv }, "/success/updater");
+        setTimeout(function() { d.callback(successDivHTML != dojo.byId(successDiv).innerHTML); }, 200);
+        var updater = new drails.Updater({ success: successDiv }, "/updater/success");
         return d;
       });
       
       it("updates the failureDiv when there is a failure", function(t){
         var d = new doh.Deferred();
-        setTimeout(function() { d.callback(failureDivHTML != dojo.byId(failureDiv).innerHTML); }, 500);
-        var updater = new drails.Updater({ failure: failureDiv }, "/failure/updater");
+        setTimeout(function() { d.callback(failureDivHTML != dojo.byId(failureDiv).innerHTML); }, 200);
+        var updater = new drails.Updater({ failure: failureDiv }, "/updater/failure");
         return d;
       });
     });

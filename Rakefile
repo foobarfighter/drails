@@ -86,8 +86,9 @@ end
 namespace :server do
   desc "Starts the server"
   task :start => :stop do
-    puts "starting server"
-    `cd testapp; script/server -d > /dev/null`
+    rails_env = ENV['RAILS_ENV'] || 'development'
+    puts "starting #{rails_env} server"
+    `cd testapp; script/server -e #{rails_env} -d > /dev/null`
   end
   
   desc "Restarts the server"

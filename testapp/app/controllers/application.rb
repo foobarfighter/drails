@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
 
   # See ActionController::RequestForgeryProtection for details
   # Uncomment the :secret if you're not using the cookie session store
-  protect_from_forgery # :secret => 'fe5ff5df0920a8e5aec44e1ca40f7ccb'
+  #protect_from_forgery # :secret => 'fe5ff5df0920a8e5aec44e1ca40f7ccb'
   
   # See ActionController::Base for details 
   # Uncomment this to filter the contents of submitted sensitive data parameters
@@ -17,9 +17,8 @@ class ApplicationController < ActionController::Base
   
   before_filter :set_drails_config
   
-  attr_reader :drails_config
-  
   def set_drails_config
     @drails_config = YAML.load(File.open("#{RAILS_ROOT}/vendor/plugins/d-rails/config/drails.yml"))
   end
+  
 end

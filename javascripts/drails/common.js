@@ -14,7 +14,8 @@ drails._xhrMap = {
 	"method":				[ "method", function(v) { return v.toLowerCase(); } ],
 	"insertion":		[ "place", function(v) { return drails._insertionMap[v] }],
 	"parameters":		[ "content", function(v) { return dojo.queryToObject(v); } ],
-	"evalScripts":	[ "noop", function(v) { return null; } ]
+	//"evalScripts":	[ "handleAs", function(v) { return v == true ? "javascript" : "text"; } ]
+	"evalScripts":	"evalScripts"
 };
 
 drails._xhrCallbackMap = {
@@ -79,7 +80,6 @@ dojo.declare("drails.Request", [drails._base], {
 	_requestOnConstruction: true,
 	_transformedArgs: null,
 	_transformedMethod: null,
-	_handleAs: null,
 	
 	constructor: function(url, xhrArgs){
 		if (this._requestOnConstruction){
@@ -94,23 +94,30 @@ dojo.declare("drails.Request", [drails._base], {
 			dojo.mixin(dojoXhrArgs, this.transformSettings(xhrArgs));
 			dojo.mixin(dojoXhrArgs, this.transformCallbacks(url, xhrArgs));
 		}
+		dojo.mixin(dojoXhrArgs, this._initHandlerAndHeaders());
 		this._transformedMethod = dojoXhrArgs['method'] || 'post';
-		// TODO: Add specs and cleanup
-		this._handleAs = "javascript";
-		dojoXhrArgs['handleAs'] = this._handleAs;
-		dojoXhrArgs['headers'] = { "Accept": "text/javascript, text/html, application/xml, text/xml, */*" };
-		// END TODO: Add specs and cleanup
 		this._transformedArgs = dojoXhrArgs;
 		dojo.xhr(this._transformedMethod, this._transformedArgs);
+	},
+	
+	_initHandlerAndHeaders: function(){
+		var o = {
+			'headers': {
+				'Accept': 'text/javascript, text/html, application/xml, text/xml, */*'
+			}
+		};
+		return o;
 	}
 });
 
 
 dojo.declare("drails.Updater", [drails.Request], {
 	
+	stripRegExp: new RegExp('<script[^>]*>([\\S\\s]*?)<\/script>', "img"),
 	_requestOnConstruction: false,
 	_successNode: null,
 	_failureNode: null,
+	_strippedContent: null,
 	
 	constructor: function(target, url, xhrArgs) {
 		xhrArgs = xhrArgs || {};
@@ -122,11 +129,11 @@ dojo.declare("drails.Updater", [drails.Request], {
 	},
 	
 	onSuccess: function(response, ioArgs) {
-		this._placeHTML(response, ioArgs, this._successNode);
+		this._handle(response.toString(), ioArgs, this._successNode);
 	},
 	
 	onFailure: function(response, ioArgs) {
-		this._placeHTML(response, ioArgs, this._failureNode);
+		this._handle(response.responseText, ioArgs, this._failureNode);
 	},
 	
 	interpolateTargets: function(target){
@@ -139,6 +146,37 @@ dojo.declare("drails.Updater", [drails.Request], {
 		else {
 			throw new Error("Invalid target type");
 		}
+	},
+	
+	strippedContent: function(responseText){
+		return responseText.replace(this.stripRegExp, "");
+	},
+	
+	_evalScripts: function(scripts){
+		if (!scripts) return;
+		
+		dojo.forEach(scripts, function(script){
+			if (script) eval(script);
+		});
+	},
+	
+	_handle: function(responseText, ioArgs, node){
+		var scripts = null;
+		var doEval = ioArgs.args['evalScripts'];
+		
+		if (doEval) scripts = this._grepScripts(responseText);
+		responseText = this.strippedContent(responseText);
+		this._placeHTML(responseText, ioArgs, node);
+		if (doEval) this._evalScripts(scripts);
+	},
+	
+	_grepScripts: function(responseText){
+		var regexp = this.scriptRegExp;
+		var scripts = [];
+		dojo.forEach(this.stripRegExp.exec(responseText), function(script, i){
+			if (i > 0) scripts.push(script);
+		});
+		return scripts;
 	},
 	
 	_placeHTML: function(response, ioArgs, target) {
