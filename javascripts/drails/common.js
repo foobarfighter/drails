@@ -13,7 +13,7 @@ drails._xhrMap = {
 	"asynchronous": [ "sync", function(v) { return !v; } ],
 	"method":				[ "method", function(v) { return v.toLowerCase(); } ],
 	"insertion":		[ "place", function(v) { return drails._insertionMap[v] }],
-	"parameters":		[ "content", function(v) { return dojo.queryToObject(v); } ],
+	"parameters":		[ "content", function(v) { return dojo.isObject(v) ? v : dojo.queryToObject(v); } ],
 	//"evalScripts":	[ "handleAs", function(v) { return v == true ? "javascript" : "text"; } ]
 	"evalScripts":	"evalScripts"
 };
@@ -97,8 +97,6 @@ dojo.declare("drails.Request", [drails._base], {
 		dojo.mixin(dojoXhrArgs, this._initHandlerAndHeaders());
 		this._transformedMethod = dojoXhrArgs['method'] || 'post';
 		this._transformedArgs = dojoXhrArgs;
-		console.debug(this._transformedMethod)
-		console.debug(this._transformedArgs)
 		switch(this._transformedMethod){
 			case 'post':
 				dojo.xhrPost(this._transformedArgs);
