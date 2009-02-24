@@ -1,10 +1,39 @@
 
-<!-- Event based field observers -->
-<form id="foo_form" action="/form_observers/success" onsubmit="return false;">
-  type something here: <input id="foo_field" type="text" name="foo" value="" />
-  <button id="tab_to">tab to me</button>
+<h3>Event based field observers</h3>
+<form id="foo_form10" action="/form_observers/success" onsubmit="return false;">
+  type something here: <input id="foo_field10" type="text" name="foo" value="" />
+  <button id="tab_to10">tab to me</button>
 </form>
 
-<%= observe_field("foo_field", :url => "/form_observers/success", :success => "document.getElementById('success_response').innerHTML = request;") %>
+<%= observe_field("foo_field10", :url => "/form_observers/success", :success => "document.getElementById('success_response10').innerHTML = request;") %>
 
-<div id="success_response">default</div>
+<div id="success_response10">default</div>
+
+<form id="foo_form11" action="/form_observers/success" onsubmit="return false;">
+  type something here: <input id="foo_field11" type="text" name="foo" value="" />
+  <button id="tab_to11">tab to me</button>
+</form>
+
+<%= observe_field("foo_field11", :url => "/form_observers/failure", :failure => "document.getElementById('failure_response11').innerHTML = request.responseText;") %>
+
+<div id="failure_response11">default</div>
+
+
+<h3>Timed Event based field observers</h3>
+<form id="foo_form20" action="/form_observers/success" onsubmit="return false;">
+  type something here: <input id="foo_field20" type="text" name="foo" value="" />
+  <button id="tab_to20">tab to me</button>
+</form>
+
+<%= observe_field("foo_field20", :frequency => 0.1, :url => "/form_observers/success", :success => "document.getElementById('success_response20').innerHTML = request;") %>
+
+<div id="success_response20">default</div>
+
+<form id="foo_form21" action="/form_observers/success" onsubmit="return false;">
+  type something here: <input id="foo_field21" type="text" name="foo" value="" />
+  <button id="tab_to21">tab to me</button>
+</form>
+
+<%= observe_field("foo_field21", :frequency => 0.1, :url => "/form_observers/failure", :failure => "document.getElementById('failure_response21').innerHTML = request.responseText;") %>
+
+<div id="failure_response21">default</div>
