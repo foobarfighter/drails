@@ -290,7 +290,7 @@ dojo.declare("drails.Form.Element.Observer", [drails.TimedObserver], {
 dojo.declare("drails.Form.Observer", [drails.TimedObserver], {
 	getValue: function(){
 		// TODO: does this returns a query string in prototype?		 
-		return dojo.formToObject(this.element);
+		return dojo.objectToQuery(dojo.formToObject(this.element));
 	}
 });
 

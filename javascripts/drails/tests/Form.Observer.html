@@ -28,11 +28,8 @@
     dojo.require("drails.tests.helpers");
     
     spec("drails.Form.Observer", function() {
-      var o;
       before(function() {
-        o = new drails.Form.Observer('my_form', .1, function(element, value){
-          this.stop();
-        });
+        dojo.byId("foo").value = "somevalue";
       });
       
       it("gets the value from the form element", function(t) {
@@ -41,9 +38,29 @@
           bar_name: 'somevalue2',
           baz_radio: 'somevalue3'
         }
-        t.is(expected, o.getValue());
+        var o = new drails.Form.Observer('my_form', .1, function(element, value){
+          this.stop();
+        });
+        t.is(dojo.objectToQuery(expected), o.getValue());
       });
-    })
+      
+      it("calls executes the callback when a form value changes", function(t){
+        var d = new doh.Deferred();
+        var callbackCount = 0;
+        var success = false;
+        
+        setTimeout(function(){ d.callback(success) }, 200);
+        var o = new drails.Form.Observer('my_form', .05, function(element, value){
+          if (++callbackCount > 1) {
+            success = true;
+            this.stop();
+          }else{
+            dojo.byId('foo').value = 'bar';
+          }
+        });
+        return d;
+      });
+    });
     
     dojo.addOnLoad(function(){
       doh.spec.register();

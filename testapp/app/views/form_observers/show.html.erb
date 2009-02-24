@@ -49,3 +49,21 @@
 </form>
 <%= observe_form("foo_form31", :url => "/form_observers/failure", :failure => "document.getElementById('failure_response31').innerHTML = request.responseText;") %>
 <div id="failure_response31">default</div>
+
+
+<h3>Timed Event based form observer</h3>
+<form id="foo_form40" action="/form_observers/success" onsubmit="return false">
+  type something here: <input id="foo_field40" type="text" name="foo" value="thud" /><br />
+  and type something here: <input id="foo_field41" type="text" name="bar" value="thonk" /></br />
+  <button id="tab_to40">tab to me</button>
+</form>
+<%= observe_form("foo_form40", :frequency => 0.1, :url => "/form_observers/success", :success => "document.getElementById('success_response40').innerHTML = request;") %>
+<div id="success_response40">default</div>
+
+<form id="foo_form41" action="/form_observers/failure" onsubmit="return false">
+  type something here: <input id="foo_field42" type="text" name="foo" value="thud" /><br />
+  and type something here: <input id="foo_field43" type="text" name="bar" value="thonk" /></br />
+  <button id="tab_to41">tab to me</button>
+</form>
+<%= observe_form("foo_form41", :frequency => 0.1, :url => "/form_observers/failure", :failure => "document.getElementById('failure_response41').innerHTML = request.responseText;") %>
+<div id="failure_response41">default</div>

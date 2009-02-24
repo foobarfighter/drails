@@ -66,4 +66,20 @@ describe "form observers" do
       end
     end
   end
+  
+  describe "drails.Form.Observer" do
+    describe "when the response is successful" do
+      it "posts the field data when the text changes and updates the success_response{n} div" do
+        driver.assert_element_present("css=#success_response40 .success_js")
+        driver.get_inner_html("css=#success_response40 .success_js").should == "success_js"
+      end
+    end
+    
+    describe "when the response is a failure" do
+      it "posts the field data when the text changes and updates the failure_response{n} div" do
+        driver.assert_element_present("css=#failure_response41 .failure_js")
+        driver.get_inner_html("css=#failure_response41 .failure_js").should == "failure_js"
+      end
+    end
+  end
 end
