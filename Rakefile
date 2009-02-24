@@ -14,7 +14,9 @@ desc 'Runs the d-rails ruby specs.'
 Spec::Rake::SpecTask.new(:runspec) do |t|
   t.libs << 'lib'
   t.libs << File.dirname(__FILE__)
-  t.spec_files = FileList['spec/**/*_spec.rb']
+  t.spec_files = []
+  t.spec_files += FileList['spec/helpers/*_spec.rb']
+  t.spec_files += FileList['spec/*_spec.rb']
 end
 
 desc 'Test the d-rails ruby specs'
