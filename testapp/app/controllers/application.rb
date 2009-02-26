@@ -18,7 +18,7 @@ class ApplicationController < ActionController::Base
   before_filter :set_drails_config
   
   def set_drails_config
-    @drails_config = YAML.load(File.open("#{RAILS_ROOT}/vendor/plugins/d-rails/config/drails.yml"))
+    @drails_config = YAML.load(File.open("#{RAILS_ROOT}/vendor/plugins/drails/config/drails.yml"))
   end
   
   def success

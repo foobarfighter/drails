@@ -10,6 +10,6 @@ begin
     Drails::ScriptaculousOverride.override
   end
 rescue Exception => e
-  raise "Could not load d-rails config file: #{config_file}: #{e.to_s}"
+  raise "Could not load drails config file: #{config_file}: #{e.to_s}"
 end
 

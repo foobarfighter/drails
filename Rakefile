@@ -10,7 +10,7 @@ TESTAPP_PATH = File.join(File.dirname(__FILE__), "testapp")
 desc 'Default: run specs.'
 task :default => :spec
 
-desc 'Runs the d-rails ruby specs.'
+desc 'Runs the drails ruby specs.'
 Spec::Rake::SpecTask.new(:runspec) do |t|
   t.libs << 'lib'
   t.libs << File.dirname(__FILE__)
@@ -19,7 +19,7 @@ Spec::Rake::SpecTask.new(:runspec) do |t|
   t.spec_files += FileList['spec/*_spec.rb']
 end
 
-desc 'Test the d-rails ruby specs'
+desc 'Test the drails ruby specs'
 task :spec  => ['testjs:teardown', 'runspec'] do
 end
 
@@ -34,33 +34,33 @@ end
 
 namespace :dev do
   namespace :setup do
-    desc "Sets up the toolkit that will be used by the installed d-rails version.  Pass TOOLKIT=prototype on the command line to setup d-rails with the prototype tookkit."
+    desc "Sets up the toolkit that will be used by the installed drails version.  Pass TOOLKIT=prototype on the command line to setup drails with the prototype tookkit."
     task :toolkit do
       toolkit = ENV["TOOLKIT"] == "prototype" ? "prototype" : "dojo"
       puts "Setting up application using the #{toolkit} toolkit"
-      File.open("testapp/vendor/plugins/d-rails/config/drails.yml", "w") do |f|
+      File.open("testapp/vendor/plugins/drails/config/drails.yml", "w") do |f|
         f << "drails:\n  toolkit: #{toolkit}\n"
       end
     end
     
-    desc "Sets up d-rails within testapp"
+    desc "Sets up drails within testapp"
     task :full => ["dev:teardown:all"] do |t|
-      cp_r ".", "/tmp/d-rails"
+      cp_r ".", "/tmp/drails"
       rm_rf "testapp/public/javascripts/dojo"
       mkdir_p "testapp/vendor/plugins"
-      cp_r "/tmp/d-rails", "testapp/vendor/plugins"
+      cp_r "/tmp/drails", "testapp/vendor/plugins"
       
-      puts "Executing d-rails install..."
-      cmd = "cd #{TESTAPP_PATH}/vendor/plugins/d-rails; chmod 755 install.rb; RAILS_ROOT=#{TESTAPP_PATH} ./install.rb"
+      puts "Executing drails install..."
+      cmd = "cd #{TESTAPP_PATH}/vendor/plugins/drails; chmod 755 install.rb; RAILS_ROOT=#{TESTAPP_PATH} ./install.rb"
       puts cmd
       `#{cmd}`
       puts "done"
       Rake::Task["dev:setup:toolkit"].invoke
     end
     
-    desc "Sets up d-rails within testapp with symlinks to important source files so that development can be done while testapp is running"
+    desc "Sets up drails within testapp with symlinks to important source files so that development can be done while testapp is running"
     task :linked => :full  do
-      chdir "testapp/vendor/plugins/d-rails" do
+      chdir "testapp/vendor/plugins/drails" do
         rm_rf  "generators"
         ln_s(DRAILS_PATH + "/generators", "generators", :verbose => true)
         rm_rf  "tasks"
@@ -75,7 +75,7 @@ namespace :dev do
     desc "Tears down the entire development environment"
     task :all => [ :dojo ] do
       rm_rf "testapp/vendor"
-      rm_rf "/tmp/d-rails"
+      rm_rf "/tmp/drails"
     end
     
     desc "Removes dojo from the development environment"
@@ -106,26 +106,26 @@ end
 
 
 namespace :cli do
-  desc 'Setup the d-rails CLI development environment.'
+  desc 'Setup the drails CLI development environment.'
   task :setup => [ "dev:setup:linked" ] do
   end
   
-  desc 'Tear down the d-rails CLI development environment'
+  desc 'Tear down the drails CLI development environment'
   task :teardown => ["dev:teardown:all"] do
   end
 end
 
 namespace :testjs do
-  desc 'Setup the d-rails javascript development environment.'
+  desc 'Setup the drails javascript development environment.'
   task :setup => ["dev:setup:linked"] do
   end
   
-  desc 'Fire up a web browser and run the d-rails javascript tests'
+  desc 'Fire up a web browser and run the drails javascript tests'
   task :spec => [ :teardown, :setup, "server:restart" ] do
     `open http://localhost:3000/javascripts/dojo/drails/tests/runTests.html`
   end
 
-  desc 'Tear down the d-rails development environment.'
+  desc 'Tear down the drails development environment.'
   task :teardown do
     delete_files = ['testapp/javascripts/public/dojo/drails'].each do |file|
       if File.exists? file

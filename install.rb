@@ -2,11 +2,11 @@
 
 ####################################################################
 #                                                                  #
-#      Copyright (c) 2008, Bob Remeika and others                  #
+#      Copyright (c) 2009, Bob Remeika and others                  #
 #      All Rights Reserved.                                        #
 #                                                                  #
 #      Licensed under the MIT License.                             #
-#      For more information on d-rails licensing, see:             #
+#      For more information on drails licensing, see:              #
 #                                                                  #
 #          http://www.opensource.org/licenses/mit-license.php      #
 #                                                                  #

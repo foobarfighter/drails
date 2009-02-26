@@ -104,6 +104,12 @@ dojo.declare("drails.Request", [drails._base], {
 			case 'get':
 				dojo.xhrGet(this._transformedArgs);
 				break;
+			case 'delete':
+				dojo.xhrDelete(this._transformedArgs);
+				break;
+			case 'put':
+				dojo.xhrPut(this._transformedArgs);
+				break;
 			default:
 				dojo.xhr(this._transformedMethod, this._transformedArgs);
 		}
@@ -553,7 +559,7 @@ dojo.declare("drails.Toggler", [dojo.fx.Toggler], {
 		
 		constructor: function(element, effect, options){
 			var ctor = _f._fxCtorMap[effect];
-			if (!ctor) throw new Error("'" + effect + "' is not a valid d-rails effect");
+			if (!ctor) throw new Error("'" + effect + "' is not a valid drails effect");
 			var o = { node: element, duration: 200 };
 			this.fxOptions = dojo.mixin(o, options || {});
 			this.fx = ctor(this.fxOptions)
@@ -582,7 +588,7 @@ dojo.declare("drails.Toggler", [dojo.fx.Toggler], {
 		
 		findToggleFxCtor: function(effect){
 			var ctor = _f._fxCtorMap[_f._toggleFxOptionMap[effect]];
-			if (!ctor) throw new Error("'" + effect + "' is not a valid d-rails toggle effect");
+			if (!ctor) throw new Error("'" + effect + "' is not a valid drails toggle effect");
 			return ctor;
 		},
 		

@@ -1,10 +1,10 @@
 ####################################################################
 #                                                                  #
-#      Copyright (c) 2008, Bob Remeika and others                  #
+#      Copyright (c) 2009, Bob Remeika and others                  #
 #      All Rights Reserved.                                        #
 #                                                                  #
 #      Licensed under the MIT License.                             #
-#      For more information on d-rails licensing, see:             #
+#      For more information on drails licensing, see:              #
 #                                                                  #
 #          http://www.opensource.org/licenses/mit-license.php      #
 #                                                                  #
@@ -23,7 +23,7 @@ module Drails
 
 ** Installation Error:
 **
-** d-rails requires the dojo-pkg rubygem for installation.
+** drails requires the dojo-pkg rubygem for installation.
 ** To get dojo-pkg:
 **
 **    sudo gem install dojo-pkg
@@ -47,12 +47,12 @@ MSG
     def install_success_msg
       msg =<<MSG
 
-** d-rails was installed successfully!
-** d-rails installed dojo source and d-rails scripts to:
+** drails was installed successfully!
+** drails installed dojo source and drails scripts to:
 **
 **    #{dojo_dest_dir}
 **
-** All other d-rails source files are located at:
+** All other drails source files are located at:
 **
 **    #{drails_root}
 **
@@ -77,10 +77,10 @@ MSG
       end
 
       begin
-        write_message "** Installing d-rails javascripts into your application..."
+        write_message "** Installing drails javascripts into your application..."
         install_drails_scripts
       rescue Exception => e
-        die_with_message("!! Could not install d-rails javascripts: #{e.to_s}")
+        die_with_message("!! Could not install drails javascripts: #{e.to_s}")
       end
 
       write_message(install_success_msg)

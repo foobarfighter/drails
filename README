@@ -1,13 +1,13 @@
-d-rails
+drails
 =======
 
-d-rails allows you to use RJS with Dojo in your Rails application.  It completely replaces the need
+drails allows you to use RJS with Dojo in your Rails application.  It completely replaces the need
 for Prototype/Scriptaculous in your application and let's you use the powerful Dojo Toolkit as
 your Javascript library.
 
 Examples:
 =========
-The best way to see how to use d-rails helpers is to view the specs.  Most people will be interested in
+The best way to see how to use drails helpers is to view the specs.  Most people will be interested in
 prototype_helper_spec.rb and scriptaculous_helper_spec.rb.  For a quick taste, here is an example of how
 you can create an link that replaces the "success_response" div on successful completion of an ajax call
 with the HTML returned by the server:
@@ -18,39 +18,41 @@ with the HTML returned by the server:
 <div id="success_response">...some html to be replaced...</div>
 
 
-To see the usages for the d-rails generators for dojo modules, dijits, and build profiles, type this
+To see the usages for the drails generators for dojo modules, dijits, and build profiles, type this
 from the command line:
 
 cd my_rails_app; script/generate dojo
 
-d-rails comes with some handy rake tasks for incorporating dojo builds.  To see what is available, type
+drails comes with some handy rake tasks for incorporating dojo builds.  To see what is available, type
 this from the command line.
 
 cd my_rails_app; rake -T | grep drails
 
 Installation:
 =============
+# drails relies on the dojo-pkg gem.  Installing this gem can sometimes take a while
+gem install dojo-pkg
 cd my_rails_app
-script/plugin install git://github.com/foobarfighter/d-rails.git
+script/plugin install git://github.com/foobarfighter/drails.git
 
 ** NOTE: This also installs the dojo-pkg gem (a package that includes the dojo source code) from rubyforge.
 This can sometimes take a while.
 
 How it works:
 =============
-d-rails tries not to touch Rails' ruby internals as much as possible by providing a client
+drails tries not to touch Rails' ruby internals as much as possible by providing a client
 side library that provides the same argument interface as Prototype/Scriptaculous.  The method
 names and objects map to the Prototype/Scriptaculous methods and objects needed for emulating the
 RJS helper APIs as well as help with any argument munging that is needed due to inconsistencies
 between the Dojo and Prototype/Scriptaculous APIs.
 
-d-rails overrides Rails' ruby internals only when it needs to in order to call out to d-rails functions
+drails overrides Rails' ruby internals only when it needs to in order to call out to drails functions
 instead of Prototype/Scriptaculous.  This monkey patching is necessary only because Rails/RJS is so
 tightly coupled to the Javascript framework that is bundled with it.
 
 Limitations:
 ============
-- d-rails supports all of the most common Rails helpers, but does not fully support RJS.  If there is
+- drails supports all of the most common Rails helpers, but does not fully support RJS.  If there is
   a huge demand for this, then I will add the complete RJS implementation, but I'm assuming that most
   people that are using Dojo, prefer to right Javascript instead of Ruby generated Javascript.
 
