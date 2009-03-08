@@ -80,7 +80,7 @@ describe Drails::ScriptaculousHelper do
     
     describe "when the element is passed" do
       it "returns the drails.Sortable.create method with the default onUpdate  callback" do
-        helper_output.should == 'drails.Sortable.create("my_id", {onUpdate:function(){new drails.Request(\'http://somemockurl.com\', {asynchronous:true, evalScripts:true, parameters:Sortable.serialize("my_id")})}});'
+        helper_output.should == 'drails.Sortable.create("my_id", {onUpdate:function(){new drails.Request(\'http://somemockurl.com\', {asynchronous:true, evalScripts:true, parameters:drails.Sortable.serialize("my_id")})}});'
       end
     end
     
@@ -117,7 +117,7 @@ describe Drails::ScriptaculousHelper do
         @helper_output = test_view.sortable_element_js('my_id', options)
       end
       it "returns a drails.Sortable with all of the options" do
-        helper_output.should == "drails.Sortable.create(\"my_id\", {constraint:'if (true)', containment:['blah','blah2'], handle:'handleIt()', onUpdate:function(){new drails.Request('http://somemockurl.com', {asynchronous:true, evalScripts:true, parameters:Sortable.serialize(\"my_id\")})}, only:['boo','boo2'], overlap:'true', tag:'tag'});"
+        helper_output.should == "drails.Sortable.create(\"my_id\", {constraint:'if (true)', containment:['blah','blah2'], handle:'handleIt()', onUpdate:function(){new drails.Request('http://somemockurl.com', {asynchronous:true, evalScripts:true, parameters:drails.Sortable.serialize(\"my_id\")})}, only:['boo','boo2'], overlap:'true', tag:'tag'});"
       end
     end
   end

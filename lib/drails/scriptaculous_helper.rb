@@ -27,7 +27,7 @@ module Drails
       end
       
       def sortable_element_js_with_dojo(element_id, options = {}) #:nodoc:
-        options[:with]     ||= "Sortable.serialize(#{element_id.to_json})"
+        options[:with]     ||= "drails.Sortable.serialize(#{element_id.to_json})"
         options[:onUpdate] ||= "function(){" + remote_function(options) + "}"
         options.delete_if { |key, value| PrototypeHelper::AJAX_OPTIONS.include?(key) }
   
