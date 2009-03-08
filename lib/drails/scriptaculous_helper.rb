@@ -34,7 +34,7 @@ module Drails
         [:tag, :overlap, :constraint, :handle].each do |option|
           options[option] = "'#{options[option]}'" if options[option]
         end
-  
+
         options[:containment] = array_or_string_for_javascript(options[:containment]) if options[:containment]
         options[:only] = array_or_string_for_javascript(options[:only]) if options[:only]
   

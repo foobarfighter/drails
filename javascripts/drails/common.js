@@ -421,7 +421,7 @@ dojo.declare("drails.Sortable", null, {
 	},
 	
 	_initDnd: function(){
-		this.source = new dojo.dnd.Source(this.sourceNode);
+		this.source = new dojo.dnd.Source(this.sourceNode, this.options);
 		this.connects.push(dojo.connect(this.source, "onDndDrop", this, "onUpdate"));
 		if (dojo.isFunction(this.options.onUpdate)){
 			this.connects.push(dojo.connect(this, "onUpdate", this.options.onUpdate));

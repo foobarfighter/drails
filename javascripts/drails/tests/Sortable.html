@@ -60,6 +60,12 @@
         sortable = drails.Sortable.create(elementId);
         t.t(dojo.parser != null);
       });
+
+      it(".create passes the options to dojo.dnd.Source", function(t){
+        sortable = drails.Sortable.create(elementId, {skipForm: true});
+        t.t(sortable.options['skipForm']);
+        t.t(sortable.source.skipForm);
+      });
       
       it(".destroy destroys the sortable", function(t){
         sortable = drails.Sortable.create(elementId);

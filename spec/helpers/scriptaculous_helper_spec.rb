@@ -103,6 +103,16 @@ describe Drails::ScriptaculousHelper do
         helper_output.should == "drails.Sortable.create(\"my_id\", {onUpdate:function(){}});"
       end
     end
+
+    describe "when :skipForm is passed" do
+      before do
+        @helper_output = test_view.sortable_element_js('my_id', :skipForm => true, :onUpdate => "function(){}")
+      end
+
+      it "returns a drails.Sortable.create with a skipForm option" do
+        helper_output.should == "drails.Sortable.create(\"my_id\", {onUpdate:function(){}, skipForm:true});"
+      end
+    end
     
     describe "when sortable specific params are passed" do
       before do
