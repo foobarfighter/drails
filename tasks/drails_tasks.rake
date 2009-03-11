@@ -33,32 +33,22 @@ namespace :drails do
     
     desc "Copy the prebuilt files into the applications public/javascripts directory"
     task :copy do
-      # BEGIN: Gathers all prebuilt files
       release_root = "#{RAILS_ROOT}/public/javascripts/dojo/release"
-      release_dir = "#{release_root}/dojo/dojo"
-      build_profile_files = FileList[RAILS_ROOT + "/public/javascripts/*.profile.js"]
-      prebuilt_files = build_profile_files.collect do |f|
-        build_file = File.basename(f).gsub(/.profile.js$/, ".js")
-        uncompressed_build_file = build_file + ".uncompressed.js"
-        [build_file, uncompressed_build_file]
-      end
-      prebuilt_files << ["dojo.js", "dojo.js.uncompressed.js"]
-      prebuilt_files.flatten!
-      # END: Gathers all prebuilt files
-      
-      prebuilt_files.each do |f|
-        cp File.join(release_dir, f), "#{RAILS_ROOT}/public/javascripts/#{f}", :verbose => true
-      end
+      cp_r release_root, "#{RAILS_ROOT}/public/javascripts", :verbose => true
     end
     
     desc "Cleans the release directory"
     task :clean do
+      release_destination = "#{RAILS_ROOT}/public/javascripts/release"
       release_root = "#{RAILS_ROOT}/public/javascripts/dojo/release"
-      rm_rf release_root
+      rm_rf release_destination if File.directory?(release_destination)
+      rm_rf release_root if File.directory?(release_root)
     end
     
     desc "Builds, copys the prebuilt files, and cleans the release directory"
-    task :full => [:do, :copy, :clean] do
+    task :full => [:clean, :do, :copy] do
+      release_root = "#{RAILS_ROOT}/public/javascripts/dojo/release"
+      rm_rf release_root if File.directory?(release_root)
     end
     
   end
