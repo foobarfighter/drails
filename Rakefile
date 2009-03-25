@@ -82,17 +82,35 @@ namespace :dev do
         puts "Found rails versions: #{@rails_versions.join(', ')}"
       end
 
-      desc "Sets up a rails testapp with files layered in from the generate directory"
-      task :testapp => :find_versions do
+      task :validate_args => :find_versions do
         raise "A RAILS_VERSION number was expected" unless ENV["RAILS_VERSION"]
+        unless File.directory?("testapps/generate/rails-#{ENV['RAILS_VERSION']}")
+          warn "RAILS_VERSION (#{ENV['RAILS_VERSION']}) is not a officially supported version, but drails may still work"
+        end
         unless @rails_versions && @rails_versions.find { |v| v == ENV['RAILS_VERSION'] }
           raise "RAILS_VERSION (#{ENV['RAILS_VERSION']}) was not found in your installed rails versions"
         end
+      end
 
+      desc "Sets up a rails testapp with files layered in from the generate directory"
+      task :testapp => [ :validate_args, "dev:teardown:rails:clean" ] do
         app_generate_command = "rails _#{ENV['RAILS_VERSION']}_ rails-#{ENV['RAILS_VERSION']}"
         Dir.chdir "testapps" do
           puts "Execing: #{app_generate_command}"
-          exec app_generate_command
+          system app_generate_command
+        end
+
+        Rake::Task["dev:setup:rails:layer_shared"].invoke
+        Rake::Task["dev:setup:rails:layer_version_specific"].invoke
+      end
+
+      task :layer_shared => :testapp do
+        cp_r Dir["testapps/generate/shared/*"], "testapps/rails-#{ENV['RAILS_VERSION']}"
+      end
+
+      task :layer_version_specific => :testapp do
+        if File.directory?("testapps/generate/rails-#{ENV['RAILS_VERSION']}")
+          cp_r Dir["testapps/generate/rails-#{ENV['RAILS_VERSION']}/*"], "testapps/rails-#{ENV['RAILS_VERSION']}"
         end
       end
     end
@@ -108,6 +126,13 @@ namespace :dev do
     desc "Removes dojo from the development environment"
     task :dojo do
       rm_rf "testapp/public/javascripts/dojo"
+    end
+
+    namespace :rails do
+      desc "Cleans previously generated testapps"
+      task :clean do
+        rm_rf Dir["testapps/rails-*"]
+      end
     end
   end
 end
