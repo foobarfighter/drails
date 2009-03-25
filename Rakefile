@@ -42,14 +42,14 @@ namespace :dev do
         f << "drails:\n  toolkit: #{toolkit}\n"
       end
     end
-    
+
     desc "Sets up drails within testapp"
     task :full => ["dev:teardown:all"] do |t|
       cp_r ".", "/tmp/drails"
       rm_rf "testapp/public/javascripts/dojo"
       mkdir_p "testapp/vendor/plugins"
       cp_r "/tmp/drails", "testapp/vendor/plugins"
-      
+
       puts "Executing drails install..."
       cmd = "cd #{TESTAPP_PATH}/vendor/plugins/drails; chmod 755 install.rb; RAILS_ROOT=#{TESTAPP_PATH} ./install.rb"
       puts cmd
@@ -57,7 +57,7 @@ namespace :dev do
       puts "done"
       Rake::Task["dev:setup:toolkit"].invoke
     end
-    
+
     desc "Sets up drails within testapp with symlinks to important source files so that development can be done while testapp is running"
     task :linked => :full  do
       chdir "testapp/vendor/plugins/drails" do
@@ -69,15 +69,42 @@ namespace :dev do
       rm_rf "testapp/public/javascripts/dojo/drails"
       ln_s(DRAILS_PATH + "/javascripts/drails", "testapp/public/javascripts/dojo/drails")
     end
+
+    namespace :rails do
+      desc "Finds the versions of the installed rails gems on your system"
+      task :find_versions do
+        @rails_versions = nil
+        `gem list rails`.split("\n").each do |line|
+          if line =~ /^rails\s+\((.*?)\)/
+            @rails_versions = $1.split(/,\s*/)
+          end
+        end
+        puts "Found rails versions: #{@rails_versions.join(', ')}"
+      end
+
+      desc "Sets up a rails testapp with files layered in from the generate directory"
+      task :testapp => :find_versions do
+        raise "A RAILS_VERSION number was expected" unless ENV["RAILS_VERSION"]
+        unless @rails_versions && @rails_versions.find { |v| v == ENV['RAILS_VERSION'] }
+          raise "RAILS_VERSION (#{ENV['RAILS_VERSION']}) was not found in your installed rails versions"
+        end
+
+        app_generate_command = "rails _#{ENV['RAILS_VERSION']}_ rails-#{ENV['RAILS_VERSION']}"
+        Dir.chdir "testapps" do
+          puts "Execing: #{app_generate_command}"
+          exec app_generate_command
+        end
+      end
+    end
   end
-  
+
   namespace :teardown do
     desc "Tears down the entire development environment"
     task :all => [ :dojo ] do
       rm_rf "testapp/vendor"
       rm_rf "/tmp/drails"
     end
-    
+
     desc "Removes dojo from the development environment"
     task :dojo do
       rm_rf "testapp/public/javascripts/dojo"
@@ -92,11 +119,11 @@ namespace :server do
     puts "starting #{rails_env} server"
     `cd testapp; script/server -e #{rails_env} -d > /dev/null`
   end
-  
+
   desc "Restarts the server"
   task :restart => [ :stop, :start ] do
   end
-  
+
   desc "Stops the server"
   task :stop do
     puts "stopping server"
@@ -109,7 +136,7 @@ namespace :cli do
   desc 'Setup the drails CLI development environment.'
   task :setup => [ "dev:setup:linked" ] do
   end
-  
+
   desc 'Tear down the drails CLI development environment'
   task :teardown => ["dev:teardown:all"] do
   end
@@ -119,7 +146,7 @@ namespace :testjs do
   desc 'Setup the drails javascript development environment.'
   task :setup => ["dev:setup:linked"] do
   end
-  
+
   desc 'Fire up a web browser and run the drails javascript tests'
   task :spec => [ :teardown, :setup, "server:restart" ] do
     `open http://localhost:3000/javascripts/dojo/drails/tests/runTests.html`
@@ -129,7 +156,7 @@ namespace :testjs do
   task :teardown do
     delete_files = ['testapp/javascripts/public/dojo/drails'].each do |file|
       if File.exists? file
-        rm file 
+        rm file
         puts "removed #{file}"
       end
     end
@@ -146,7 +173,7 @@ namespace :selenium do
   desc "Sets up the selenium test environment"
   task :setup => "dev:setup:linked" do
   end
-  
+
   desc "Runs Selenium tests"
   task :spec => [:setup, "server:start"] do
     system("ruby -Ilib -e 'require \"spec/selenium/selenium_suite\"'")

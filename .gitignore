@@ -5,3 +5,4 @@ testapp/public/javascripts/release
 testapp/vendor/
 testapp/tmp/
 rdoc/
+drails.iml
