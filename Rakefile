@@ -85,7 +85,7 @@ namespace :dev do
       task :validate_args => :find_versions do
         raise "A RAILS_VERSION number was expected" unless ENV["RAILS_VERSION"]
         unless File.directory?("testapps/generate/rails-#{ENV['RAILS_VERSION']}")
-          warn "RAILS_VERSION (#{ENV['RAILS_VERSION']}) is not a officially supported version, but drails may still work"
+          warn "RAILS_VERSION (#{ENV['RAILS_VERSION']}) is not an officially supported version, but drails may still work"
         end
         unless @rails_versions && @rails_versions.find { |v| v == ENV['RAILS_VERSION'] }
           raise "RAILS_VERSION (#{ENV['RAILS_VERSION']}) was not found in your installed rails versions"
