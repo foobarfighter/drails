@@ -1,3 +1,4 @@
+gem 'rails', ENV['RAILS_VERSION']
 require 'action_view'
 
 class TestView
