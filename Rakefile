@@ -19,7 +19,7 @@ Spec::Rake::SpecTask.new(:runspec) do |t|
 end
 
 desc 'Test the drails ruby specs'
-task :spec  => ['dev:setup:rails:validate_args', 'dev:teardown:all', 'runspec'] do
+task :spec  => ['dev:setup:rails:testapp', 'dev:teardown:all', 'runspec'] do
 end
 
 desc 'Generate documentation for the drails plugin.'
