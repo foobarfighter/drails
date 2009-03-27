@@ -38,6 +38,12 @@ script/plugin install git://github.com/foobarfighter/drails.git
 ** NOTE: This also installs the dojo-pkg gem (a package that includes the dojo source code) from rubyforge.
 This can sometimes take a while.
 
+Support:
+========
+Check out http://d-rails.org for the official site.
+If you find a bug, please send a quick email to d-rails@googlegroups.com.
+Also, feel free to swing by the #d-rails IRC channel on irc.freenode.net
+
 How it works:
 =============
 drails tries not to touch Rails' ruby internals as much as possible by providing a client
