@@ -1,8 +1,13 @@
-v1.1.0
+v1.0.1
 ======
 * Build now copies the entire release path into the javascript director.  To see how to address build vs. development
-  issues, check out the ideapad reference application.
+  issues, check out the ideapad reference application.  This fixes problems caused by external resources not being
+  loaded from the generated build.
+
+  See:
   http://github.com/foobarfighter/ideapad/blob/e3dc0b610b71755739d99ed39539385bee99f4d4/app/views/layouts/layout.html.erb
+  http://github.com/foobarfighter/ideapad/blob/e3dc0b610b71755739d99ed39539385bee99f4d4/.gitignore
+
 * Added drails testing capabilities for multiple versions of rails
 * Added Drails::VERSION module
 
