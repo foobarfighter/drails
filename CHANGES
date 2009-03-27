@@ -1,0 +1,10 @@
+v1.1.0
+======
+* Build now copies the entire release path into the javascript director.  To see how to address build vs. development
+  issues, check out the ideapad reference application.
+  http://github.com/foobarfighter/ideapad/blob/e3dc0b610b71755739d99ed39539385bee99f4d4/app/views/layouts/layout.html.erb
+* Added testing capabilities
+
+v1.0.0
+======
+* Initial release
