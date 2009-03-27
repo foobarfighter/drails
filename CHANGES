@@ -4,6 +4,7 @@ v1.1.0
   issues, check out the ideapad reference application.
   http://github.com/foobarfighter/ideapad/blob/e3dc0b610b71755739d99ed39539385bee99f4d4/app/views/layouts/layout.html.erb
 * Added drails testing capabilities for multiple versions of rails
+* Added Drails::VERSION module
 
 v1.0.0
 ======
