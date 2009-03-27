@@ -7,7 +7,7 @@ require 'fileutils'
 DRAILS_PATH = File.dirname(__FILE__)
 
 desc 'Default: run specs.'
-task :default => :spec
+task :default => "spec:drails"
 
 desc 'Runs the drails ruby specs.'
 Spec::Rake::SpecTask.new(:runspec) do |t|
@@ -19,7 +19,24 @@ Spec::Rake::SpecTask.new(:runspec) do |t|
 end
 
 desc 'Test the drails ruby specs'
-task :spec  => ['dev:setup:rails:testapp', 'dev:teardown:all', 'runspec'] do
+namespace :spec do
+  desc "Runs the drails tests, the selenium tests, and the javascript tests"
+  task :all => [:drails, :selenium, :testjs] do
+  end
+
+  desc "Runs the drails spec suite"
+  task :drails  => ['dev:setup:rails:testapp', 'dev:teardown:all', 'runspec'] do
+  end
+
+  desc 'Fire up a web browser and run the drails javascript tests'
+  task :testjs => [ "dev:setup:linked", "server:restart" ] do
+    `open http://localhost:3000/javascripts/dojo/drails/tests/runTests.html`
+  end
+
+  desc "Runs Selenium tests"
+  task :selenium => ["dev:setup:linked", "server:start"] do
+    system("RAILS_ENV=development ruby -Ilib -e 'require \"spec/selenium/selenium_suite\"'")
+  end
 end
 
 desc 'Generate documentation for the drails plugin.'
@@ -152,19 +169,5 @@ namespace :server do
   task :stop do
     puts "stopping server"
     `ps aux | grep "p 3000" | grep -v grep | awk '{ print $2 }' | xargs kill`
-  end
-end
-
-namespace :testjs do
-  desc 'Fire up a web browser and run the drails javascript tests'
-  task :spec => [ "dev:setup:linked", "server:restart" ] do
-    `open http://localhost:3000/javascripts/dojo/drails/tests/runTests.html`
-  end
-end
-
-namespace :selenium do
-  desc "Runs Selenium tests"
-  task :spec => ["dev:setup:linked", "server:start"] do
-    system("RAILS_ENV=development ruby -Ilib -e 'require \"spec/selenium/selenium_suite\"'")
   end
 end

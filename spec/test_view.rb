@@ -1,4 +1,4 @@
-gem 'rails', ENV['RAILS_VERSION']
+require 'action_controller'
 require 'action_view'
 
 class TestView

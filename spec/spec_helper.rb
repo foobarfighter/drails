@@ -1,11 +1,26 @@
 require 'rubygems'
+require 'spec'
+require 'spec/matchers/include_options'
+
+gem 'rails', ENV['RAILS_VERSION']
+
+# Helper so loading all of rails is not needed just to get the version
+module Rails
+  module VERSION
+    version_parts = ENV['RAILS_VERSION'].split(".").collect { |part| part.to_i }
+    MAJOR = version_parts[0]
+    MINOR = version_parts[1]
+    TINY  = version_parts[2]
+    STRING = [MAJOR, MINOR, TINY].join('.')
+  end
+  def self.version
+    VERSION::STRING
+  end
+end
+
 require 'drails'
 require 'installer'
 require File.join(File.dirname(__FILE__), 'test_view')
-
-
-require 'spec'
-require 'spec/matchers/include_options'
 
 Spec::Runner.configure do |config|
   config.mock_with :rr
