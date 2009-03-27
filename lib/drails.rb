@@ -10,6 +10,7 @@
 #                                                                  #
 ####################################################################
 
+require 'drails/version'
 require 'drails/error'
 require 'drails/dojo_helper.rb'
 require 'drails/prototype_helper'
