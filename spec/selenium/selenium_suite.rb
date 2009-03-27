@@ -8,6 +8,7 @@ class SeleniumSuite
       require File.expand_path(x)
     end
 
+    Polonium::Configuration.instance.app_server_engine = "webrick"
     unless Polonium::Configuration.instance.browser
       Polonium::Configuration.instance.browser = "firefox"
     end

@@ -23,6 +23,7 @@ drails._xhrCallbackMap = {
 	"onLoading":				null,
 	"onLoaded":					null,
 	"onInteractive":		null,
+  "onCreate":         null,   // Added in prototype 1.5.1
 	"onComplete":				null,		// handle ?
 	"onFailure":				"error",
 	"onSuccess":				"load"

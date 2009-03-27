@@ -16,7 +16,7 @@ describe Drails::Installer do
   attr_reader :installer, :rails_root, :drails_root
 
   before do
-    @rails_root = File.join(File.dirname(__FILE__), "../testapp")
+    @rails_root = File.join(File.dirname(__FILE__), "../testapps/rails-#{ENV['RAILS_VERSION']}")
     @drails_root = File.join(File.dirname(__FILE__), "../")
   end
 
