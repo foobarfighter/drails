@@ -29,4 +29,15 @@ describe Drails::DojoHelper do
     end
   end
 
+  describe "#javascript_include_dojo" do
+    describe "when the build option is present" do
+      it "requires dojo and the dojo build from the releases directory"
+    end
+    describe "when the build option is not present" do
+      it "requires dojo"
+      it "registers the drails module path"
+      it "requires drails.common"
+    end
+  end
+
 end
